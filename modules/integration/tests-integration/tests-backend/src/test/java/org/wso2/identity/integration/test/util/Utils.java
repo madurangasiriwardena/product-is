@@ -120,7 +120,7 @@ public class Utils {
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("username", userName));
         urlParameters.add(new BasicNameValuePair("password", password));
-        if (StringUtils.equals(url, SAML_SSO_URL)) {
+        if (StringUtils.equals(url, SAML_SSO_URL)) {//todo port?
             urlParameters.add(new BasicNameValuePair("tocommonauth", "true"));
         }
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));

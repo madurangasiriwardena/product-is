@@ -311,6 +311,7 @@
                             <tasks>
                                 <ant antfile="src/test/resources/artifacts/IS/saml/saml-app-build.xml" target="saml-tenant-signingdisabled" />
                                 <ant antfile="src/test/resources/artifacts/IS/saml/registrymount/registry-app-build.xml" target="saml-tenant-registrymount" />
+                                <ant antfile="src/test/resources/artifacts/IS/saml/samlbearer/samlbearer-app-build.xml" target="saml-tenant-samlbearer" />
                             </tasks>
                         </configuration>
                         <goals>
@@ -644,6 +645,7 @@
             <artifactId>org.wso2.carbon.databridge.receiver.thrift</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>

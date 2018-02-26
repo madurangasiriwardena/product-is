@@ -352,7 +352,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
                     .getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(), httpClient);
 
 
-            if (requestMissingClaims(response)) {
+            if (requestConsent(response)) {
                 String pastrCookie = Utils.getPastreCookie(response);
                 Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
                 EntityUtils.consume(response.getEntity());
@@ -692,10 +692,10 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         return claimValues;
     }
 
-    private boolean requestMissingClaims (HttpResponse response) {
+    private boolean requestConsent(HttpResponse response) {
 
         String redirectUrl = Utils.getRedirectUrl(response);
-        return redirectUrl.contains("consent.do") ? true : false;
+        return redirectUrl.contains("consent.do");
 
     }
 }

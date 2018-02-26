@@ -23,6 +23,7 @@ import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -30,25 +31,43 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
+import org.wso2.carbon.identity.application.common.model.xsd.Claim;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
+import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
+import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceIdentityOAuthAdminException;
+import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderInfoDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.um.ws.api.stub.ClaimValue;
+import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceUserStoreExceptionException;
+import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
+import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
+import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.CarbonTestServerManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.application.mgt.bean.OIDCApplication;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTest {
@@ -56,6 +75,8 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     private Map<Integer, ApplicationManagementServiceClient> applicationManagementServiceClients;
     private Map<Integer, IdentityProviderMgtServiceClient> identityProviderMgtServiceClients;
     private Map<Integer, SAMLSSOConfigServiceClient> samlSSOConfigServiceClients;
+    private Map<Integer, RemoteUserStoreManagerServiceClient> remoteUserStoreManagerServiceClients;
+    private Map<Integer, OauthAdminClient> oauthAdminClients;
     protected Map<Integer, AutomationContext> automationContextMap;
     private Map<Integer, Tomcat> tomcatServers;
     private HttpClient httpClient;
@@ -68,6 +89,8 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         applicationManagementServiceClients = new HashMap<Integer, ApplicationManagementServiceClient>();
         identityProviderMgtServiceClients = new HashMap<Integer, IdentityProviderMgtServiceClient>();
         samlSSOConfigServiceClients = new HashMap<Integer, SAMLSSOConfigServiceClient>();
+        remoteUserStoreManagerServiceClients = new HashMap<Integer, RemoteUserStoreManagerServiceClient>();
+        oauthAdminClients = new HashMap<Integer, OauthAdminClient>();
         automationContextMap = new HashMap<Integer, AutomationContext>();
         httpClient = new DefaultHttpClient();
         tomcatServers = new HashMap<Integer, Tomcat>();
@@ -132,6 +155,11 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
                                                                                                            serviceUrl));
                 } else if (IdentityConstants.ServiceClientType.SAML_SSO_CONFIG.equals(clientType)) {
                     samlSSOConfigServiceClients.put(portOffset, new SAMLSSOConfigServiceClient(serviceUrl, sessionCookie));
+                } else if (IdentityConstants.ServiceClientType.OAUTH_CONFIG.equals(clientType)) {
+                    oauthAdminClients.put(portOffset, new OauthAdminClient(serviceUrl, sessionCookie));
+                } else if (IdentityConstants.ServiceClientType.REMOTE_USERSTORE_MANAGER.equals(clientType)) {
+                    remoteUserStoreManagerServiceClients.put(portOffset, new RemoteUserStoreManagerServiceClient
+                            (serviceUrl, sessionCookie));
                 }
             }
         }
@@ -165,6 +193,14 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
 
     public IdentityProvider getIdentityProvider(int portOffset, String idPName) throws Exception {
         return identityProviderMgtServiceClients.get(portOffset).getIdPByName(idPName);
+    }
+
+    public IdentityProvider getResidentIdP(int portOffset) throws Exception {
+        return identityProviderMgtServiceClients.get(portOffset).getResidentIdP();
+    }
+
+    public void updateResidentIdp(int portOffset, IdentityProvider identityProvider) throws Exception {
+        identityProviderMgtServiceClients.get(portOffset).updateResidentIdP(identityProvider);
     }
 
     public void updateIdentityProvider(int portOffset, String oldIdPName,
@@ -288,6 +324,97 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     public void closeHttpConnection(HttpResponse response) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         bufferedReader.close();
+    }
+
+    public void addUser(int portOffset, String username, String password, String[] roleList, ClaimValue[] claimValues,
+                        String profileName, boolean requirePasswordChange) throws
+            RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException, UserStoreException {
+
+        remoteUserStoreManagerServiceClients.get(portOffset).addUser(username, password, roleList, claimValues,
+                profileName,
+                requirePasswordChange);
+    }
+
+    public void removeUser(int portOffset, String username) throws
+            RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException, UserStoreException {
+
+        remoteUserStoreManagerServiceClients.get(portOffset).deleteUser(username);
+    }
+
+    public OIDCApplication createOIDCApplication(int portOffset, String name, String callBackURL, List<String> requiredClaims)
+            throws Exception {
+
+        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
+        appDTO.setApplicationName(name);
+        appDTO.setCallbackUrl(callBackURL);
+        appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
+        appDTO.setGrantTypes("refresh_token urn:ietf:params:oauth:grant-type:saml2-bearer");
+
+        oauthAdminClients.get(portOffset).registerOAuthApplicationData(appDTO);
+        OAuthConsumerAppDTO[] appDtos = oauthAdminClients.get(portOffset).getAllOAuthApplicationData();
+
+        OIDCApplication oidcApplication = null;
+        for (OAuthConsumerAppDTO appDto : appDtos) {
+            if (appDto.getApplicationName().equals(name)) {
+                oidcApplication = new OIDCApplication();
+                oidcApplication.setClientId(appDto.getOauthConsumerKey());
+                oidcApplication.setClientSecret(appDto.getOauthConsumerSecret());
+                break;
+            }
+        }
+        if (oidcApplication == null) {
+            throw new Exception("OAuth application is not created properly.");
+        }
+
+        ServiceProvider serviceProvider = new ServiceProvider();
+        serviceProvider.setApplicationName(name);
+        serviceProvider.setDescription(name);
+        applicationManagementServiceClients.get(portOffset).createApplication(serviceProvider);
+
+        serviceProvider = applicationManagementServiceClients.get(portOffset).getApplication(name);
+
+        ClaimConfig claimConfig = null;
+        if (!requiredClaims.isEmpty()) {
+            claimConfig = new ClaimConfig();
+            for (String claimUri : requiredClaims) {
+                Claim claim = new Claim();
+                claim.setClaimUri(claimUri);
+                ClaimMapping claimMapping = new ClaimMapping();
+                claimMapping.setRequested(true);
+                claimMapping.setLocalClaim(claim);
+                claimMapping.setRemoteClaim(claim);
+                claimConfig.addClaimMappings(claimMapping);
+                claimConfig.setLocalClaimDialect(true);
+            }
+        }
+
+        serviceProvider.setClaimConfig(claimConfig);
+        serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
+        List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<>();
+
+        if (oidcApplication.getClientId() != null) {
+            InboundAuthenticationRequestConfig inboundAuthenticationRequestConfig = new
+                    InboundAuthenticationRequestConfig();
+            inboundAuthenticationRequestConfig.setInboundAuthKey(oidcApplication.getClientId());
+            inboundAuthenticationRequestConfig.setInboundAuthType(OAuth2Constant.OAUTH_2);
+            if (StringUtils.isNotBlank(oidcApplication.getClientSecret())) {
+                Property property = new Property();
+                property.setName(OAuth2Constant.OAUTH_CONSUMER_SECRET);
+                property.setValue(oidcApplication.getClientSecret());
+                Property[] properties = {property};
+                inboundAuthenticationRequestConfig.setProperties(properties);
+            }
+            authRequestList.add(inboundAuthenticationRequestConfig);
+        }
+
+        if (authRequestList.size() > 0) {
+            serviceProvider.getInboundAuthenticationConfig().setInboundAuthenticationRequestConfigs(authRequestList
+                    .toArray(new InboundAuthenticationRequestConfig[authRequestList.size()]));
+        }
+
+        applicationManagementServiceClients.get(portOffset).updateApplicationData(serviceProvider);
+
+        return oidcApplication;
     }
 
     private void setSystemProperties() {
