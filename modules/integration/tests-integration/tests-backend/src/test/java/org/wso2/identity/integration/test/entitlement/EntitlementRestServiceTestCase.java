@@ -27,6 +27,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -65,7 +66,7 @@ public class EntitlementRestServiceTestCase extends ISIntegrationTest {
             ".w3.org/2001/XMLSchema#string\" MustBePresent=\"true\"/></Match></AllOf></AnyOf></Target><Rule " +
             "Effect=\"Permit\" RuleId=\"permit\"/></Policy>";
     private EntitlementPolicyServiceClient entitlementPolicyClient;
-    private HttpClient httpClient;
+    private CloseableHttpClient httpClient;
     private String username;
     private String password;
     private String serverPort;
@@ -90,7 +91,7 @@ public class EntitlementRestServiceTestCase extends ISIntegrationTest {
                 "Subscriber"}, "DELETE", true, null, 1);
         entitlementPolicyClient.removePolicy(POLICY_ID);
         entitlementPolicyClient = null;
-        httpClient = null;
+        httpClient.close();
     }
 
     @Test(groups = "wso2.is", description = "Test retrieving API resource list")

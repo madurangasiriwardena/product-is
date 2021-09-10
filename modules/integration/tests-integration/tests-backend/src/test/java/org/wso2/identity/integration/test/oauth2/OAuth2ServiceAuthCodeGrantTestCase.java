@@ -23,7 +23,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
@@ -67,7 +68,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 
     private static final String PLAYGROUND_RESET_PAGE = "http://localhost:" + CommonConstants.DEFAULT_TOMCAT_PORT +
             "/playground2/oauth2.jsp?reset=true";
-    private DefaultHttpClient client;
+    private CloseableHttpClient client;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -79,7 +80,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
                 isServer.getSuperTenant().getTenantAdmin().getPassword(),
                 isServer.getInstance().getHosts().get("default"));
-        client = new DefaultHttpClient();
+        client = HttpClients.createDefault();
 
         setSystemproperties();
     }
@@ -90,7 +91,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         this.logManger.logOut();
         deleteApplication();
         removeOAuthApplicationData();
-
+        client.close();
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")

@@ -20,7 +20,7 @@ package org.wso2.identity.integration.test.idp.mgt;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -231,20 +231,23 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
 
     private String sendAuthorizeRequest() throws IOException {
 
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(oidcAppClientId, OAuth2Constant.CALLBACK_URL));
-        String content = DataExtractUtil.getContentData(response);
-        Assert.assertNotNull(content);
-        return content;
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            HttpResponse response =
+                    sendGetRequest(client, getAuthzRequestUrl(oidcAppClientId, OAuth2Constant.CALLBACK_URL));
+            String content = DataExtractUtil.getContentData(response);
+            Assert.assertNotNull(content);
+            return content;
+        }
     }
 
     private String sendRecoveryRequest() throws IOException {
 
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpResponse response = sendGetRequest(client, recoveryEndpoint);
-        String content = DataExtractUtil.getContentData(response);
-        Assert.assertNotNull(content);
-        return content;
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            HttpResponse response = sendGetRequest(client, recoveryEndpoint);
+            String content = DataExtractUtil.getContentData(response);
+            Assert.assertNotNull(content);
+            return content;
+        }
     }
 
 }

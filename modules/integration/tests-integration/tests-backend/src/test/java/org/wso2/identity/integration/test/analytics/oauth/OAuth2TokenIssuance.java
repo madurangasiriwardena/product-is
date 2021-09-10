@@ -19,7 +19,8 @@ package org.wso2.identity.integration.test.analytics.oauth;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -51,7 +52,7 @@ public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
     private String accessToken;
     private String consumerKey;
     private String consumerSecret;
-    private DefaultHttpClient client;
+    private CloseableHttpClient client;
     private OAuthConsumerAppDTO appDto;
 
     @BeforeClass(alwaysRun = true)
@@ -64,7 +65,7 @@ public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
                 .getTenantAdmin().getPassword(), isServer.getInstance().getHosts().get("default"));
 
         setSystemproperties();
-        client = new DefaultHttpClient();
+        client = HttpClients.createDefault();
     }
 
     @AfterClass(alwaysRun = true)
@@ -75,6 +76,7 @@ public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
         logManger = null;
         consumerKey = null;
         accessToken = null;
+        client.close();
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")

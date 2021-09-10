@@ -23,9 +23,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
@@ -69,8 +69,8 @@ public class AbstractApplicationAuthzTestCase extends ISIntegrationTest {
     protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     protected EntitlementPolicyServiceClient entitlementPolicyClient;
 
-    protected HttpClient httpClientAzUser;
-    protected HttpClient httpClientNonAzUser;
+    protected CloseableHttpClient httpClientAzUser;
+    protected CloseableHttpClient httpClientNonAzUser;
 
     protected HttpResponse sendSAMLMessage(String url, String samlMsgKey, String samlMsgValue) throws IOException {
 

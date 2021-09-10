@@ -20,10 +20,10 @@ package org.wso2.identity.integration.test.user.mgt;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -59,46 +59,46 @@ public class UserMgtUISecurityTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, description = "Testing open redirect vulnerability")
     public void openRedirectTest() throws IOException {
 
-        HttpClient httpClient = new DefaultHttpClient();
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
 
-        HttpPost loginPost = new HttpPost(SERVER_URL + LOGIN_PAGE_CONTEXT);
+            HttpPost loginPost = new HttpPost(SERVER_URL + LOGIN_PAGE_CONTEXT);
 
-        List<NameValuePair> loginParameters = new ArrayList<>();
+            List<NameValuePair> loginParameters = new ArrayList<>();
 
-        loginParameters.add(new BasicNameValuePair("username", USER_NAME));
-        loginParameters.add(new BasicNameValuePair("password", OLD_PASSWORD));
+            loginParameters.add(new BasicNameValuePair("username", USER_NAME));
+            loginParameters.add(new BasicNameValuePair("password", OLD_PASSWORD));
 
-        loginPost.setEntity(new UrlEncodedFormEntity(loginParameters));
+            loginPost.setEntity(new UrlEncodedFormEntity(loginParameters));
 
-        HttpResponse loginResponse = httpClient.execute(loginPost);
-        String cookie = loginResponse.getHeaders("Set-Cookie")[0].getValue();
+            HttpResponse loginResponse = httpClient.execute(loginPost);
+            String cookie = loginResponse.getHeaders("Set-Cookie")[0].getValue();
 
-        EntityUtils.consume(loginResponse.getEntity());
+            EntityUtils.consume(loginResponse.getEntity());
 
-        HttpPost post = new HttpPost(SERVER_URL + CHANGE_PASSWORD_CONTEXT);
+            HttpPost post = new HttpPost(SERVER_URL + CHANGE_PASSWORD_CONTEXT);
 
-        post.setHeader("Cookie", cookie);
+            post.setHeader("Cookie", cookie);
 
-        List<NameValuePair> urlParameters = new ArrayList<>();
+            List<NameValuePair> urlParameters = new ArrayList<>();
 
-        urlParameters.add(new BasicNameValuePair("pwd_regex", PW_REGEX));
-        urlParameters.add(new BasicNameValuePair("username", USER_NAME));
-        urlParameters.add(new BasicNameValuePair("isUserChange", "true"));
-        urlParameters.add(new BasicNameValuePair("returnPath", RETURN_PATH));
-        urlParameters.add(new BasicNameValuePair("currentPassword", NEW_PASSWORD));
-        urlParameters.add(new BasicNameValuePair("checkPassword", OLD_PASSWORD));
+            urlParameters.add(new BasicNameValuePair("pwd_regex", PW_REGEX));
+            urlParameters.add(new BasicNameValuePair("username", USER_NAME));
+            urlParameters.add(new BasicNameValuePair("isUserChange", "true"));
+            urlParameters.add(new BasicNameValuePair("returnPath", RETURN_PATH));
+            urlParameters.add(new BasicNameValuePair("currentPassword", NEW_PASSWORD));
+            urlParameters.add(new BasicNameValuePair("checkPassword", OLD_PASSWORD));
 
-        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+            post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
-        HttpResponse response = httpClient.execute(post);
+            HttpResponse response = httpClient.execute(post);
 
-        String repString = EntityUtils.toString(response.getEntity());
+            String repString = EntityUtils.toString(response.getEntity());
 
-        if (repString != null) {
-            Assert.assertFalse(repString.contains(RETURN_PATH), "Possible open redirect vulnerability.");
-        } else {
-            Assert.assertTrue(false, "Invalid response for password update.");
+            if (repString != null) {
+                Assert.assertFalse(repString.contains(RETURN_PATH), "Possible open redirect vulnerability.");
+            } else {
+                Assert.assertTrue(false, "Invalid response for password update.");
+            }
         }
-
     }
 }

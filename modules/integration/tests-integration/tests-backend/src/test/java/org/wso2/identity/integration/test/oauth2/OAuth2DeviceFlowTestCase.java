@@ -24,7 +24,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
@@ -66,7 +67,7 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
     private String userCode;
     private String deviceCode;
 
-    private DefaultHttpClient client;
+    private CloseableHttpClient client;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -76,7 +77,7 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
                         isServer.getSuperTenant().getTenantAdmin().getPassword(),
                         isServer.getInstance().getHosts().get("default"));
-        client = new DefaultHttpClient();
+        client = HttpClients.createDefault();
 
         setSystemproperties();
     }
@@ -86,6 +87,7 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
 
         deleteApplication();
         removeOAuthApplicationData();
+        client.close();
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")

@@ -31,6 +31,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -99,6 +100,11 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
 
         super.init();
         client = HttpClients.createDefault();
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void tearDownClass() throws Exception {
+        client.close();
     }
 
     List<String> userIds = new ArrayList<>();

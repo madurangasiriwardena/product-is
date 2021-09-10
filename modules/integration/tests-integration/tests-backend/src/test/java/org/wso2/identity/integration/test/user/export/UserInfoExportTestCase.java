@@ -20,13 +20,14 @@ package org.wso2.identity.integration.test.user.export;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -52,7 +53,7 @@ public class UserInfoExportTestCase extends ISIntegrationTest {
     private static final String ME = "me";
     private static final String RESOURCE_PATH = "/api/identity/user/v1.0/";
     private static final String USERNAME_CLAIM_URI = "http://wso2.org/claims/username";
-    private HttpClient client;
+    private CloseableHttpClient client;
 
     private String username;
     private String tenantAwareUsername;
@@ -82,6 +83,11 @@ public class UserInfoExportTestCase extends ISIntegrationTest {
         super.init();
         client = HttpClients.createDefault();
 
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void tearDownClass() throws Exception {
+        client.close();
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Export user details")

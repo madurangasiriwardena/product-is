@@ -21,8 +21,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -36,6 +36,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -115,11 +116,10 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
 
     @Test(description = "Testing SAML ECP login failure", groups = "wso2.is", dependsOnMethods = {"testSAMLECPLogin"})
     public void testSAMLECPAuthnFailLogin() {
-        try {
-            httpClient = new DefaultHttpClient();
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
             HttpResponse response;
             String samlECPReq = buildECPSAMLRequest(SAML_ECP_ACS_URL, SAML_ECP_ISSUER);
-            response = Utils.sendECPPostRequest(SAML_ECP_SSO_URL, USER_AGENT, httpClient, config.getUser().getUsername(), "RandomPassword", samlECPReq);
+            response = Utils.sendECPPostRequest(SAML_ECP_SSO_URL, USER_AGENT, client, config.getUser().getUsername(), "RandomPassword", samlECPReq);
             String result = extractDataFromResponse(response);
             if(log.isDebugEnabled()){
                 log.debug("Response : " + result);
@@ -134,11 +134,11 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
 
     @Test(description = "Testing SAML ECP SOAP faults for invalid requests", groups = "wso2.is", dependsOnMethods = {"testSAMLECPAuthnFailLogin"})
     public void testSOAPFault() {
-        try {
-            httpClient = new DefaultHttpClient();
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
             HttpResponse response;
             String samlECPReq = buildInvalidECPSAMLRequest(SAML_ECP_ACS_URL, SAML_ECP_ISSUER);
-            response = Utils.sendECPPostRequest(SAML_ECP_SSO_URL, USER_AGENT, httpClient, config.getUser().getUsername(), config.getUser().getPassword(), samlECPReq);
+            response = Utils.sendECPPostRequest(SAML_ECP_SSO_URL, USER_AGENT, client, config.getUser().getUsername(),
+                    config.getUser().getPassword(), samlECPReq);
             String result = extractDataFromResponse(response);
             if(log.isDebugEnabled()){
                 log.debug("Response : " + result);

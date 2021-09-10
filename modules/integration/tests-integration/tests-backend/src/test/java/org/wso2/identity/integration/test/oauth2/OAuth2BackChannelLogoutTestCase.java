@@ -22,11 +22,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -64,7 +64,7 @@ import static org.wso2.identity.integration.test.utils.CommonConstants.DEFAULT_T
  */
 public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    private HttpClient client;
+    private CloseableHttpClient client;
     private final String OIDC_APP_NAME = "playground2";
     private String oidcAppClientId = "";
     private String oidcAppClientSecret = "";
@@ -118,6 +118,7 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
         removeApplications();
 
         remoteUSMServiceClient.deleteUser(USERNAME);
+        client.close();
     }
 
     protected void init() throws Exception {

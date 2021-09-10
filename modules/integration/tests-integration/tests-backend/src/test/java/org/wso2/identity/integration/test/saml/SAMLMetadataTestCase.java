@@ -21,16 +21,16 @@ package org.wso2.identity.integration.test.saml;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-import org.wso2.carbon.tenant.mgt.stub.TenantMgtAdminServiceExceptionException;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.json.JSONObject;
 import org.json.XML;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.utils.DataExtractUtil;
 
 import java.io.IOException;
 
@@ -56,38 +56,40 @@ public class SAMLMetadataTestCase extends ISIntegrationTest {
     private void testResponseContent(String samlMetadataEndpoint, String samlEndpoint)
             throws IOException, JSONException {
 
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpResponse httpResponse = sendGetRequest(client, samlMetadataEndpoint);
-        String content = DataExtractUtil.getContentData(httpResponse);
-        Assert.assertNotNull(content, "Response content is not received");
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            HttpResponse httpResponse = sendGetRequest(client, samlMetadataEndpoint);
+            String content = DataExtractUtil.getContentData(httpResponse);
+            Assert.assertNotNull(content, "Response content is not received");
 
-        JSONArray singleLogoutServices = XML.toJSONObject(content).getJSONObject("EntityDescriptor").getJSONObject(
-                "IDPSSODescriptor").getJSONArray("SingleLogoutService");
-        for (int i = 0; i < singleLogoutServices.length(); i++) {
-            JSONObject singleLogoutService = singleLogoutServices.getJSONObject(i);
-            Assert.assertEquals(singleLogoutService.getString("Location"),
-                    samlEndpoint, String.format("Expected location was not received for single logout" +
-                            " service for the binding %S.", singleLogoutService.getString("Binding")));
-            Assert.assertEquals(singleLogoutService.getString("ResponseLocation"),
-                    samlEndpoint, String.format("Expected response location was not received for single " +
-                            "logout service for the binding %S.", singleLogoutService.getString("Binding")));
+            JSONArray singleLogoutServices = XML.toJSONObject(content).getJSONObject("EntityDescriptor").getJSONObject(
+                    "IDPSSODescriptor").getJSONArray("SingleLogoutService");
+            for (int i = 0; i < singleLogoutServices.length(); i++) {
+                JSONObject singleLogoutService = singleLogoutServices.getJSONObject(i);
+                Assert.assertEquals(singleLogoutService.getString("Location"),
+                        samlEndpoint, String.format("Expected location was not received for single logout" +
+                                " service for the binding %S.", singleLogoutService.getString("Binding")));
+                Assert.assertEquals(singleLogoutService.getString("ResponseLocation"),
+                        samlEndpoint, String.format("Expected response location was not received for single " +
+                                "logout service for the binding %S.", singleLogoutService.getString("Binding")));
+            }
+
+            JSONArray singleSignOnServices = XML.toJSONObject(content).getJSONObject("EntityDescriptor").getJSONObject(
+                    "IDPSSODescriptor").getJSONArray("SingleSignOnService");
+            for (int i = 0; i < singleSignOnServices.length(); i++) {
+                JSONObject singleSignOnService = singleSignOnServices.getJSONObject(i);
+                Assert.assertEquals(singleSignOnService.getString("Location"),
+                        samlEndpoint, String.format("Expected location was not received for single sign-on " +
+                                "service for the binding %S.", singleSignOnService.getString("Binding")));
+            }
+
+            JSONObject artifactResolutionService =
+                    XML.toJSONObject(content).getJSONObject("EntityDescriptor").getJSONObject(
+                            "IDPSSODescriptor").getJSONObject("ArtifactResolutionService");
+            Assert.assertEquals(artifactResolutionService.getString("Location"),
+                    SAMLARTRESOLVE_ENDPOINT,
+                    String.format("Expected location was not received for artifact resolution" +
+                            "service for the binding %S.", artifactResolutionService.getString("Binding")));
         }
-
-        JSONArray singleSignOnServices = XML.toJSONObject(content).getJSONObject("EntityDescriptor").getJSONObject(
-                "IDPSSODescriptor").getJSONArray("SingleSignOnService");
-        for (int i = 0; i < singleSignOnServices.length(); i++) {
-            JSONObject singleSignOnService = singleSignOnServices.getJSONObject(i);
-            Assert.assertEquals(singleSignOnService.getString("Location"),
-                    samlEndpoint, String.format("Expected location was not received for single sign-on " +
-                            "service for the binding %S.", singleSignOnService.getString("Binding")));
-        }
-
-        JSONObject artifactResolutionService =
-                XML.toJSONObject(content).getJSONObject("EntityDescriptor").getJSONObject(
-                        "IDPSSODescriptor").getJSONObject("ArtifactResolutionService");
-        Assert.assertEquals(artifactResolutionService.getString("Location"),
-                SAMLARTRESOLVE_ENDPOINT, String.format("Expected location was not received for artifact resolution" +
-                        "service for the binding %S.", artifactResolutionService.getString("Binding")));
     }
 
     private HttpResponse sendGetRequest(HttpClient client, String samlMetadataEndpoint) throws IOException {

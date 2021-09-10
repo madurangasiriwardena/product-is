@@ -22,10 +22,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -64,6 +64,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.xpath.XPathExpressionException;
 
 import static org.wso2.identity.integration.test.utils.CommonConstants.DEFAULT_TOMCAT_PORT;
@@ -102,7 +103,7 @@ public class EmailOTPTestCase extends ISIntegrationTest {
     private static final String profileName = "default";
     private static final String TENANT_DOMAIN_PARAM = "tenantDomain";
 
-    private HttpClient httpClient;
+    private CloseableHttpClient httpClient;
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
@@ -150,7 +151,7 @@ public class EmailOTPTestCase extends ISIntegrationTest {
         ssoConfigServiceClient = null;
         identityProviderMgtServiceClient = null;
         remoteUSMServiceClient = null;
-        httpClient = null;
+        httpClient.close();
     }
 
     @Test(description = "Testing Email OTP authentication with a SAML SP", groups = "wso2.is", priority = 1)

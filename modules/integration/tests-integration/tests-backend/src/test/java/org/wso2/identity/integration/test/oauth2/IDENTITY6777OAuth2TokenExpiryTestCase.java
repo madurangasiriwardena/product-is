@@ -17,10 +17,10 @@ package org.wso2.identity.integration.test.oauth2;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
@@ -53,7 +53,6 @@ public class IDENTITY6777OAuth2TokenExpiryTestCase extends OAuth2ServiceAbstract
     private String consumerKey;
     private String consumerSecret;
 
-    private DefaultHttpClient client;
 
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
 
@@ -69,7 +68,6 @@ public class IDENTITY6777OAuth2TokenExpiryTestCase extends OAuth2ServiceAbstract
 
         adminUsername = userInfo.getUserName();
         adminPassword = userInfo.getPassword();
-        client = new DefaultHttpClient();
         setSystemproperties();
     }
 
@@ -192,22 +190,23 @@ public class IDENTITY6777OAuth2TokenExpiryTestCase extends OAuth2ServiceAbstract
      */
     public JSONObject requestAccessTokenUsingResourceOwnerGrant() throws Exception {
         ArrayList<NameValuePair> postParameters;
-        HttpClient client = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost(TOKEN_API_ENDPOINT);
-        //generate post request
-        httpPost.setHeader("Authorization", "Basic " + getBase64EncodedString(consumerKey, consumerSecret));
-        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
-        postParameters = new ArrayList<NameValuePair>();
-        postParameters.add(new BasicNameValuePair("username", adminUsername));
-        postParameters.add(new BasicNameValuePair("password", adminPassword));
-        postParameters.add(new BasicNameValuePair("scope", "RO"));
-        postParameters.add(new BasicNameValuePair("grant_type", GRANT_TYPE_PASSWORD));
-        httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
-        HttpResponse response = client.execute(httpPost);
-        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-        //Get access token from the response
-        JSONParser parser = new JSONParser();
-        return (JSONObject) parser.parse(responseString);
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            HttpPost httpPost = new HttpPost(TOKEN_API_ENDPOINT);
+            //generate post request
+            httpPost.setHeader("Authorization", "Basic " + getBase64EncodedString(consumerKey, consumerSecret));
+            httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+            postParameters = new ArrayList<NameValuePair>();
+            postParameters.add(new BasicNameValuePair("username", adminUsername));
+            postParameters.add(new BasicNameValuePair("password", adminPassword));
+            postParameters.add(new BasicNameValuePair("scope", "RO"));
+            postParameters.add(new BasicNameValuePair("grant_type", GRANT_TYPE_PASSWORD));
+            httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
+            HttpResponse response = client.execute(httpPost);
+            String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+            //Get access token from the response
+            JSONParser parser = new JSONParser();
+            return (JSONObject) parser.parse(responseString);
+        }
     }
 
     /**
@@ -218,21 +217,22 @@ public class IDENTITY6777OAuth2TokenExpiryTestCase extends OAuth2ServiceAbstract
      */
     public String requestAccessTokenUsingClientCredentialsGrant() throws Exception {
         ArrayList<NameValuePair> postParameters;
-        HttpClient client = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost(TOKEN_API_ENDPOINT);
-        //generate post request
-        httpPost.setHeader("Authorization", "Basic " + getBase64EncodedString(consumerKey, consumerSecret));
-        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
-        postParameters = new ArrayList<NameValuePair>();
-        postParameters.add(new BasicNameValuePair("scope", "CC"));
-        postParameters.add(new BasicNameValuePair("grant_type", GRANT_TYPE_CLIENT_CREDENTIALS));
-        httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
-        HttpResponse response = client.execute(httpPost);
-        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-        //Get access token from the response
-        JSONParser parser = new JSONParser();
-        JSONObject token = (JSONObject) parser.parse(responseString);
-        return token.get("access_token").toString();
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            HttpPost httpPost = new HttpPost(TOKEN_API_ENDPOINT);
+            //generate post request
+            httpPost.setHeader("Authorization", "Basic " + getBase64EncodedString(consumerKey, consumerSecret));
+            httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+            postParameters = new ArrayList<NameValuePair>();
+            postParameters.add(new BasicNameValuePair("scope", "CC"));
+            postParameters.add(new BasicNameValuePair("grant_type", GRANT_TYPE_CLIENT_CREDENTIALS));
+            httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
+            HttpResponse response = client.execute(httpPost);
+            String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+            //Get access token from the response
+            JSONParser parser = new JSONParser();
+            JSONObject token = (JSONObject) parser.parse(responseString);
+            return token.get("access_token").toString();
+        }
     }
 
     /**

@@ -18,10 +18,10 @@
 package org.wso2.identity.integration.test.oauth2;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -101,15 +101,16 @@ public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbs
     public void revokeAccessToken(String consumerKey, String consumerSecret,
                                   String accessToken, String backendUrl) throws Exception {
         ArrayList<NameValuePair> postParameters;
-        HttpClient client = new DefaultHttpClient();
-        HttpPost httpRevoke = new HttpPost(backendUrl);
-        //Generate revoke token post request
-        httpRevoke.setHeader("Authorization", "Basic " + getBase64EncodedString(consumerKey, consumerSecret));
-        httpRevoke.setHeader("Content-Type", "application/x-www-form-urlencoded");
-        postParameters = new ArrayList<NameValuePair>();
-        postParameters.add(new BasicNameValuePair("token", accessToken));
-        httpRevoke.setEntity(new UrlEncodedFormEntity(postParameters));
-        client.execute(httpRevoke);
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            HttpPost httpRevoke = new HttpPost(backendUrl);
+            //Generate revoke token post request
+            httpRevoke.setHeader("Authorization", "Basic " + getBase64EncodedString(consumerKey, consumerSecret));
+            httpRevoke.setHeader("Content-Type", "application/x-www-form-urlencoded");
+            postParameters = new ArrayList<NameValuePair>();
+            postParameters.add(new BasicNameValuePair("token", accessToken));
+            httpRevoke.setEntity(new UrlEncodedFormEntity(postParameters));
+            client.execute(httpRevoke);
+        }
     }
 
     /**

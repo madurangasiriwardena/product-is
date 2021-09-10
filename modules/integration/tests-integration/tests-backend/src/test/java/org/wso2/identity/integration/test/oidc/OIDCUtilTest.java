@@ -16,17 +16,11 @@
 
 package org.wso2.identity.integration.test.oidc;
 
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
-import org.testng.Assert;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.oidc.bean.OIDCUser;
-import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -44,7 +38,6 @@ import static org.wso2.identity.integration.test.oidc.OIDCAbstractIntegrationTes
 public class OIDCUtilTest {
 
     protected static OIDCUser user;
-    protected HttpClient client;
     protected static Map<String, OIDCApplication> applications = new HashMap<>(2);
     public static final String username = "oidcsessiontestuser";
     public static final String password = "oidcsessiontestuser";

@@ -21,6 +21,7 @@ package org.wso2.identity.integration.test.oauth2;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,23 +48,24 @@ public class Oauth2JWKSEndpointTestCase {
 
     private void getPublicKeySet(String jwksEndpoint) throws IOException, JSONException {
 
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpResponse httpResponse = sendGetRequest(client, jwksEndpoint);
-        String content = DataExtractUtil.getContentData(httpResponse);
-        Assert.assertNotNull(content, "Response content is not received");
-        JSONObject publicKeySet = new JSONObject(content);
-        Assert.assertNotNull(publicKeySet.getJSONArray("keys").getJSONObject(0).getString("kty"),
-                "The public key type can not be null");
-        Assert.assertNotNull(publicKeySet.getJSONArray("keys").getJSONObject(0).getString("e"),
-                "The exponent value of the public key can not be null");
-        Assert.assertNotNull(publicKeySet.getJSONArray("keys").getJSONObject(0).getString("use"),
-                "Usage of the key can not be null");
-        Assert.assertNotNull(publicKeySet.getJSONArray("keys").getJSONObject(0).getString("kid"),
-                "The thumbprint of the certificate can not be null");
-        Assert.assertNotNull(publicKeySet.getJSONArray("keys").getJSONObject(0).getString("alg"),
-                "The algorithm can not be null");
-        Assert.assertNotNull(publicKeySet.getJSONArray("keys").getJSONObject(0).getString("n"),
-                "The modulus value of the public key can not be null");
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            HttpResponse httpResponse = sendGetRequest(client, jwksEndpoint);
+            String content = DataExtractUtil.getContentData(httpResponse);
+            Assert.assertNotNull(content, "Response content is not received");
+            JSONObject publicKeySet = new JSONObject(content);
+            Assert.assertNotNull(publicKeySet.getJSONArray("keys").getJSONObject(0).getString("kty"),
+                    "The public key type can not be null");
+            Assert.assertNotNull(publicKeySet.getJSONArray("keys").getJSONObject(0).getString("e"),
+                    "The exponent value of the public key can not be null");
+            Assert.assertNotNull(publicKeySet.getJSONArray("keys").getJSONObject(0).getString("use"),
+                    "Usage of the key can not be null");
+            Assert.assertNotNull(publicKeySet.getJSONArray("keys").getJSONObject(0).getString("kid"),
+                    "The thumbprint of the certificate can not be null");
+            Assert.assertNotNull(publicKeySet.getJSONArray("keys").getJSONObject(0).getString("alg"),
+                    "The algorithm can not be null");
+            Assert.assertNotNull(publicKeySet.getJSONArray("keys").getJSONObject(0).getString("n"),
+                    "The modulus value of the public key can not be null");
+        }
     }
 
     private HttpResponse sendGetRequest(HttpClient client, String jwksEndpoint) throws IOException {

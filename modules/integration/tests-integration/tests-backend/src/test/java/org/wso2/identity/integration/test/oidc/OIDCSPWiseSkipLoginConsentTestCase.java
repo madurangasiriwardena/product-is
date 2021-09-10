@@ -18,15 +18,12 @@ package org.wso2.identity.integration.test.oidc;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -34,11 +31,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.xsd.LocalAndOutboundAuthenticationConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
-import org.wso2.identity.integration.test.util.Utils;
-import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,7 +40,7 @@ import java.util.Map;
 public class OIDCSPWiseSkipLoginConsentTestCase extends OIDCAbstractIntegrationTest {
 
     protected Log log = LogFactory.getLog(getClass());
-    protected HttpClient client;
+    protected CloseableHttpClient client;
     private CookieStore cookieStore = new BasicCookieStore();
     protected String sessionDataKey;
     protected String sessionDataKeyConsent;
@@ -69,6 +62,7 @@ public class OIDCSPWiseSkipLoginConsentTestCase extends OIDCAbstractIntegrationT
 
         deleteObjects();
         clear();
+        client.close();
     }
 
     private void deleteObjects() throws Exception {

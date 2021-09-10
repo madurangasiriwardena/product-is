@@ -27,8 +27,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
@@ -279,7 +280,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return response;
 	}
 
-	public HttpResponse sendConsentGetRequest(DefaultHttpClient client, String locationURL, CookieStore cookieStore,
+	public HttpResponse sendConsentGetRequest(HttpClient client, String locationURL, CookieStore cookieStore,
 											  List<NameValuePair> consentRequiredClaimsFromResponse) throws Exception {
 
 		HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create().disableRedirectHandling()
@@ -291,7 +292,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
 		Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
 		HttpResponse httpResponse = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
-		client.setCookieStore(cookieStore);
+//		client.setCookieStore(cookieStore);
 		EntityUtils.consume(response.getEntity());
 		return httpResponse;
 	}
@@ -460,28 +461,30 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
     public String requestAccessToken(String consumerKey, String consumerSecret,
                                      String backendUrl, String username, String password) throws Exception {
         List<NameValuePair> postParameters;
-        HttpClient client = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost(backendUrl);
-        //generate post request
-        httpPost.setHeader("Authorization", "Basic " + getBase64EncodedString(consumerKey, consumerSecret));
-        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
-        postParameters = new ArrayList<NameValuePair>();
-        postParameters.add(new BasicNameValuePair("username", username));
-        postParameters.add(new BasicNameValuePair("password", password));
-        postParameters.add(new BasicNameValuePair("scope", SCOPE_PRODUCTION));
-        postParameters.add(new BasicNameValuePair("grant_type", GRANT_TYPE_PASSWORD));
-        httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
-        HttpResponse response = client.execute(httpPost);
-        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-        EntityUtils.consume(response.getEntity());
-        //Get access token from the response
-        JSONParser parser = new JSONParser();
-        JSONObject json = (JSONObject) parser.parse(responseString);
-        Object accessToken = json.get("access_token");
-        if (accessToken == null) {
-            throw new Exception("Error occurred while requesting access token. Access token not found in json response");
-        }
-        return accessToken.toString();
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+			HttpPost httpPost = new HttpPost(backendUrl);
+			//generate post request
+			httpPost.setHeader("Authorization", "Basic " + getBase64EncodedString(consumerKey, consumerSecret));
+			httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+			postParameters = new ArrayList<NameValuePair>();
+			postParameters.add(new BasicNameValuePair("username", username));
+			postParameters.add(new BasicNameValuePair("password", password));
+			postParameters.add(new BasicNameValuePair("scope", SCOPE_PRODUCTION));
+			postParameters.add(new BasicNameValuePair("grant_type", GRANT_TYPE_PASSWORD));
+			httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
+			HttpResponse response = client.execute(httpPost);
+			String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+			EntityUtils.consume(response.getEntity());
+			//Get access token from the response
+			JSONParser parser = new JSONParser();
+			JSONObject json = (JSONObject) parser.parse(responseString);
+			Object accessToken = json.get("access_token");
+			if (accessToken == null) {
+				throw new Exception(
+						"Error occurred while requesting access token. Access token not found in json response");
+			}
+			return accessToken.toString();
+		}
     }
 
     /**

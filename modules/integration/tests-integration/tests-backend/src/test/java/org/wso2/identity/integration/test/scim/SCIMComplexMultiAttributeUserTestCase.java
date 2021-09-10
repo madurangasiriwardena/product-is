@@ -29,6 +29,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -75,6 +76,11 @@ public class SCIMComplexMultiAttributeUserTestCase extends ISIntegrationTest {
     public void testInit() throws Exception {
         super.init();
         client = HttpClients.createDefault();
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void testTearDown() throws Exception {
+        client.close();
     }
 
     private String userId;

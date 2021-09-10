@@ -20,7 +20,8 @@ package org.wso2.identity.integration.test.oauth2;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -49,7 +50,7 @@ public class Oauth2OPIframeTestCase extends OAuth2ServiceAbstractIntegrationTest
             "https://localhost:9853/oidc/checksession?client_id=%s&redirect_uri=http" +
                     "://localhost:8888/playground2/oauth2client";
     private AuthenticatorClient logManger;
-    private DefaultHttpClient client;
+    private CloseableHttpClient client;
     private final String username;
     private final String userPassword;
     private final AutomationContext context;
@@ -63,7 +64,7 @@ public class Oauth2OPIframeTestCase extends OAuth2ServiceAbstractIntegrationTest
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+        return new Object[][] {{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
     }
 
     @Factory(dataProvider = "configProvider")
@@ -89,7 +90,7 @@ public class Oauth2OPIframeTestCase extends OAuth2ServiceAbstractIntegrationTest
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
 
         setSystemproperties();
-        client = new DefaultHttpClient();
+        client = HttpClients.createDefault();
     }
 
     @AfterClass(alwaysRun = true)
@@ -100,6 +101,7 @@ public class Oauth2OPIframeTestCase extends OAuth2ServiceAbstractIntegrationTest
 
         logManger = null;
         consumerKey = null;
+        client.close();
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")

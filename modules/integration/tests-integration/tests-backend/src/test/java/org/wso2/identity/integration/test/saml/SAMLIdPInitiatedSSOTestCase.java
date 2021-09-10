@@ -23,10 +23,10 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.testng.Assert;
@@ -58,7 +58,7 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
             = "https://localhost:%s/samlsso?tenantDomain=wso2.com&spEntityID=%s";
     private static final String SAML_SSO_URL = "https://localhost:%s/samlsso";
     private static final String SP_ACS_URL = "http://localhost:8490/%s/home.jsp";
-    private HttpClient httpClient;
+    private CloseableHttpClient httpClient;
     private CookieStore cookieStore = new BasicCookieStore();
     private SAMLConfig samlConfig;
 
@@ -99,6 +99,7 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
         super.ssoConfigServiceClient.removeServiceProvider(samlConfig.getApp().getArtifact());
         super.deleteApplication(samlConfig.getApp().getArtifact());
         super.testClear();
+        httpClient.close();
     }
 
     @Test(groups = "wso2.is", description = "This test method will test the IdP initiated SAML SSO process.")

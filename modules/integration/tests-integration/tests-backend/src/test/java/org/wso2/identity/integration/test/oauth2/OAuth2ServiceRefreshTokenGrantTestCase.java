@@ -20,7 +20,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
@@ -45,7 +46,7 @@ public class OAuth2ServiceRefreshTokenGrantTestCase extends OAuth2ServiceAbstrac
     private String consumerKey;
     private String consumerSecret;
 
-    private DefaultHttpClient client;
+    private CloseableHttpClient client;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -58,7 +59,7 @@ public class OAuth2ServiceRefreshTokenGrantTestCase extends OAuth2ServiceAbstrac
                 isServer.getInstance().getHosts().get("default"));
 
         setSystemproperties();
-        client = new DefaultHttpClient();
+        client = HttpClients.createDefault();
     }
 
     @AfterClass(alwaysRun = true)
@@ -69,6 +70,7 @@ public class OAuth2ServiceRefreshTokenGrantTestCase extends OAuth2ServiceAbstrac
         logManger = null;
         consumerKey = null;
         refreshToken = null;
+        client.close();
     }
 
     @Test(alwaysRun = true, description = "Check Oauth2 application registration")

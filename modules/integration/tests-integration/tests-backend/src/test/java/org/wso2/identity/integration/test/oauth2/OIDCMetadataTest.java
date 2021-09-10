@@ -21,6 +21,7 @@ package org.wso2.identity.integration.test.oauth2;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -74,47 +75,48 @@ public class OIDCMetadataTest extends ISIntegrationTest {
 
     private void testResponseContent(String oidcMetadataEndpoint) throws IOException, JSONException {
 
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpResponse httpResponse = sendGetRequest(client, oidcMetadataEndpoint);
-        String content = DataExtractUtil.getContentData(httpResponse);
-        Assert.assertNotNull(content, "Response content is not received");
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            HttpResponse httpResponse = sendGetRequest(client, oidcMetadataEndpoint);
+            String content = DataExtractUtil.getContentData(httpResponse);
+            Assert.assertNotNull(content, "Response content is not received");
 
-        JSONObject oidcMetadataEndpoints = new JSONObject(content);
-        Assert.assertEquals(oidcMetadataEndpoints.getString("check_session_iframe"),
-                CHECK_SESSION_IFRAME, "Incorrect session iframe");
-        Assert.assertEquals(oidcMetadataEndpoints.getString("issuer"),
-                ISSUER, "Incorrect issuer");
-        Assert.assertEquals(oidcMetadataEndpoints.getString("authorization_endpoint"),
-                AUTHORIZATION_ENDPOINT, "Incorrect authorization endpoint");
-        Assert.assertEquals(oidcMetadataEndpoints.getString("token_endpoint"),
-                TOKEN_ENDPOINT, "Incorrect token_endpoint");
-        Assert.assertEquals(oidcMetadataEndpoints.getString("end_session_endpoint"),
-                END_SESSION_ENDPOINT, "Incorrect end session endpoint");
-        Assert.assertEquals(oidcMetadataEndpoints.getString("revocation_endpoint"),
-                REVOCATION_ENDPOINT, "Incorrect revocation endpoint");
-        Assert.assertEquals(oidcMetadataEndpoints.getString("userinfo_endpoint"),
-                USERINFO_ENDPOINT, "Incorrect userinfo endpoint");
+            JSONObject oidcMetadataEndpoints = new JSONObject(content);
+            Assert.assertEquals(oidcMetadataEndpoints.getString("check_session_iframe"),
+                    CHECK_SESSION_IFRAME, "Incorrect session iframe");
+            Assert.assertEquals(oidcMetadataEndpoints.getString("issuer"),
+                    ISSUER, "Incorrect issuer");
+            Assert.assertEquals(oidcMetadataEndpoints.getString("authorization_endpoint"),
+                    AUTHORIZATION_ENDPOINT, "Incorrect authorization endpoint");
+            Assert.assertEquals(oidcMetadataEndpoints.getString("token_endpoint"),
+                    TOKEN_ENDPOINT, "Incorrect token_endpoint");
+            Assert.assertEquals(oidcMetadataEndpoints.getString("end_session_endpoint"),
+                    END_SESSION_ENDPOINT, "Incorrect end session endpoint");
+            Assert.assertEquals(oidcMetadataEndpoints.getString("revocation_endpoint"),
+                    REVOCATION_ENDPOINT, "Incorrect revocation endpoint");
+            Assert.assertEquals(oidcMetadataEndpoints.getString("userinfo_endpoint"),
+                    USERINFO_ENDPOINT, "Incorrect userinfo endpoint");
 
-        if (oidcMetadataEndpoint.equals(TOKEN_ENDPOINT_SUPER_TENANT) ||
-                oidcMetadataEndpoint.equals(OIDCDISCOVERY_ENDPOINT_SUPER_TENANT) ||
-                oidcMetadataEndpoint.equals(TOKEN_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM) ||
-                oidcMetadataEndpoint.equals(OIDCDISCOVERY_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM)) {
-            Assert.assertEquals(oidcMetadataEndpoints.getString("jwks_uri"),
-                    JKWS_URI_SUPER_TENANT, "Incorrect jwks uri");
-            Assert.assertEquals(oidcMetadataEndpoints.getString("registration_endpoint"),
-                    REGISTRATION_ENDPOINT_SUPER_TENANT, "Incorrect registration endpoint");
-            Assert.assertEquals(oidcMetadataEndpoints.getString("introspection_endpoint"),
-                    INTROSPECTION_ENDPOINT_SUPER_TENANT, "Incorrect introspection endpoint");
-        }
+            if (oidcMetadataEndpoint.equals(TOKEN_ENDPOINT_SUPER_TENANT) ||
+                    oidcMetadataEndpoint.equals(OIDCDISCOVERY_ENDPOINT_SUPER_TENANT) ||
+                    oidcMetadataEndpoint.equals(TOKEN_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM) ||
+                    oidcMetadataEndpoint.equals(OIDCDISCOVERY_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM)) {
+                Assert.assertEquals(oidcMetadataEndpoints.getString("jwks_uri"),
+                        JKWS_URI_SUPER_TENANT, "Incorrect jwks uri");
+                Assert.assertEquals(oidcMetadataEndpoints.getString("registration_endpoint"),
+                        REGISTRATION_ENDPOINT_SUPER_TENANT, "Incorrect registration endpoint");
+                Assert.assertEquals(oidcMetadataEndpoints.getString("introspection_endpoint"),
+                        INTROSPECTION_ENDPOINT_SUPER_TENANT, "Incorrect introspection endpoint");
+            }
 
-        if (oidcMetadataEndpoint.equals(TOKEN_ENDPOINT_TENANT) ||
-                oidcMetadataEndpoint.equals(OIDCDISCOVERY_ENDPOINT_TENANT)) {
-            Assert.assertEquals(oidcMetadataEndpoints.getString("jwks_uri"),
-                    JKWS_URI_TENANT, "Incorrect jwks uri");
-            Assert.assertEquals(oidcMetadataEndpoints.getString("registration_endpoint"),
-                    REGISTRATION_ENDPOINT_TENANT, "Incorrect registration endpoint");
-            Assert.assertEquals(oidcMetadataEndpoints.getString("introspection_endpoint"),
-                    INTROSPECTION_ENDPOINT_TENANT, "Incorrect introspection endpoint");
+            if (oidcMetadataEndpoint.equals(TOKEN_ENDPOINT_TENANT) ||
+                    oidcMetadataEndpoint.equals(OIDCDISCOVERY_ENDPOINT_TENANT)) {
+                Assert.assertEquals(oidcMetadataEndpoints.getString("jwks_uri"),
+                        JKWS_URI_TENANT, "Incorrect jwks uri");
+                Assert.assertEquals(oidcMetadataEndpoints.getString("registration_endpoint"),
+                        REGISTRATION_ENDPOINT_TENANT, "Incorrect registration endpoint");
+                Assert.assertEquals(oidcMetadataEndpoints.getString("introspection_endpoint"),
+                        INTROSPECTION_ENDPOINT_TENANT, "Incorrect introspection endpoint");
+            }
         }
     }
 

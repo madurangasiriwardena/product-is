@@ -26,6 +26,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -64,7 +65,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
     CookieStore cookieStore = new BasicCookieStore();
 
-    protected HttpClient client;
+    protected CloseableHttpClient client;
     protected List<NameValuePair> consentParameters = new ArrayList<>();
 
     @BeforeClass(alwaysRun = true)
@@ -79,7 +80,6 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         createApplications();
 
         client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
-
     }
 
     @AfterClass(alwaysRun = true)
@@ -88,7 +88,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         deleteUser(user);
         deleteApplications();
         clear();
-
+        client.close();
     }
 
     @Test(groups = "wso2.is", description = "Test authz endpoint before creating a valid session")

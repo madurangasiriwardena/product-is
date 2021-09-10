@@ -184,9 +184,7 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
     public void testSAMLRedirectBindingDynamicWithInboundQueryParam() throws Exception {
 
         HttpGet request = new HttpGet(TRAVELOCITY_SAMPLE_APP_URL + "/samlsso?SAML2.HTTPBinding=HTTP-Redirect");
-        CloseableHttpClient client = null;
-        try {
-            client = HttpClientBuilder.create().disableRedirectHandling().build();
+        try (CloseableHttpClient client = HttpClientBuilder.create().disableRedirectHandling().build()) {
             // Do a redirect to travelocity app.
             HttpResponse response = client.execute(request);
             EntityUtils.consume(response.getEntity());
@@ -212,10 +210,6 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
                 }
             }
             Assert.assertTrue(isDynamicQueryParamReplaced);
-        } finally {
-            if (client != null) {
-                client.close();
-            }
         }
     }
 
@@ -224,9 +218,7 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
     public void testSAMLRedirectBindingDynamicWithoutInboundQueryParam() throws Exception {
 
         HttpGet request = new HttpGet(TRAVELOCITY_SAMPLE_APP_URL + "/samlsso?SAML2.HTTPBinding=HTTP-Redirect");
-        CloseableHttpClient client = null;
-        try {
-            client = HttpClientBuilder.create().disableRedirectHandling().build();
+        try (CloseableHttpClient client = HttpClientBuilder.create().disableRedirectHandling().build()) {
             // Do a redirect to travelocity app.
             HttpResponse response = client.execute(request);
             EntityUtils.consume(response.getEntity());
@@ -253,10 +245,6 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
             }
 
             Assert.assertTrue(isDynamicQuerySentInFedAuthRequestEmpty);
-        } finally {
-            if (client != null) {
-                client.close();
-            }
         }
     }
 

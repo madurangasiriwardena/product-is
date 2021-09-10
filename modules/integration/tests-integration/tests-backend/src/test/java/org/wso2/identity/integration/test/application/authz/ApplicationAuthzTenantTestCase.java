@@ -123,7 +123,8 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;
         remoteUSMServiceClient = null;
-        httpClientAzUser = null;
+        httpClientAzUser.close();
+        httpClientNonAzUser.close();
     }
 
     @Test(alwaysRun = true, description = "Test authorized tenant user login by evaluating the policy", groups = "wso2.is")

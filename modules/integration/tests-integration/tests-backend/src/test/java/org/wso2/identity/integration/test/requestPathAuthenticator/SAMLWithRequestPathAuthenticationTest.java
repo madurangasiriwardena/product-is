@@ -26,8 +26,8 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -216,7 +216,12 @@ public class SAMLWithRequestPathAuthenticationTest extends ISIntegrationTest {
                 secToken = tokens[5];
             }
         }
-        client = new DefaultHttpClient();
+        try {
+            client.close();
+        } catch (IOException e) {
+            log.error("Error while closing the http client", e);
+        }
+        client = HttpClients.createDefault();
         EntityUtils.consume(response.getEntity());
         request = new HttpPost(isURL + "samlsso");
         urlParameters = new ArrayList<>();
@@ -239,26 +244,28 @@ public class SAMLWithRequestPathAuthenticationTest extends ISIntegrationTest {
     public void testSMALRedirectBinding() throws Exception {
         HttpGet request = new HttpGet(TRAVELOCITY_SAMPLE_APP_URL + "/samlsso?SAML2.HTTPBinding=HTTP-Redirect");
 
-        CloseableHttpClient client = HttpClientBuilder.create().disableRedirectHandling().build();
-        // Do a redirect to travelocity app.
-        HttpResponse response = client.execute(request);
-        EntityUtils.consume(response.getEntity());
+        try (CloseableHttpClient client = HttpClientBuilder.create().disableRedirectHandling().build()) {
+            // Do a redirect to travelocity app.
+            HttpResponse response = client.execute(request);
+            EntityUtils.consume(response.getEntity());
 
-        // Modify the location header to included the secToken.
-        String location = Utils.getRedirectUrl(response) + "&" + "sectoken=" + getSecToken(adminUsername, adminPassword);
+            // Modify the location header to included the secToken.
+            String location =
+                    Utils.getRedirectUrl(response) + "&" + "sectoken=" + getSecToken(adminUsername, adminPassword);
 
-        // Do a GET manually to send the SAML Request to IS.
-        HttpGet requestToIS = new HttpGet(location);
-        HttpResponse samlResponseFromIS = client.execute(requestToIS);
-        String samlResponse = extractDataFromResponse(samlResponseFromIS, "SAMLResponse", 5);
-        EntityUtils.consume(samlResponseFromIS.getEntity());
+            // Do a GET manually to send the SAML Request to IS.
+            HttpGet requestToIS = new HttpGet(location);
+            HttpResponse samlResponseFromIS = client.execute(requestToIS);
+            String samlResponse = extractDataFromResponse(samlResponseFromIS, "SAMLResponse", 5);
+            EntityUtils.consume(samlResponseFromIS.getEntity());
 
-        // Send the SAMLResponse to ACS.
-        HttpResponse finalSAMLResponse = sendSAMLMessage(client, ACS_URL, samlResponse);
-        String resultPage = extractDataFromResponse(finalSAMLResponse);
+            // Send the SAMLResponse to ACS.
+            HttpResponse finalSAMLResponse = sendSAMLMessage(client, ACS_URL, samlResponse);
+            String resultPage = extractDataFromResponse(finalSAMLResponse);
 
-        Assert.assertTrue(resultPage.contains("You are logged in as " + adminUsername), "SAML SSO Login failed " +
-                "with BasicAuthRequestPath authentication failed.");
+            Assert.assertTrue(resultPage.contains("You are logged in as " + adminUsername), "SAML SSO Login failed " +
+                    "with BasicAuthRequestPath authentication failed.");
+        }
     }
 
     private String getSecToken(String username, String password) throws UnsupportedEncodingException {

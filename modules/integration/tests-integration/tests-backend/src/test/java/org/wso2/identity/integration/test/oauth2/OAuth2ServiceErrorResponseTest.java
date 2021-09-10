@@ -18,7 +18,8 @@ package org.wso2.identity.integration.test.oauth2;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -26,8 +27,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ import java.util.List;
 public class OAuth2ServiceErrorResponseTest extends OAuth2ServiceAbstractIntegrationTest {
 
     private AuthenticatorClient logManger;
-    private DefaultHttpClient client;
+    private CloseableHttpClient client;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -46,7 +47,7 @@ public class OAuth2ServiceErrorResponseTest extends OAuth2ServiceAbstractIntegra
                                               isServer.getInstance().getHosts().get("default"));
 
         setSystemproperties();
-        client = new DefaultHttpClient();
+        client = HttpClients.createDefault();
     }
 
     @AfterClass(alwaysRun = true)
@@ -54,6 +55,7 @@ public class OAuth2ServiceErrorResponseTest extends OAuth2ServiceAbstractIntegra
         removeOAuthApplicationData();
         logManger = null;
         consumerKey = null;
+        client.close();
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")

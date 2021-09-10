@@ -24,7 +24,8 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
@@ -37,9 +38,6 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.engine.context.beans.ContextUrls;
-import org.wso2.carbon.automation.engine.context.beans.Tenant;
-import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_OAuth2AccessToken;
@@ -79,7 +77,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     private String consumerKey;
     private String consumerSecret;
 
-    private DefaultHttpClient client;
+    private CloseableHttpClient client;
 
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
 
@@ -119,8 +117,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         adminClient = new OauthAdminClient(backendURL, sessionCookie);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
         oAuth2TokenValidationClient = new Oauth2TokenValidationClient(backendURL, sessionCookie);
-        client = new DefaultHttpClient();
-        client.setCookieStore(cookieStore);
+        client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
         setSystemproperties();
         remoteUSMServiceClient.addUser(USERNAME, PASSWORD, new String[]{"admin"},
                 getUserClaims(), "default", true);
@@ -134,6 +131,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         logManger = null;
         consumerKey = null;
         accessToken = null;
+        client.close();
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")

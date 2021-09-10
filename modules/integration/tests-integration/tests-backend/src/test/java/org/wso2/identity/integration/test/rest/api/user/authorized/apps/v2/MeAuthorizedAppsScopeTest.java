@@ -30,6 +30,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -79,8 +80,8 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
     private String sessionDataKeyConsent;
     private String sessionDataKey;
     private String authorizationCode;
-    private HttpClient httpClientForFirstSession;
-    private HttpClient httpClientForSecondSession;
+    private CloseableHttpClient httpClientForFirstSession;
+    private CloseableHttpClient httpClientForSecondSession;
 
     private String accessToken;
     private List<String> accessTokes = new ArrayList<>();
@@ -163,6 +164,8 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
         deleteApplication(clientIdApp1);
         deleteApplication(clientIdApp2);
         super.conclude();
+        httpClientForFirstSession.close();
+        httpClientForSecondSession.close();
     }
 
     @Test(groups = "wso2.is", description = "Test login using OpenId connect authorization code flow")

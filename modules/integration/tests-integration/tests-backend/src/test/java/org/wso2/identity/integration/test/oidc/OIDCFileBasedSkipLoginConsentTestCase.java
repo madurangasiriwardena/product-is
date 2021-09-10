@@ -22,6 +22,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.testng.annotations.AfterClass;
@@ -45,7 +46,7 @@ public class OIDCFileBasedSkipLoginConsentTestCase extends OIDCAbstractIntegrati
 
     private static final String SKIP_CONSENT_ENABLED_TOML = "skip_consent_enabled.toml";
     protected Log log = LogFactory.getLog(getClass());
-    protected HttpClient client;
+    protected CloseableHttpClient client;
     private CookieStore cookieStore = new BasicCookieStore();
     protected String sessionDataKey;
     protected String sessionDataKeyConsent;
@@ -69,6 +70,7 @@ public class OIDCFileBasedSkipLoginConsentTestCase extends OIDCAbstractIntegrati
 
         deleteObjects();
         clear();
+        client.close();
     }
 
     private void changeISConfiguration(String fileName) throws IOException,

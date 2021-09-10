@@ -135,7 +135,8 @@ public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;
         remoteUSMServiceClient = null;
-        httpClientAzUser = null;
+        httpClientAzUser.close();
+        httpClientNonAzUser.close();
     }
 
 

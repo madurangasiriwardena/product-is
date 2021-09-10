@@ -3,14 +3,11 @@ package org.wso2.identity.integration.test.sts;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -56,7 +53,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
     private static final String INBOUND_AUTH_TYPE = "samlsso";
     private static final int PORT_OFFSET_0 = 0;
     private static final int PORT_OFFSET_1 = 1;
-    private String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
+    private static final String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
     private static final String PASSIVESTS_REALM = "PassiveSTSSampleApp";
     private static final String PASSIVESTS_INBOUND_AUTH_TYPE = "passivests";
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
@@ -305,87 +302,6 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         }
 
         Assert.assertTrue(success, "Failed to update service provider with inbound SAML2 configs in secondary IS");
-    }
-
-    private String sendSAMLRequestToPrimaryIS(HttpClient client) throws Exception {
-
-        HttpGet request = new HttpGet(SAML_SSO_URL);
-        request.addHeader("User-Agent", USER_AGENT);
-        HttpResponse response = client.execute(request);
-
-        return extractValueFromResponse(response, "name=\"sessionDataKey\"", 1);
-    }
-
-    private String authenticateWithSecondaryIS(HttpClient client, String sessionId)
-            throws Exception {
-
-        HttpPost request = new HttpPost(String.format(COMMON_AUTH_URL, DEFAULT_PORT + PORT_OFFSET_1));
-        request.addHeader("User-Agent", USER_AGENT);
-        request.addHeader("Referer", PRIMARY_IS_SAML_ACS_URL);
-
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("username", "admin"));
-        urlParameters.add(new BasicNameValuePair("password", "admin"));
-        urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionId));
-        request.setEntity(new UrlEncodedFormEntity(urlParameters));
-
-        HttpResponse response = client.execute(request);
-        closeHttpConnection(response);
-        return getHeaderValue(response, "Location");
-    }
-
-    private Map<String, String> getSAMLResponseFromSecondaryIS(HttpClient client,
-                                                               String redirectURL)
-            throws Exception {
-
-        HttpPost request = new HttpPost(redirectURL);
-        request.addHeader("User-Agent", USER_AGENT);
-        request.addHeader("Referer", PRIMARY_IS_SAML_ACS_URL);
-        HttpResponse response = client.execute(request);
-
-        Map<String, Integer> searchParams = new HashMap<String, Integer>();
-        searchParams.put("SAMLResponse", 5);
-        searchParams.put("RelayState", 5);
-        return extractValuesFromResponse(response, searchParams);
-    }
-
-    private String sendSAMLResponseToPrimaryIS(HttpClient client, Map<String, String> searchResults)
-            throws Exception {
-
-        HttpPost request = new HttpPost(String.format(COMMON_AUTH_URL, DEFAULT_PORT + PORT_OFFSET_0));
-        request.setHeader("User-Agent", USER_AGENT);
-
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("SAMLResponse", searchResults.get("SAMLResponse")));
-        urlParameters.add(new BasicNameValuePair("RelayState", searchResults.get("RelayState")));
-        request.setEntity(new UrlEncodedFormEntity(urlParameters));
-
-        HttpResponse response = new DefaultHttpClient().execute(request);
-        closeHttpConnection(response);
-        return getHeaderValue(response, "Location");
-    }
-
-    private String getSAMLResponseFromPrimaryIS(HttpClient client, String redirectURL)
-            throws Exception {
-
-        HttpGet request = new HttpGet(redirectURL);
-        request.addHeader("User-Agent", USER_AGENT);
-        HttpResponse response = client.execute(request);
-
-        return extractValueFromResponse(response, "SAMLResponse", 5);
-    }
-
-    private boolean sendSAMLResponseToWebApp(HttpClient client, String samlResponse)
-            throws Exception {
-
-        HttpPost request = new HttpPost(PRIMARY_IS_SAML_ACS_URL);
-        request.setHeader("User-Agent", USER_AGENT);
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("SAMLResponse", samlResponse));
-        request.setEntity(new UrlEncodedFormEntity(urlParameters));
-        HttpResponse response = new DefaultHttpClient().execute(request);
-
-        return super.validateSAMLResponse(response, "admin");
     }
 
     private void updateServiceProviderWithSAMLConfigs(int portOffset, String issuerName,

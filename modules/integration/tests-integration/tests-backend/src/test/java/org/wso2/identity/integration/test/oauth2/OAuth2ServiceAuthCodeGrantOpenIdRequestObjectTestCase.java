@@ -24,7 +24,8 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
@@ -83,9 +84,9 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
     private String consumerKey;
     private String consumerSecret;
 
-    private DefaultHttpClient client;
+    private CloseableHttpClient client;
     private List<NameValuePair> consentParameters = new ArrayList<>();
-    private CookieStore cookieStore = new BasicCookieStore();
+    private CookieStore cookieStore;
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
     private static final String givenNameClaimURI = "http://wso2.org/claims/givenname";
     private static final String countryClaimURI = "http://wso2.org/claims/country";
@@ -115,12 +116,15 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
 
         super.init();
         changeISConfiguration();
+        cookieStore = new BasicCookieStore();
+        client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
     }
 
     @AfterTest(alwaysRun = true)
     public void restoreConfiguration() throws Exception {
 
         resetISConfiguration();
+        client.close();
     }
 
     @BeforeClass(alwaysRun = true)
@@ -134,8 +138,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
                 isServer.getSuperTenant().getTenantAdmin().getPassword(),
                 isServer.getInstance().getHosts().get("default"));
         oAuth2TokenValidationClient = new Oauth2TokenValidationClient(backendURL, sessionIndex);
-        client = new DefaultHttpClient();
-        client.setCookieStore(cookieStore);
         setSystemproperties();
         remoteUSMServiceClient.addUser(USERNAME, PASSWORD, new String[]{"admin"}, getUserClaims(), "default", true);
         claimMetadataManagementServiceClient = new ClaimMetadataManagementServiceClient(backendURL,

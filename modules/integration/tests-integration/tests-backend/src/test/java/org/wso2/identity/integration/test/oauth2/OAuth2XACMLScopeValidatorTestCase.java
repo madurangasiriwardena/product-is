@@ -103,7 +103,6 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
             "    </Rule>\n" +
             "    <Rule Effect=\"Deny\" RuleId=\"deny_others\"></Rule>\n" +
             "</Policy>";
-    private CloseableHttpClient client;
     private EntitlementPolicyServiceClient entitlementPolicyClient;
 
     @BeforeClass(alwaysRun = true)
@@ -185,9 +184,7 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
      */
     private boolean getTokenAndValidate(Scope scope) throws Exception {
 
-        client = HttpClientBuilder.create().disableRedirectHandling().build();
-
-        try {
+        try (CloseableHttpClient client = HttpClientBuilder.create().disableRedirectHandling().build()) {
             Secret password = new Secret(userInfo.getPassword());
             AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(userInfo.getUserName(),
                     password);
@@ -214,8 +211,6 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
             TokenIntrospectionResponse introspectionResponse = TokenIntrospectionResponse.parse(introspectionHTTPResp);
             Assert.assertNotNull(introspectionResponse, "Introspection response is null.");
             return introspectionResponse.indicatesSuccess();
-        } finally {
-            client.close();
         }
     }
 }

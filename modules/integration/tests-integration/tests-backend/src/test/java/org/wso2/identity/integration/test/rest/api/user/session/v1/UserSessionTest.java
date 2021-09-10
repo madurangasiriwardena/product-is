@@ -94,7 +94,6 @@ public class UserSessionTest extends RESTAPIUserTestBase {
     protected String session_test_user1;
     protected String session_test_user2;
     protected String TEST_USER_PASSWORD = "passWord1@";
-    protected CloseableHttpClient client;
     private String ADMIN_ROLE = "admin";
     private String DEFAULT_PROFILE = "default";
     protected UserManagementClient userMgtClient;
@@ -168,14 +167,14 @@ public class UserSessionTest extends RESTAPIUserTestBase {
 
     private void createSessionsForTesting() throws Exception {
 
-        client = HttpClientBuilder.create().build();
-        loginUserToApplication(client, ISSUER_TRAVELOCITY_COM, session_test_user1, TEST_USER_PASSWORD);
-        loginUserToApplication(client, ISSUER_AVIS_COM, session_test_user1, TEST_USER_PASSWORD);
-        client.close();
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            loginUserToApplication(client, ISSUER_TRAVELOCITY_COM, session_test_user1, TEST_USER_PASSWORD);
+            loginUserToApplication(client, ISSUER_AVIS_COM, session_test_user1, TEST_USER_PASSWORD);
+        }
 
-        client = HttpClientBuilder.create().build();
-        loginUserToApplication(client, ISSUER_TRAVELOCITY_COM, session_test_user1, TEST_USER_PASSWORD);
-        client.close();
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            loginUserToApplication(client, ISSUER_TRAVELOCITY_COM, session_test_user1, TEST_USER_PASSWORD);
+        }
     }
 
     private void loginUserToApplication(CloseableHttpClient client, String application, String username,

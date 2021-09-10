@@ -23,12 +23,12 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import org.json.simple.JSONArray;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -48,7 +48,6 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTest {
@@ -66,7 +65,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
     private String consumerKey;
     private String consumerSecret;
 
-    private DefaultHttpClient client;
+    private CloseableHttpClient client;
 
     private static final String FIRST_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
     private static final String LAST_NAME_CLAIM_URI = "http://wso2.org/claims/lastname";
@@ -80,7 +79,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
         super.init(TestUserMode.TENANT_USER);
 
         setSystemproperties();
-        client = new DefaultHttpClient();
+        client = HttpClients.createDefault();
 
         remoteUSMServiceClient.addRole(OAUTH_ROLE, null, null);
         remoteUSMServiceClient.addUser(USERNAME, PASSWORD, null, getUserClaims(), "default",
@@ -94,6 +93,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
         remoteUSMServiceClient.deleteRole(OAUTH_ROLE);
         remoteUSMServiceClient.deleteUser(USERNAME);
         consumerKey = null;
+        client.close();
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")

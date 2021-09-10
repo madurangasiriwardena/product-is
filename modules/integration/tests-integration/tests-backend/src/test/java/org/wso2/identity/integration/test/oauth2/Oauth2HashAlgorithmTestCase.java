@@ -18,7 +18,8 @@ package org.wso2.identity.integration.test.oauth2;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -55,7 +56,7 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
     private String authorizationCode;
     private String consumerKey;
     private String consumerSecret;
-    private DefaultHttpClient client;
+    private CloseableHttpClient client;
     private ServerConfigurationManager serverConfigurationManager;
 
     @BeforeClass(alwaysRun = true)
@@ -76,7 +77,7 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
         logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
                 isServer.getSuperTenant().getTenantAdmin().getPassword(),
                 isServer.getInstance().getHosts().get("default"));
-        client = new DefaultHttpClient();
+        client = HttpClients.createDefault();
 
         setSystemproperties();
         registerAndDeployApplication();
@@ -91,6 +92,7 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
         consumerKey = null;
         accessToken = null;
         serverConfigurationManager.restoreToLastConfiguration(false);
+        client.close();
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request")

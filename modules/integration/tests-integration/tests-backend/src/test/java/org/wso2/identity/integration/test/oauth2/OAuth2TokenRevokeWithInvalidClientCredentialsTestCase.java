@@ -20,10 +20,10 @@ package org.wso2.identity.integration.test.oauth2;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
@@ -73,28 +73,31 @@ public class OAuth2TokenRevokeWithInvalidClientCredentialsTestCase extends OAuth
 
         //Revoke access token
         ArrayList<NameValuePair> postParameters;
-        HttpClient client = new DefaultHttpClient();
-        HttpPost httpRevoke = new HttpPost(REVOKE_TOKEN_API_ENDPOINT);
-        //Generate revoke token post request
-        httpRevoke.setHeader("Authorization", "Basic " + getInvalidBase64EncodedString(clientKey, clientSecret));
-        httpRevoke.setHeader("Content-Type", "application/x-www-form-urlencoded");
-        postParameters = new ArrayList<NameValuePair>();
-        postParameters.add(new BasicNameValuePair("token", accessToken));
-        httpRevoke.setEntity(new UrlEncodedFormEntity(postParameters));
-        HttpResponse response = client.execute(httpRevoke);
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            HttpPost httpRevoke = new HttpPost(REVOKE_TOKEN_API_ENDPOINT);
+            //Generate revoke token post request
+            httpRevoke.setHeader("Authorization", "Basic " + getInvalidBase64EncodedString(clientKey, clientSecret));
+            httpRevoke.setHeader("Content-Type", "application/x-www-form-urlencoded");
+            postParameters = new ArrayList<>();
+            postParameters.add(new BasicNameValuePair("token", accessToken));
+            httpRevoke.setEntity(new UrlEncodedFormEntity(postParameters));
+            HttpResponse response = client.execute(httpRevoke);
 
-        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
-        Object obj = JSONValue.parse(rd);
+            Object obj = JSONValue.parse(rd);
 
-        Assert.assertNotNull(obj, "Returned error response should have produced a valid JSON.");
-        Assert.assertNotNull(((JSONObject) obj).get("error"), "Returned error response should have 'error' defined.");
+            Assert.assertNotNull(obj, "Returned error response should have produced a valid JSON.");
+            Assert.assertNotNull(((JSONObject) obj).get("error"),
+                    "Returned error response should have 'error' defined.");
 
-        String errorMessage = ((JSONObject) obj).get("error").toString();
-        EntityUtils.consume(response.getEntity());
-        Assert.assertEquals("invalid_client", errorMessage,
-                "Invalid format in sending client credentials, should have produced : " + OAuth2Constant.INVALID_CLIENT
-                        + "error code");
+            String errorMessage = ((JSONObject) obj).get("error").toString();
+            EntityUtils.consume(response.getEntity());
+            Assert.assertEquals("invalid_client", errorMessage,
+                    "Invalid format in sending client credentials, should have produced : " +
+                            OAuth2Constant.INVALID_CLIENT
+                            + "error code");
+        }
 
     }
 

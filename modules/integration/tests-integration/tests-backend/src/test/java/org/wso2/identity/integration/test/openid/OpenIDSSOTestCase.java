@@ -24,11 +24,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -70,7 +70,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
 
     private OpenIDUtils.OpenIDConfig config;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
-    private HttpClient client;
+    private CloseableHttpClient client;
     private File identityXML;
     private ServerConfigurationManager serverConfigurationManager;
 
@@ -102,6 +102,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         }
 
         remoteUSMServiceClient = null;
+        client.close();
     }
 
     @BeforeMethod
@@ -152,7 +153,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         HttpResponse response;
         String results;
 
-        client = new DefaultHttpClient();
+        client = HttpClients.createDefault();
 
         response = executePhaseBeforeApproval();
 
@@ -170,7 +171,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         }
 
         if (config.getUserConsent() == OpenIDUtils.UserConsent.APPROVE_ALWAYS){
-            client = new DefaultHttpClient();
+            client = HttpClients.createDefault();
 
             response = executePhaseBeforeApproval();
             results = extractDataFromResponse(response);

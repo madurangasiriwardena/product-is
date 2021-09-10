@@ -24,9 +24,8 @@ import com.nimbusds.jwt.PlainJWT;
 import com.nimbusds.jwt.SignedJWT;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -118,22 +117,25 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
             dependsOnMethods = "updateServiceProviderCert")
     public void sentAuthorizationGrantRequest() throws Exception {
 
-        HttpClient client = getRedirectDisabledClient();
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL));
-        // If the request is valid it will return a 302 to redirect to the login page.
-        assertForLoginPage(response);
-        EntityUtils.consume(response.getEntity());
+        try (CloseableHttpClient client = getRedirectDisabledClient()) {
+            HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL));
+            // If the request is valid it will return a 302 to redirect to the login page.
+            assertForLoginPage(response);
+            EntityUtils.consume(response.getEntity());
+        }
     }
 
     @Test(groups = "wso2.is", description = "Check Initial OAuth2 Authorize Request with unsigned request object",
             dependsOnMethods = "sentAuthorizationGrantRequest")
     public void sendAuthorizationGrantRequestWithPlainJWTRequestObject() throws Exception {
 
-        HttpClient client = getRedirectDisabledClient();
-        String unsignedRequestObject = buildPlainJWT(consumerKey);
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, unsignedRequestObject));
-        assertForLoginPage(response);
-        EntityUtils.consume(response.getEntity());
+        try (CloseableHttpClient client = getRedirectDisabledClient()) {
+            String unsignedRequestObject = buildPlainJWT(consumerKey);
+            HttpResponse response =
+                    sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, unsignedRequestObject));
+            assertForLoginPage(response);
+            EntityUtils.consume(response.getEntity());
+        }
     }
 
     @Test(groups = "wso2.is", description = "Check enabling option to enforce request object signature validation",
@@ -151,23 +153,27 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
             " a unsigned request object", dependsOnMethods = "testEnforceRequestObjectSignatureValidation")
     public void sendUnsuccessfulAuthorizationGrantRequestWithPlainJWTRequestObject() throws Exception {
 
-        HttpClient client = getRedirectDisabledClient();
-        String unsignedRequestObject = buildPlainJWT(consumerKey);
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, unsignedRequestObject));
-        // Since we have enforced request object validation we should be redirected to the error page.
-        assertForErrorPage(response);
-        EntityUtils.consume(response.getEntity());
+        try (CloseableHttpClient client = getRedirectDisabledClient()) {
+            String unsignedRequestObject = buildPlainJWT(consumerKey);
+            HttpResponse response =
+                    sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, unsignedRequestObject));
+            // Since we have enforced request object validation we should be redirected to the error page.
+            assertForErrorPage(response);
+            EntityUtils.consume(response.getEntity());
+        }
     }
 
     @Test(groups = "wso2.is", description = "Check request object signature validation by sending a valid signed" +
             " request object", dependsOnMethods = "sendUnsuccessfulAuthorizationGrantRequestWithPlainJWTRequestObject")
     public void sendSuccessfulAuthorizationGrantRequestWithSignedRequestObject() throws Exception {
 
-        HttpClient client = getRedirectDisabledClient();
-        String signedRequestObject = buildSignedJWT(consumerKey, sp1PrivateKey);
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, signedRequestObject));
-        assertForLoginPage(response);
-        EntityUtils.consume(response.getEntity());
+        try (CloseableHttpClient client = getRedirectDisabledClient()) {
+            String signedRequestObject = buildSignedJWT(consumerKey, sp1PrivateKey);
+            HttpResponse response =
+                    sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, signedRequestObject));
+            assertForLoginPage(response);
+            EntityUtils.consume(response.getEntity());
+        }
     }
 
     @Test(groups = "wso2.is", description = "Check request object signature validation by sending an invalid signed" +
@@ -175,11 +181,13 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
     public void sendUnSuccessfulAuthorizationGrantRequestWithSignedRequestObjectWithDifferentPrivateKey() throws
             Exception {
 
-        HttpClient client = getRedirectDisabledClient();
-        String signedRequestObject = buildSignedJWT(consumerKey, sp2PrivateKey);
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, signedRequestObject));
-        assertForErrorPage(response);
-        EntityUtils.consume(response.getEntity());
+        try (CloseableHttpClient client = getRedirectDisabledClient()) {
+            String signedRequestObject = buildSignedJWT(consumerKey, sp2PrivateKey);
+            HttpResponse response =
+                    sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, signedRequestObject));
+            assertForErrorPage(response);
+            EntityUtils.consume(response.getEntity());
+        }
     }
 
     private void assertForLoginPage(HttpResponse response) {
@@ -203,11 +211,9 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
         return location.getValue();
     }
 
-    private HttpClient getRedirectDisabledClient() {
+    private CloseableHttpClient getRedirectDisabledClient() {
 
-        HttpClient client = new DefaultHttpClient();
-        HttpClientParams.setRedirecting(client.getParams(), false);
-        return client;
+        return HttpClientBuilder.create().disableRedirectHandling().build();
     }
 
     private String getAuthzRequestUrl(String clientId, String callbackUrl, String requestObject) {

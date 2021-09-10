@@ -20,16 +20,17 @@ package org.wso2.identity.integration.test.oauth2.dcrm.api;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -45,14 +46,13 @@ import java.io.InputStreamReader;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 
 /**
  * OAuth2 DCRM API Create process test case
  */
 public class OAuthDCRMTestCase extends ISIntegrationTest {
     private static final String DUMMY_DCR_APP = "dummyDCRApp";
-    private HttpClient client;
+    private CloseableHttpClient client;
 
     private String client_id;
     private String username;
@@ -79,6 +79,11 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         super.init();
         client = HttpClients.createDefault();
 
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void testTearDown() throws Exception {
+        client.close();
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", priority = 1, description = "Create a service provider successfully")

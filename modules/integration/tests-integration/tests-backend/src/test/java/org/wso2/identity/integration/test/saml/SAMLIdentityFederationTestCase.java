@@ -26,7 +26,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.opensaml.xml.util.Base64;
@@ -70,17 +71,14 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
     private static final String SAML_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String SAML_SSO_URL = "http://localhost:8490/travelocity.com/samlsso?SAML2" +
                                                ".HTTPBinding=HTTP-Redirect";
-    private static final String SAML_SSO_LOGOUT_URL = "http://localhost:8490/travelocity"
-            + ".com/logout?SAML2.HTTPBinding=HTTP-Redirect";
 
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String AUTHENTICATION_TYPE = "federated";
     private static final String INBOUND_AUTH_TYPE = "samlsso";
-    private static final int TOMCAT_8490 = 8490;
     protected static final int PORT_OFFSET_0 = 0;
     protected static final int PORT_OFFSET_1 = 1;
     private static final String SAMLSSOAUTHENTICATOR = "SAMLSSOAuthenticator";
-    private String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
+    private static final String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
 
     private String usrName = "testFederatedUser";
     private String usrPwd = "testFederatePassword";
@@ -263,32 +261,36 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
 
     public void testSAMLToSAMLFederation() throws Exception {
 
-        HttpClient client = getNewHttpClientWithCookieStore();
+        try (CloseableHttpClient client = getNewHttpClientWithCookieStore()) {
 
-        String sessionId = sendSAMLRequestToPrimaryIS(client);
-        Assert.assertNotNull(sessionId, "Unable to acquire 'sessionDataKey' value");
+            String sessionId = sendSAMLRequestToPrimaryIS(client);
+            Assert.assertNotNull(sessionId, "Unable to acquire 'sessionDataKey' value");
 
-        String redirectURL = authenticateWithSecondaryIS(client, sessionId);
-        Assert.assertNotNull(redirectURL, "Unable to acquire redirect url after login to secondary IS");
+            String redirectURL = authenticateWithSecondaryIS(client, sessionId);
+            Assert.assertNotNull(redirectURL, "Unable to acquire redirect url after login to secondary IS");
 
-        Map<String, String> responseParameters = getSAMLResponseFromSecondaryIS(client, redirectURL);
-        Assert.assertNotNull(responseParameters.get("SAMLResponse"), "Unable to acquire 'SAMLResponse' value");
-        Assert.assertNotNull(responseParameters.get("RelayState"), "Unable to acquire 'RelayState' value");
+            Map<String, String> responseParameters = getSAMLResponseFromSecondaryIS(client, redirectURL);
+            Assert.assertNotNull(responseParameters.get("SAMLResponse"), "Unable to acquire 'SAMLResponse' value");
+            Assert.assertNotNull(responseParameters.get("RelayState"), "Unable to acquire 'RelayState' value");
 
-        redirectURL = sendSAMLResponseToPrimaryIS(client, responseParameters);
-        Assert.assertNotNull(redirectURL, "Unable to acquire redirect url after sending SAML response to primary IS");
+            redirectURL = sendSAMLResponseToPrimaryIS(client, responseParameters);
+            Assert.assertNotNull(redirectURL,
+                    "Unable to acquire redirect url after sending SAML response to primary IS");
 
-        String samlResponse = getSAMLResponseFromPrimaryIS(client, redirectURL);
-        Assert.assertNotNull(samlResponse, "Unable to acquire SAML response from primary IS");
+            String samlResponse = getSAMLResponseFromPrimaryIS(client, redirectURL);
+            Assert.assertNotNull(samlResponse, "Unable to acquire SAML response from primary IS");
 
-        String decodedSAMLResponse = new String(Base64.decode(samlResponse));
-        Assert.assertTrue(decodedSAMLResponse.contains("AuthnContextClassRef"), "AuthnContextClassRef is not received" +
-                ".");
-        Assert.assertTrue(decodedSAMLResponse.contains("AuthenticatingAuthority"), "AuthenticatingAuthority is not " +
-                "received.");
+            String decodedSAMLResponse = new String(Base64.decode(samlResponse));
+            Assert.assertTrue(decodedSAMLResponse.contains("AuthnContextClassRef"),
+                    "AuthnContextClassRef is not received" +
+                            ".");
+            Assert.assertTrue(decodedSAMLResponse.contains("AuthenticatingAuthority"),
+                    "AuthenticatingAuthority is not " +
+                            "received.");
 
-        boolean validResponse = sendSAMLResponseToWebApp(client, samlResponse);
-        Assert.assertTrue(validResponse, "Invalid SAML response received by travelocity app");
+            boolean validResponse = sendSAMLResponseToWebApp(samlResponse);
+            Assert.assertTrue(validResponse, "Invalid SAML response received by travelocity app");
+        }
     }
 
     private ClaimMapping[] getClaimMappings(){
@@ -426,7 +428,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         return extractValueFromResponse(response, "SAMLResponse", 5);
     }
 
-    private boolean sendSAMLResponseToWebApp(HttpClient client, String samlResponse)
+    private boolean sendSAMLResponseToWebApp(String samlResponse)
             throws Exception {
 
         HttpPost request = new HttpPost(PRIMARY_IS_SAML_ACS_URL);
@@ -434,9 +436,11 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("SAMLResponse", samlResponse));
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
-        HttpResponse response = new DefaultHttpClient().execute(request);
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            HttpResponse response = client.execute(request);
 
-        return validateSAMLResponse(response, usrName);
+            return validateSAMLResponse(response, usrName);
+        }
     }
 
 

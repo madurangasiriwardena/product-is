@@ -25,7 +25,8 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
@@ -56,8 +57,7 @@ public class OAuth2ServiceAuthCodeGrantCacheDisabledTestCase extends OAuth2Servi
 
     private ServerConfigurationManager serverConfigurationManager;
     private AuthenticatorClient logManger;
-    private DefaultHttpClient client;
-    private List<NameValuePair> consentParameters = new ArrayList<>();
+    private CloseableHttpClient client;
     private CookieStore cookieStore = new BasicCookieStore();
     private String accessToken;
     private String sessionDataKey;
@@ -86,8 +86,7 @@ public class OAuth2ServiceAuthCodeGrantCacheDisabledTestCase extends OAuth2Servi
         logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
                 isServer.getSuperTenant().getTenantAdmin().getPassword(),
                 isServer.getInstance().getHosts().get("default"));
-        client = new DefaultHttpClient();
-        client.setCookieStore(cookieStore);
+        client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
 
         setSystemproperties();
     }
@@ -108,6 +107,7 @@ public class OAuth2ServiceAuthCodeGrantCacheDisabledTestCase extends OAuth2Servi
         serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXML, identityXml, true);
         serverConfigurationManager.restartGracefully();
         serverConfigurationManager = null;
+        client.close();
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")

@@ -18,26 +18,26 @@
 
 package org.wso2.identity.integration.test.entitlement;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URLEncoder;
-
 import junit.framework.Assert;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URLEncoder;
+
 import javax.servlet.http.HttpServletResponse;
 
 public class EntitlementSecurityTestCase extends ISIntegrationTest {
-    private HttpClient httpClient;
+    private CloseableHttpClient httpClient;
     private String value;
     private String url;
 
@@ -53,7 +53,7 @@ public class EntitlementSecurityTestCase extends ISIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-        httpClient = null;
+        httpClient.close();
     }
 
     @Test(alwaysRun = true, description = "Test reflected XSS in XACML policy editor")

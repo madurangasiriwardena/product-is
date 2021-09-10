@@ -26,7 +26,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -53,11 +54,12 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
-import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.namespace.QName;
 
 
 public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
@@ -105,7 +107,7 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
     private String currentOTP = "";
 
     private UserProfileMgtServiceClient userProfileMgtClient;
-    private HttpClient httpClient;
+    private CloseableHttpClient httpClient;
     private RemoteUserStoreManagerServiceClient usmClient;
 
     private IdentityGovernanceServiceClient identityGovernanceServiceClient;
@@ -119,7 +121,7 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
         dashboardPortalURL = webAppUrlContext + DASHBOARD_PORTAL_URL;
         selectPasswordResetOption(ENABLE_ADMIN_PASSWORD_RESET_OFFLINE);
         setUpUser();
-        httpClient = new DefaultHttpClient();
+        httpClient = HttpClients.createDefault();
         usmClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
     }
 
@@ -127,6 +129,7 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
         cleanUpUser();
+        httpClient.close();
     }
 
     @Test(groups = "wso2.is.governance", description = "Check whether the OTP and AccountLock claims get updated")

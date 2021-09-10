@@ -78,6 +78,7 @@ public class SCIM2MeTestCase extends ISIntegrationTest {
         assertEquals(response.getStatusLine().getStatusCode(), 404, "User " +
                 "has not been deleted successfully");
         EntityUtils.consume(response.getEntity());
+        client.close();
     }
 
     private HttpResponse deleteUser(String userId) throws IOException {

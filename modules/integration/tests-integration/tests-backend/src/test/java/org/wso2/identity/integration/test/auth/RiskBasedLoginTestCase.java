@@ -25,8 +25,8 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -61,6 +61,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -79,9 +80,8 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private WebAppAdminClient webAppAdminClient;
     private CookieStore cookieStore = new BasicCookieStore();
-    private HttpClient client;
+    private CloseableHttpClient client;
     private HttpResponse response;
-    private List<NameValuePair> consentParameters = new ArrayList<>();
     private ServerConfigurationManager serverConfigurationManager;
     private IdentityProvider superTenantResidentIDP;
 
@@ -208,7 +208,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
 
         oauthAdminClient.removeOAuthApplicationData(consumerKey);
         applicationManagementServiceClient.deleteApplication(PRIMARY_IS_APPLICATION_NAME);
-        client.getConnectionManager().shutdown();
+        client.close();
 
         this.logManger.logOut();
         logManger = null;

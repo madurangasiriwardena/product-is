@@ -21,9 +21,8 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -91,7 +90,7 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     private IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
-    private HttpClient httpClient;
+    private CloseableHttpClient httpClient;
 
     private enum User {
         SUPER_TENANT_USER("samluser1", "samluser1", "carbon.super", "samluser1@wso2.com", "samlnickuser1",
@@ -266,12 +265,12 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;
         remoteUSMServiceClient = null;
-        httpClient = null;
+        httpClient.close();
         resetISConfiguration();
     }
 
-    @Test(description = "Test whether error code included in redirect URL with DefaultAuthenticator", groups = "wso2" +
-            ".is", priority = 1)
+    @Test(description = "Test whether error code included in redirect URL with DefaultAuthenticator",
+            groups = "wso2.is", priority = 1)
     public void testErrorCodeInRedirectUrl() throws Exception {
         try {
             HttpResponse response;

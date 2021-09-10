@@ -68,7 +68,6 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     private static final String INBOUND_AUTH_TYPE = "samlsso";
     private static final String SECONDARY_IS_SERVICE_PROVIDER_NAME = "primaryIS";
     private static final String SECONDARY_IS_SAML_ISSUER_NAME = "is-sp-saml";
-    private static final int TOMCAT_8490 = 8490;
     private static final int PORT_OFFSET_0 = 0;
     private static final int PORT_OFFSET_1 = 1;
     //Claim Uris
@@ -81,7 +80,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     private static final String password = "samlFederatedUserPassword1";
     private static final String email = "samlFederatedUser1@wso2.com";
     private static final String profileName = "default";
-    private static String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
+    private static final String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
     private ServerConfigurationManager serverConfigurationManager;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
 

@@ -25,11 +25,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -96,7 +96,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
     private String artifact = "travelocity.com-registrymount";
 
-    private HttpClient httpClient;
+    private CloseableHttpClient httpClient;
 
     private String resultPage;
 
@@ -123,7 +123,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
         ssoConfigServiceClient =
                 new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
 
-        httpClient = new DefaultHttpClient();
+        httpClient = HttpClients.createDefault();
 
         createApplication();
 
@@ -141,7 +141,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
         serverConfigurationManager.restoreToLastConfiguration(false);
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;
-        httpClient = null;
+        httpClient.close();
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is")

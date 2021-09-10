@@ -29,6 +29,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -68,8 +69,8 @@ public class OAuth2TokenRevocationWithMultipleSessionTerminationTestCase extends
     private String consumerSecret;
     private String sessionDataKeyConsent;
     private String sessionDataKey;
-    private  HttpClient httpClientForFirstSession;
-    private  HttpClient httpClientForSecondSession;
+    private CloseableHttpClient httpClientForFirstSession;
+    private CloseableHttpClient httpClientForSecondSession;
     private static final String SESSION_API_ENDPOINT = "https://localhost:9853/t/carbon.super/api/users/v1/me/sessions";
 
     @BeforeClass(alwaysRun = true)
@@ -86,6 +87,8 @@ public class OAuth2TokenRevocationWithMultipleSessionTerminationTestCase extends
     public void testConclude() throws Exception {
 
         deleteApplication();
+        httpClientForFirstSession.close();
+        httpClientForSecondSession.close();
     }
 
     @Test(groups = "wso2.is", description = "Create OAuth2 application")

@@ -23,6 +23,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.openqa.selenium.remote.internal.HttpClientFactory;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
@@ -202,47 +204,48 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
 
         // We have to check whether the service is up and running by calling the generated endpoint.
         String url = super.getBackendURL() + addUserWorkflowName + "Service";
-        HttpClient client = new HttpClientFactory().getHttpClient();
         HttpGet request = new HttpGet(url);
 
         boolean runLoop;
         int count = 1;
 
         do {
-            runLoop = false;
-            HttpResponse httpResponse = client.execute(request);
+            try (CloseableHttpClient client = HttpClients.createDefault()) {
+                runLoop = false;
+                HttpResponse httpResponse = client.execute(request);
 
-            // If the server response is 500 or it contains "service not available" text or "Operation not found" text,
-            // then we have to assume that the service is still not available. So we have to recheck after
-            // brief time period.
-            if (httpResponse.getStatusLine().getStatusCode() == 500) {
-                runLoop = true;
-            } else {
-                BufferedReader bufferedReader =
-                        new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    if (line.contains("The service cannot be found for the endpoint reference") ||
-                            line.contains("The endpoint reference (EPR) for the Operation not found")) {
-                        runLoop = true;
-                        break;
+                // If the server response is 500 or it contains "service not available" text or "Operation not found" text,
+                // then we have to assume that the service is still not available. So we have to recheck after
+                // brief time period.
+                if (httpResponse.getStatusLine().getStatusCode() == 500) {
+                    runLoop = true;
+                } else {
+                    BufferedReader bufferedReader =
+                            new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        if (line.contains("The service cannot be found for the endpoint reference") ||
+                                line.contains("The endpoint reference (EPR) for the Operation not found")) {
+                            runLoop = true;
+                            break;
+                        }
                     }
                 }
-            }
 
-            // Wait 20 times for 5 seconds intervals until the workflow is properly deployed. This is for server based
-            // test runners like Jenkins.
-            if (count < 20) {
-                log.info("Still no luck :(. So going to wait 5 seconds and try " + (20 - count) + " more time(s).");
-                Thread.sleep(5000);
-            }
+                // Wait 20 times for 5 seconds intervals until the workflow is properly deployed. This is for server based
+                // test runners like Jenkins.
+                if (count < 20) {
+                    log.info("Still no luck :(. So going to wait 5 seconds and try " + (20 - count) + " more time(s).");
+                    Thread.sleep(5000);
+                }
 
-            // Give up after 100 seconds or this will be a forever loop.
-            if (count >= 20) {
-                log.info("No luck. Going to give up. Test will most probably fail.");
-                runLoop = false;
+                // Give up after 100 seconds or this will be a forever loop.
+                if (count >= 20) {
+                    log.info("No luck. Going to give up. Test will most probably fail.");
+                    runLoop = false;
+                }
+                count++;
             }
-            count++;
         } while (runLoop);
     }
 

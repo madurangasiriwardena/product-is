@@ -106,6 +106,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
         appMgtClient.deleteApplication(SERVICE_PROVIDER_NAME);
+        client.close();
     }
 
     @Test(alwaysRun = true, description = "Add service provider")

@@ -260,6 +260,7 @@ public abstract class AbstractAnalyticsLoginTestCase extends ISIntegrationTest {
 
         deleteUser();
         deleteApplication();
+        sharedHttpClient.close();
     }
 
     public void testAddSP() throws Exception {

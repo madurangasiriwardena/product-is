@@ -21,10 +21,10 @@ package org.wso2.identity.integration.test.scim;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.apache.wink.client.Resource;
@@ -36,7 +36,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
@@ -228,24 +227,25 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
     private String requestAccessToken(String consumerKey, String consumerSecret, String oauth2Endpoint)
             throws Exception {
         ArrayList<NameValuePair> postParameters;
-        HttpClient client = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost(oauth2Endpoint);
-        //generate post request
-        httpPost.setHeader("Authorization", "Basic "
-                + new String(Base64.encodeBase64((consumerKey + ":" + consumerSecret).getBytes())));
-        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
-        postParameters = new ArrayList<NameValuePair>();
-        postParameters.add(new BasicNameValuePair("username", "admin"));
-        postParameters.add(new BasicNameValuePair("password", "admin"));
-        postParameters.add(new BasicNameValuePair("scope", SCOPE_DEFAULT));
-        postParameters.add(new BasicNameValuePair("grant_type", GRANT_TYPE_CLIENT_CREDENTIALS));
-        httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
-        HttpResponse response = client.execute(httpPost);
-        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-        //get access token from the response
-        JSONParser parser = new JSONParser();
-        JSONObject json = (JSONObject) parser.parse(responseString);
-        return json.get("access_token").toString();
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            HttpPost httpPost = new HttpPost(oauth2Endpoint);
+            //generate post request
+            httpPost.setHeader("Authorization", "Basic "
+                    + new String(Base64.encodeBase64((consumerKey + ":" + consumerSecret).getBytes())));
+            httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+            postParameters = new ArrayList<NameValuePair>();
+            postParameters.add(new BasicNameValuePair("username", "admin"));
+            postParameters.add(new BasicNameValuePair("password", "admin"));
+            postParameters.add(new BasicNameValuePair("scope", SCOPE_DEFAULT));
+            postParameters.add(new BasicNameValuePair("grant_type", GRANT_TYPE_CLIENT_CREDENTIALS));
+            httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
+            HttpResponse response = client.execute(httpPost);
+            String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+            //get access token from the response
+            JSONParser parser = new JSONParser();
+            JSONObject json = (JSONObject) parser.parse(responseString);
+            return json.get("access_token").toString();
+        }
     }
 
     private void loginUsingSecondaryUserStoreUser() throws Exception {

@@ -26,6 +26,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -58,7 +59,7 @@ public class IdentifierFirstLoginTestCase extends AbstractAdaptiveAuthentication
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private MultipleServersManager manager;
     private CookieStore cookieStore = new BasicCookieStore();
-    private HttpClient client;
+    private CloseableHttpClient client;
     private HttpResponse response;
     private List<NameValuePair> consentParameters = new ArrayList<>();
 
@@ -95,7 +96,7 @@ public class IdentifierFirstLoginTestCase extends AbstractAdaptiveAuthentication
 
         oauthAdminClient.removeOAuthApplicationData(consumerKey);
         applicationManagementServiceClient.deleteApplication(PRIMARY_IS_APPLICATION_NAME);
-        client.getConnectionManager().shutdown();
+        client.close();
 
         this.logManger.logOut();
         logManger = null;

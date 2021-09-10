@@ -24,10 +24,9 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
@@ -46,7 +45,6 @@ import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -283,7 +281,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         bufferedReader.close();
     }
 
-    public HttpClient getNewHttpClientWithCookieStore() {
+    public CloseableHttpClient getNewHttpClientWithCookieStore() {
 
         return HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
     }

@@ -34,8 +34,6 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -57,7 +55,6 @@ public class PermissionBasedScopeValidatorTestCase extends OAuth2ServiceAbstract
     private static final String INTROSPECT_SCOPE = "internal_application_mgt_view";
     private static final String SYSTEM_SCOPE = "SYSTEM";
     private static final String CALLBACK_URL = "https://localhost/callback";
-    private CloseableHttpClient client;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -113,30 +110,24 @@ public class PermissionBasedScopeValidatorTestCase extends OAuth2ServiceAbstract
      */
     private boolean getTokenAndValidate(Scope scope) throws Exception {
 
-        client = HttpClientBuilder.create().disableRedirectHandling().build();
+        Secret password = new Secret(userInfo.getPassword());
+        AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(userInfo.getUserName(),
+                password);
+        ClientID clientID = new ClientID(consumerKey);
+        Secret clientSecret = new Secret(consumerSecret);
+        ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
+        URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+        TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, passwordGrant, scope);
 
-        try {
-            Secret password = new Secret(userInfo.getPassword());
-            AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(userInfo.getUserName(),
-                    password);
-            ClientID clientID = new ClientID(consumerKey);
-            Secret clientSecret = new Secret(consumerSecret);
-            ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
-            URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
-            TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, passwordGrant, scope);
-
-            HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
-            Assert.assertNotNull(tokenHTTPResp, "Access token http response is null.");
-            AccessTokenResponse tokenResponse = AccessTokenResponse.parse(tokenHTTPResp);
-            Assert.assertNotNull(tokenResponse, "Access token response is null.");
-            AccessToken accessToken = tokenResponse.getTokens().getAccessToken();
-            BearerAccessToken bearerAccessToken = new BearerAccessToken(accessToken.getValue());
-            TokenIntrospectionResponse introspectionResponse =  invokeIntrospectionService(accessToken, bearerAccessToken);
-            Assert.assertNotNull(introspectionResponse, "Introspection response is null.");
-            return introspectionResponse.indicatesSuccess();
-        } finally {
-            client.close();
-        }
+        HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
+        Assert.assertNotNull(tokenHTTPResp, "Access token http response is null.");
+        AccessTokenResponse tokenResponse = AccessTokenResponse.parse(tokenHTTPResp);
+        Assert.assertNotNull(tokenResponse, "Access token response is null.");
+        AccessToken accessToken = tokenResponse.getTokens().getAccessToken();
+        BearerAccessToken bearerAccessToken = new BearerAccessToken(accessToken.getValue());
+        TokenIntrospectionResponse introspectionResponse = invokeIntrospectionService(accessToken, bearerAccessToken);
+        Assert.assertNotNull(introspectionResponse, "Introspection response is null.");
+        return introspectionResponse.indicatesSuccess();
     }
 
     private TokenIntrospectionResponse invokeIntrospectionService(AccessToken accessToken,

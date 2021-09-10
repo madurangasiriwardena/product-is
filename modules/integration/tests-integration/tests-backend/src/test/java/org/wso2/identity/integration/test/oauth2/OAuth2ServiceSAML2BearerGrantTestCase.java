@@ -105,6 +105,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
 
         deleteApplication();
         removeOAuthApplicationData();
+        client.close();
     }
 
     @Test
@@ -177,6 +178,11 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
             ssoConfigServiceClient.addServiceProvider(createDefaultSSOServiceProviderDTO());
 
             // We have to initiate the http client again or other tests will fail.
+            try {
+                client.close();
+            } catch (IOException e) {
+                log.error("Error while closing the connection.");
+            }
             client = HttpClientBuilder.create().build();
         }
     }

@@ -15,6 +15,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -79,6 +80,11 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     public void testInit() throws Exception {
         super.init();
         client = HttpClients.createDefault();
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void tearDownClass() throws Exception {
+        client.close();
     }
 
     private String userId;

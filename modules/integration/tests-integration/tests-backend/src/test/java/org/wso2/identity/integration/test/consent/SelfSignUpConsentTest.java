@@ -25,6 +25,7 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.wink.client.Resource;
 import org.apache.wink.client.RestClient;
@@ -140,15 +141,17 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
     public void testInitialSelfSignUpPage() throws IOException {
 
-        HttpClient client = HttpClientBuilder.create().build();
-        String selfRegisterEndpoint = selfRegisterDoEndpoint + "?" + CALLBACK_QUERY_PARAM + "=" + CALLBACK_ENDPOINT;
-        HttpResponse httpResponse = sendGetRequest(client, selfRegisterEndpoint);
-        String content = DataExtractUtil.getContentData(httpResponse);
-        Assert.assertNotNull(content);
-        Assert.assertTrue(content.contains("Enter your username"), "Page for entering username is not prompted while" +
-                " self registering");
-        Assert.assertTrue(content.contains(CALLBACK_ENDPOINT), "Callback endpoint is not available in self " +
-                "registration username input page.");
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            String selfRegisterEndpoint = selfRegisterDoEndpoint + "?" + CALLBACK_QUERY_PARAM + "=" + CALLBACK_ENDPOINT;
+            HttpResponse httpResponse = sendGetRequest(client, selfRegisterEndpoint);
+            String content = DataExtractUtil.getContentData(httpResponse);
+            Assert.assertNotNull(content);
+            Assert.assertTrue(content.contains("Enter your username"),
+                    "Page for entering username is not prompted while" +
+                            " self registering");
+            Assert.assertTrue(content.contains(CALLBACK_ENDPOINT), "Callback endpoint is not available in self " +
+                    "registration username input page.");
+        }
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Test without enabling self registration")
@@ -289,17 +292,19 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
     private String doCallSignUpDo(String username) throws IOException {
 
-        HttpClient client = HttpClientBuilder.create().build();
-        String tenantDomain = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
-        if (username.contains("@")) {
-            tenantDomain = MultitenantUtils.getTenantDomain(username);
-            username = MultitenantUtils.getTenantAwareUsername(username);
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            String tenantDomain = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
+            if (username.contains("@")) {
+                tenantDomain = MultitenantUtils.getTenantDomain(username);
+                username = MultitenantUtils.getTenantAwareUsername(username);
+            }
+            String selfRegisterEndpoint =
+                    signupDoEndpoint + "?" + USERNAME_QUERY_PARAM + "=" + username + "&" + TENANT_DOMAIN_QUERY_PARAM +
+                            "="
+                            + tenantDomain;
+            HttpResponse httpResponse = sendGetRequest(client, selfRegisterEndpoint);
+            return DataExtractUtil.getContentData(httpResponse);
         }
-        String selfRegisterEndpoint =
-                signupDoEndpoint + "?" + USERNAME_QUERY_PARAM + "=" + username + "&" + TENANT_DOMAIN_QUERY_PARAM + "="
-                        + tenantDomain;
-        HttpResponse httpResponse = sendGetRequest(client, selfRegisterEndpoint);
-        return DataExtractUtil.getContentData(httpResponse);
     }
 
     public void addCategoryCountry() {

@@ -150,6 +150,7 @@ public class RequestPathBasicAuthenticationSSOTest extends ISIntegrationTest {
 
         appMgtclient.deleteApplication(serviceProviderTravelocity.getApplicationName());
         appMgtclient.deleteApplication(serviceProviderAvis.getApplicationName());
+        client.close();
     }
 
     @Test(alwaysRun = true, description = "Request path authenticator login success")

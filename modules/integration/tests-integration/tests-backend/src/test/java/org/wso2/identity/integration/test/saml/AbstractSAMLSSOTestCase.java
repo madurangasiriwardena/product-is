@@ -24,10 +24,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
@@ -82,7 +82,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     protected SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
-    protected HttpClient httpClient;
+    protected CloseableHttpClient httpClient;
 
     protected enum HttpBinding {
 
@@ -269,7 +269,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;
         remoteUSMServiceClient = null;
-        httpClient = null;
+        httpClient.close();
     }
 
     public void createUser(SAMLConfig config) {

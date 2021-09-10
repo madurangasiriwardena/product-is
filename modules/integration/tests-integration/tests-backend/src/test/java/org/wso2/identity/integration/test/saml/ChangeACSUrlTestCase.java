@@ -26,8 +26,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -176,7 +176,7 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
             String samlResponse = getSAMLResponseFromPrimaryIS(client, redirectURL);
             Assert.assertNotNull(samlResponse, "Unable to acquire SAML response from primary IS");
 
-            boolean validResponse = sendSAMLResponseToWebApp(client, samlResponse);
+            boolean validResponse = sendSAMLResponseToWebApp(samlResponse);
             Assert.assertTrue(validResponse, "Invalid SAML response received by travelocity app");
         }
 
@@ -269,17 +269,19 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
         return extractValueFromResponse(response, "SAMLResponse", 5);
     }
 
-    private boolean sendSAMLResponseToWebApp(HttpClient client, String samlResponse)
+    private boolean sendSAMLResponseToWebApp(String samlResponse)
             throws Exception {
 
         HttpPost request = new HttpPost(PRIMARY_IS_SAML_ACS_URL);
         request.setHeader("User-Agent", USER_AGENT);
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("SAMLResponse", samlResponse));
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
-        HttpResponse response = new DefaultHttpClient().execute(request);
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            HttpResponse response = client.execute(request);
 
-        return validateSAMLResponse(response, usrName);
+            return validateSAMLResponse(response, usrName);
+        }
     }
 
     private void updateServiceProviderWithSAMLConfigs(int portOffset, String issuerName,
