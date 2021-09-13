@@ -35,7 +35,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.common.clients.AuthenticatorClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;

@@ -76,21 +76,41 @@ public class EntitlementPolicyServiceClient {
         PolicyDTO policySetDTO = new PolicyDTO();
         policySetDTO.setPolicy(policy);
         policySetDTO.setActive(true);
-        entitlementPolicyAdminServiceStub.addPolicy(policySetDTO);
+        try {
+            entitlementPolicyAdminServiceStub.addPolicy(policySetDTO);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void removePolicy(String policyId)
             throws IOException, EntitlementPolicyAdminServiceEntitlementException {
-        entitlementPolicyAdminServiceStub.removePolicy(policyId, false);
+
+        try {
+            entitlementPolicyAdminServiceStub.removePolicy(policyId, false);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void removePolicy(String policyId, boolean dePromote)
             throws IOException, EntitlementPolicyAdminServiceEntitlementException {
-        entitlementPolicyAdminServiceStub.removePolicy(policyId, dePromote);
+
+        try {
+            entitlementPolicyAdminServiceStub.removePolicy(policyId, dePromote);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
-    public void updatePolicy(PolicyDTO policyDTO) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
-        entitlementPolicyAdminServiceStub.updatePolicy(policyDTO);
+    public void updatePolicy(PolicyDTO policyDTO) throws RemoteException,
+            EntitlementPolicyAdminServiceEntitlementException {
+
+        try {
+            entitlementPolicyAdminServiceStub.updatePolicy(policyDTO);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void removePolicies(String[] policies, boolean dePromote) throws RemoteException {
@@ -98,15 +118,29 @@ public class EntitlementPolicyServiceClient {
             entitlementPolicyAdminServiceStub.removePolicies(policies, dePromote);
         } catch (EntitlementPolicyAdminServiceEntitlementException e) {
             log.error(e);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
-    public String[] getAllPolicyIds(String searchString) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
-        return entitlementPolicyAdminServiceStub.getAllPolicyIds(searchString);
+    public String[] getAllPolicyIds(String searchString)
+            throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
+
+        try {
+            return entitlementPolicyAdminServiceStub.getAllPolicyIds(searchString);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
-    public void addPolicy(PolicyDTO policyDTO) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
-        entitlementPolicyAdminServiceStub.addPolicy(policyDTO);
+    public void addPolicy(PolicyDTO policyDTO)
+            throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
+
+        try {
+            entitlementPolicyAdminServiceStub.addPolicy(policyDTO);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void addPolicies(PolicyDTO[] policies) throws RemoteException {
@@ -114,28 +148,61 @@ public class EntitlementPolicyServiceClient {
             entitlementPolicyAdminServiceStub.addPolicies(policies);
         } catch (EntitlementPolicyAdminServiceEntitlementException e) {
             log.error(e);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
-    public PolicyDTO getPolicy(String policyId, boolean isPDPPolicy) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
-        return entitlementPolicyAdminServiceStub.getPolicy(policyId, isPDPPolicy);
+    public PolicyDTO getPolicy(String policyId, boolean isPDPPolicy)
+            throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
+
+        try {
+            return entitlementPolicyAdminServiceStub.getPolicy(policyId, isPDPPolicy);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
-    public String[] getPolicyVersions(String policyId) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
-        return entitlementPolicyAdminServiceStub.getPolicyVersions(policyId);
+    public String[] getPolicyVersions(String policyId)
+            throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
+
+        try {
+            return entitlementPolicyAdminServiceStub.getPolicyVersions(policyId);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public PaginatedPolicySetDTO getAllPolicies(String policyTypeFilter, String policySearchString,
-                                                int pageNumber, boolean isPDPPolicy) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
-        return entitlementPolicyAdminServiceStub.getAllPolicies(policyTypeFilter, policySearchString, pageNumber, isPDPPolicy);
+                                                int pageNumber, boolean isPDPPolicy)
+            throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
+
+        try {
+            return entitlementPolicyAdminServiceStub.getAllPolicies(policyTypeFilter, policySearchString, pageNumber,
+                    isPDPPolicy);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
-    public PolicyDTO getPolicyByVersion(String policyId, String version) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
-        return entitlementPolicyAdminServiceStub.getPolicyByVersion(policyId, version);
+    public PolicyDTO getPolicyByVersion(String policyId, String version)
+            throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
+
+        try {
+            return entitlementPolicyAdminServiceStub.getPolicyByVersion(policyId, version);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
-    public void importPolicyFromRegistry(String policyRegistryPath) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
-        entitlementPolicyAdminServiceStub.importPolicyFromRegistry(policyRegistryPath);
+    public void importPolicyFromRegistry(String policyRegistryPath)
+            throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
+
+        try {
+            entitlementPolicyAdminServiceStub.importPolicyFromRegistry(policyRegistryPath);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public PaginatedStatusHolder getStatusData(String about, String key, String type,
@@ -146,6 +213,8 @@ public class EntitlementPolicyServiceClient {
             holder = entitlementPolicyAdminServiceStub.getStatusData(about, key, type, searchString, pageNumber);
         } catch (EntitlementPolicyAdminServiceEntitlementException e) {
             log.error(e);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
         }
         return holder;
     }
@@ -155,6 +224,8 @@ public class EntitlementPolicyServiceClient {
             entitlementPolicyAdminServiceStub.addSubscriber(holder);
         } catch (EntitlementPolicyAdminServiceEntitlementException e) {
             log.error(e);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -163,6 +234,8 @@ public class EntitlementPolicyServiceClient {
             entitlementPolicyAdminServiceStub.updateSubscriber(holder);
         } catch (EntitlementPolicyAdminServiceEntitlementException e) {
             log.error(e);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -172,6 +245,8 @@ public class EntitlementPolicyServiceClient {
             holder = entitlementPolicyAdminServiceStub.getSubscriber(subscribeId);
         } catch (EntitlementPolicyAdminServiceEntitlementException e) {
             log.error(e);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
         }
         return holder;
     }
@@ -182,6 +257,8 @@ public class EntitlementPolicyServiceClient {
             ids = entitlementPolicyAdminServiceStub.getSubscriberIds(searchString);
         } catch (EntitlementPolicyAdminServiceEntitlementException e) {
             log.error(e);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
         }
         return ids;
     }
@@ -191,6 +268,8 @@ public class EntitlementPolicyServiceClient {
             entitlementPolicyAdminServiceStub.deleteSubscriber(subscriberId);
         } catch (EntitlementPolicyAdminServiceEntitlementException e) {
             log.error(e);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -199,6 +278,8 @@ public class EntitlementPolicyServiceClient {
             entitlementPolicyAdminServiceStub.enableDisablePolicy(policyId, enable);
         } catch (EntitlementPolicyAdminServiceEntitlementException e) {
             log.error(e);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -207,22 +288,32 @@ public class EntitlementPolicyServiceClient {
             entitlementPolicyAdminServiceStub.publish(verificationCode);
         } catch (EntitlementPolicyAdminServiceEntitlementException e) {
             log.error(e);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
-    public void publishToPDP(String[] policies, String action, boolean enabled, String version, int order) throws RemoteException {
+    public void publishToPDP(String[] policies, String action, boolean enabled, String version, int order)
+            throws RemoteException {
         try {
             entitlementPolicyAdminServiceStub.publishToPDP(policies, action, version, enabled, order);
         } catch (EntitlementPolicyAdminServiceEntitlementException e) {
             log.error(e);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
-    public void publishPolicies(String[] policies, String[] subscriberIds, String action, boolean enabled, String version, int order) throws RemoteException {
+    public void publishPolicies(String[] policies, String[] subscriberIds, String action, boolean enabled,
+                                String version, int order)
+            throws RemoteException {
+
         try {
             entitlementPolicyAdminServiceStub.publishPolicies(policies, subscriberIds, action, version, enabled, order);
         } catch (EntitlementPolicyAdminServiceEntitlementException e) {
             log.error(e);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -231,6 +322,8 @@ public class EntitlementPolicyServiceClient {
             entitlementPolicyAdminServiceStub.orderPolicy(policyId, newOrder);
         } catch (EntitlementPolicyAdminServiceEntitlementException e) {
             log.error(e);
+        } finally {
+            entitlementPolicyAdminServiceStub._getServiceClient().cleanupTransport();
         }
     }
 

@@ -31,7 +31,7 @@ import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.governance.stub.bean.Property;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.common.clients.AuthenticatorClient;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.identity.integration.common.clients.mgt.IdentityGovernanceServiceClient;

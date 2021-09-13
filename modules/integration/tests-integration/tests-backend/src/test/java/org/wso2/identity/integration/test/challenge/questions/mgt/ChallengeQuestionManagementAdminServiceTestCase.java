@@ -22,7 +22,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.identity.application.common.model.xsd.User;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.recovery.stub.model.ChallengeQuestion;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.common.clients.AuthenticatorClient;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.challenge.questions.mgt.ChallengeQuestionMgtAdminClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;

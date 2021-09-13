@@ -21,7 +21,6 @@ package org.wso2.identity.integration.test.base;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
@@ -31,6 +30,7 @@ import org.wso2.identity.integration.test.utils.ISTestUtils;
 
 import java.io.File;
 import java.io.IOException;
+
 import javax.xml.xpath.XPathExpressionException;
 
 /**
@@ -42,7 +42,6 @@ public class ReadOnlyUserStoreInitializerTestCase extends ISIntegrationTest {
     private ServerConfigurationManager scm;
     private File defaultConfigFile;
     private UserManagementClient userMgtClient;
-    private AuthenticatorClient authenticatorClient;
     private String newUserName = "ReadOnlyLDAPUserName";
     private String newUserRole = "ReadOnlyLDAPUserRole";
     private String newUserPassword = "ReadOnlyLDAPUserPass";
@@ -52,7 +51,6 @@ public class ReadOnlyUserStoreInitializerTestCase extends ISIntegrationTest {
 
         super.init();
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
-        authenticatorClient = new AuthenticatorClient(backendURL);
 
         userMgtClient.addRole(newUserRole, null, new String[]{"/permission/admin/login"});
         userMgtClient.addUser(newUserName, newUserPassword, new String[]{newUserRole}, null);

@@ -23,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.common.clients.AuthenticatorClient;
 import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
 import org.wso2.carbon.user.mgt.stub.types.carbon.ClaimValue;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;

@@ -49,12 +49,24 @@ public class IdentityGovernanceServiceClient {
         }
     }
 
-    public ConnectorConfig[] getConnectorList() throws RemoteException, IdentityGovernanceAdminServiceIdentityGovernanceExceptionException {
-        return stub.getConnectorList();
+    public ConnectorConfig[] getConnectorList()
+            throws RemoteException, IdentityGovernanceAdminServiceIdentityGovernanceExceptionException {
+
+        try {
+            return stub.getConnectorList();
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
-    public void updateConfigurations (Property[] properties) throws RemoteException, IdentityGovernanceAdminServiceIdentityGovernanceExceptionException {
-        stub.updateConfigurations(properties);
+    public void updateConfigurations (Property[] properties)
+            throws RemoteException, IdentityGovernanceAdminServiceIdentityGovernanceExceptionException {
+
+        try {
+            stub.updateConfigurations(properties);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
 }

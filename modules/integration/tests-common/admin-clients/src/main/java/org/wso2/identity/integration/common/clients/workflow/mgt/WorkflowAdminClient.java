@@ -74,43 +74,59 @@ public class WorkflowAdminClient {
 
     public WorkflowEvent[] listWorkflowEvents() throws RemoteException {
 
-        WorkflowEvent[] workflowEvents = stub.listWorkflowEvents();
-        if (workflowEvents == null) {
-            workflowEvents = new WorkflowEvent[0];
+        try {
+            WorkflowEvent[] workflowEvents = stub.listWorkflowEvents();
+            if (workflowEvents == null) {
+                workflowEvents = new WorkflowEvent[0];
+            }
+            return workflowEvents;
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
-        return workflowEvents;
     }
 
     public Template[] listTemplates() throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        Template[] templates = stub.listTemplates();
-        if (templates == null) {
-            templates = new Template[0];
+        try {
+            Template[] templates = stub.listTemplates();
+            if (templates == null) {
+                templates = new Template[0];
+            }
+            return templates;
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
-        return templates;
     }
 
     public Template getTemplate(String templateId) throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        Template templateDTO = stub.getTemplate(templateId);
-        if (templateDTO != null) {
-            if (templateDTO.getParametersMetaData() == null) {
-                templateDTO.setParametersMetaData(new ParametersMetaData());
+        try {
+            Template templateDTO = stub.getTemplate(templateId);
+            if (templateDTO != null) {
+                if (templateDTO.getParametersMetaData() == null) {
+                    templateDTO.setParametersMetaData(new ParametersMetaData());
+                }
             }
+            return templateDTO;
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
-        return templateDTO;
     }
 
     public WorkflowImpl getWorkflowImpl(String templateId, String implId)
             throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        WorkflowImpl workflowImpl = stub.getWorkflowImpl(templateId, implId);
-        if (workflowImpl != null) {
-            if (workflowImpl.getParametersMetaData() == null) {
-                workflowImpl.setParametersMetaData(new ParametersMetaData());
+        try {
+            WorkflowImpl workflowImpl = stub.getWorkflowImpl(templateId, implId);
+            if (workflowImpl != null) {
+                if (workflowImpl.getParametersMetaData() == null) {
+                    workflowImpl.setParametersMetaData(new ParametersMetaData());
+                }
             }
+            return workflowImpl;
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
-        return workflowImpl;
     }
 
     /**
@@ -120,7 +136,12 @@ public class WorkflowAdminClient {
      * @throws WorkflowAdminServiceWorkflowException
      */
     public void addWorkflow(WorkflowWizard workflow) throws RemoteException, WorkflowAdminServiceWorkflowException {
-        stub.addWorkflow(workflow);
+
+        try {
+            stub.addWorkflow(workflow);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
 
     }
 
@@ -133,7 +154,12 @@ public class WorkflowAdminClient {
      */
     public void addBPSProfile(BPSProfile bpsProfileDTO) throws RemoteException,
             WorkflowAdminServiceWorkflowException, WorkflowImplAdminServiceWorkflowImplException {
-        stubImpl.addBPSProfile(bpsProfileDTO);
+
+        try {
+            stubImpl.addBPSProfile(bpsProfileDTO);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
 
@@ -148,11 +174,15 @@ public class WorkflowAdminClient {
             throws RemoteException, WorkflowAdminServiceWorkflowException,
             WorkflowImplAdminServiceWorkflowImplException {
 
-        BPSProfile[] bpsProfiles = stubImpl.listBPSProfiles();
-        if (bpsProfiles == null) {
-            bpsProfiles = new BPSProfile[0];
+        try {
+            BPSProfile[] bpsProfiles = stubImpl.listBPSProfiles();
+            if (bpsProfiles == null) {
+                bpsProfiles = new BPSProfile[0];
+            }
+            return bpsProfiles;
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
-        return bpsProfiles;
     }
 
     /**
@@ -165,8 +195,12 @@ public class WorkflowAdminClient {
      */
     public BPSProfile getBPSProfiles(String profileName) throws RemoteException, WorkflowAdminServiceWorkflowException,
             WorkflowImplAdminServiceWorkflowImplException {
-        BPSProfile bpsProfile = stubImpl.getBPSProfile(profileName);
-        return bpsProfile;
+
+        try {
+            return stubImpl.getBPSProfile(profileName);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -178,12 +212,22 @@ public class WorkflowAdminClient {
      */
     public void updateBPSProfile(BPSProfile bpsProfileDTO) throws RemoteException,
             WorkflowAdminServiceWorkflowException, WorkflowImplAdminServiceWorkflowImplException {
-        stubImpl.updateBPSProfile(bpsProfileDTO);
+
+        try {
+            stubImpl.updateBPSProfile(bpsProfileDTO);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void deleteBPSProfile(String profileName) throws RemoteException, WorkflowAdminServiceWorkflowException,
             WorkflowImplAdminServiceWorkflowImplException {
-        stubImpl.removeBPSProfile(profileName);
+
+        try {
+            stubImpl.removeBPSProfile(profileName);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -195,34 +239,51 @@ public class WorkflowAdminClient {
      */
     public WorkflowWizard[] listWorkflows() throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        WorkflowWizard[] workflows = stub.listWorkflows();
-        if (workflows == null) {
-            workflows = new WorkflowWizard[0];
+        try {
+            WorkflowWizard[] workflows = stub.listWorkflows();
+            if (workflows == null) {
+                workflows = new WorkflowWizard[0];
+            }
+            return workflows;
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
-        return workflows;
     }
 
     public void deleteWorkflow(String workflowId) throws RemoteException, WorkflowAdminServiceWorkflowException {
-        stub.removeWorkflow(workflowId);
+
+        try {
+            stub.removeWorkflow(workflowId);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     public Association[] listAssociationsForWorkflow(String workflowId) throws RemoteException,
             WorkflowAdminServiceWorkflowException {
 
-        Association[] associationsForWorkflow = stub.listAssociations(workflowId);
-        if (associationsForWorkflow == null) {
-            associationsForWorkflow = new Association[0];
+        try {
+            Association[] associationsForWorkflow = stub.listAssociations(workflowId);
+            if (associationsForWorkflow == null) {
+                associationsForWorkflow = new Association[0];
+            }
+            return associationsForWorkflow;
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
-        return associationsForWorkflow;
     }
 
     public Association[] listAllAssociations() throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        Association[] associations = stub.listAllAssociations();
-        if (associations == null) {
-            associations = new Association[0];
+        try {
+            Association[] associations = stub.listAllAssociations();
+            if (associations == null) {
+                associations = new Association[0];
+            }
+            return associations;
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
-        return associations;
     }
 
     public void deleteAssociation(String associationId) throws RemoteException, WorkflowAdminServiceWorkflowException {
@@ -231,7 +292,12 @@ public class WorkflowAdminClient {
 
     public void addAssociation(String workflowId, String associationName, String eventId, String condition)
             throws RemoteException, WorkflowAdminServiceWorkflowException {
-        stub.addAssociation(associationName, workflowId, eventId, condition);
+
+        try {
+            stub.addAssociation(associationName, workflowId, eventId, condition);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -242,7 +308,12 @@ public class WorkflowAdminClient {
      * @throws WorkflowAdminServiceWorkflowException
      */
     public void enableAssociation(String associationId) throws RemoteException, WorkflowAdminServiceWorkflowException {
-        stub.changeAssociationState(associationId, true);
+
+        try {
+            stub.changeAssociationState(associationId, true);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -253,20 +324,40 @@ public class WorkflowAdminClient {
      * @throws WorkflowAdminServiceWorkflowException
      */
     public void disableAssociation(String associationId) throws RemoteException, WorkflowAdminServiceWorkflowException {
-        stub.changeAssociationState(associationId, false);
+
+        try {
+            stub.changeAssociationState(associationId, false);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     public WorkflowEvent getEvent(String id) throws RemoteException {
-        return stub.getEvent(id);
+
+        try {
+            return stub.getEvent(id);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void deleteRequest(String requestId) throws WorkflowAdminServiceWorkflowException, RemoteException {
-        stub.deleteWorkflowRequest(requestId);
+
+        try {
+            stub.deleteWorkflowRequest(requestId);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     public WorkflowRequestAssociation[] getWorkflowsOfRequest(String requestId) throws
             WorkflowAdminServiceWorkflowException, RemoteException {
-        return stub.getWorkflowsOfRequest(requestId);
+
+        try {
+            return stub.getWorkflowsOfRequest(requestId);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
 }

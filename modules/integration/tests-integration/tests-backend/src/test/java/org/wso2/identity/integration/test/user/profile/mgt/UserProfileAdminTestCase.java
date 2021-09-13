@@ -22,21 +22,19 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.user.profile.stub.types.AssociatedAccountDTO;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
+import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.clients.AuthenticatorClient;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
-import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
-import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
-import java.nio.file.Paths;
 
 public class UserProfileAdminTestCase extends ISIntegrationTest {
 

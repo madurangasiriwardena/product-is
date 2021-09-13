@@ -59,42 +59,84 @@ public class UserStoreCountServiceClient {
     }
 
     public Map<String, String> countUsers(String filter) throws Exception {
-        return convertArrayToMap(stub.countUsers(filter));
+
+        try {
+            return convertArrayToMap(stub.countUsers(filter));
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     public Map<String, String> countRoles(String filter) throws Exception {
-        return convertArrayToMap(stub.countRoles(filter));
 
+        try {
+            return convertArrayToMap(stub.countRoles(filter));
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     public Map<String, String> countByClaim(String claimURI, String value) throws Exception {
-        return convertArrayToMap(stub.countClaim(claimURI, value));
+
+        try {
+            return convertArrayToMap(stub.countClaim(claimURI, value));
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     public Map<String, String> countByClaims(Map<String, String> claims) throws Exception {
-        return convertArrayToMap(stub.countClaims(convertMapToArray(claims)));
 
+        try {
+            return convertArrayToMap(stub.countClaims(convertMapToArray(claims)));
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     public long countUsersInDomain(String filter, String domain) throws Exception {
-        return stub.countUsersInDomain(filter, domain);
+
+        try {
+            return stub.countUsersInDomain(filter, domain);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     public long countRolesInDomain(String filter, String domain) throws Exception {
-        return stub.countRolesInDomain(filter, domain);
+
+        try {
+            return stub.countRolesInDomain(filter, domain);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     public long countByClaimInDomain(String claimURI, String filter, String domain) throws Exception {
-        return stub.countByClaimInDomain(claimURI, filter, domain);
+
+        try {
+            return stub.countByClaimInDomain(claimURI, filter, domain);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     public long countByClaimsInDomain(PairDTO[] pairDTOs, String domain) throws Exception {
-        return stub.countByClaimsInDomain(pairDTOs, domain);
+
+        try {
+            return stub.countByClaimsInDomain(pairDTOs, domain);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     public Set<String> getCountableUserStores() throws Exception {
-        return new HashSet<String>(Arrays.asList(stub.getCountEnabledUserStores()));
 
+        try {
+            return new HashSet<>(Arrays.asList(stub.getCountEnabledUserStores()));
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**

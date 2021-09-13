@@ -27,7 +27,7 @@
 //import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 //import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 //import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
-//import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+//import org.wso2.identity.integration.common.clients.AuthenticatorClient;
 //import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 //import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
 //import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;

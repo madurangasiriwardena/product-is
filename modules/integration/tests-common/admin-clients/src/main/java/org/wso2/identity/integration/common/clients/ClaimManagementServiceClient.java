@@ -72,6 +72,8 @@ public class ClaimManagementServiceClient {
             claimManagementServiceStub.removeClaimMapping(dialectURI, claimURI);
         } catch (RemoteException e) {
             throw new RemoteException("Unable to remove claim Mapping ", e);
+        } finally {
+            claimManagementServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -80,6 +82,8 @@ public class ClaimManagementServiceClient {
             return claimManagementServiceStub.getClaimMappings();
         } catch (RemoteException e) {
             throw new RemoteException("Error while getting claim mappings ", e);
+        } finally {
+            claimManagementServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -89,6 +93,8 @@ public class ClaimManagementServiceClient {
             return claimManagementServiceStub.getClaimMappingByDialect(dialect);
         } catch (RemoteException e) {
             throw new RemoteException("Unable while getting claim Mapping by dialect", e);
+        } finally {
+            claimManagementServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -98,6 +104,8 @@ public class ClaimManagementServiceClient {
             claimManagementServiceStub.addNewClaimDialect(claimDialectDTO);
         } catch (RemoteException e) {
             throw new RemoteException("Unable to add new claim dialect", e);
+        } finally {
+            claimManagementServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -107,6 +115,8 @@ public class ClaimManagementServiceClient {
             claimManagementServiceStub.addNewClaimMapping(claimMappingDTO);
         } catch (RemoteException e) {
             throw new RemoteException("Unable to add new claim Mapping", e);
+        } finally {
+            claimManagementServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -116,6 +126,8 @@ public class ClaimManagementServiceClient {
             claimManagementServiceStub.upateClaimMapping(claimMappingDTO);
         } catch (RemoteException e) {
             throw new RemoteException("Unable to update claim Mapping", e);
+        } finally {
+            claimManagementServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -125,6 +137,8 @@ public class ClaimManagementServiceClient {
             claimManagementServiceStub.removeClaimDialect(dialectURI);
         } catch (RemoteException e) {
             throw new RemoteException("Unable to remove claim dialect", e);
+        } finally {
+            claimManagementServiceStub._getServiceClient().cleanupTransport();
         }
     }
 }

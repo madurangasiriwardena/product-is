@@ -126,6 +126,8 @@ public class ApplicationManagementServiceClient {
         } catch (IdentityApplicationManagementServiceIdentityApplicationManagementException e) {
             log.error(e.getMessage(), e);
             throw new Exception(e.getMessage());
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
 
     }
@@ -148,8 +150,9 @@ public class ApplicationManagementServiceClient {
         } catch (IdentityApplicationManagementServiceIdentityApplicationManagementException e) {
             log.error(e.getMessage(), e);
             throw new Exception(e.getMessage());
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
-
     }
 
     /**
@@ -167,8 +170,9 @@ public class ApplicationManagementServiceClient {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception(e.getMessage());
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
-
     }
 
     /**
@@ -185,6 +189,8 @@ public class ApplicationManagementServiceClient {
         } catch (IdentityApplicationManagementServiceIdentityApplicationManagementException e) {
             log.error(e.getMessage(), e);
             throw new Exception(e.getMessage());
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -202,6 +208,8 @@ public class ApplicationManagementServiceClient {
         } catch (IdentityApplicationManagementServiceIdentityApplicationManagementException e) {
             log.error(e.getMessage(), e);
             throw new Exception(e.getMessage());
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -219,8 +227,9 @@ public class ApplicationManagementServiceClient {
         } catch (IdentityApplicationManagementServiceIdentityApplicationManagementException e) {
             log.error(e.getMessage(), e);
             throw new Exception(e.getMessage());
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
-
     }
 
     /**
@@ -230,7 +239,12 @@ public class ApplicationManagementServiceClient {
      */
     public IdentityProvider getFederatedIdentityProvider(String identityProviderName)
             throws Exception {
-        return stub.getIdentityProvider(identityProviderName);
+
+        try {
+            return stub.getIdentityProvider(identityProviderName);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -239,7 +253,12 @@ public class ApplicationManagementServiceClient {
      * @throws Exception
      */
     public RequestPathAuthenticatorConfig[] getAllRequestPathAuthenticators() throws Exception {
-        return stub.getAllRequestPathAuthenticators();
+
+        try {
+            return stub.getAllRequestPathAuthenticators();
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -248,7 +267,12 @@ public class ApplicationManagementServiceClient {
      * @throws Exception
      */
     public LocalAuthenticatorConfig[] getAllLocalAuthenticators() throws Exception {
-        return stub.getAllLocalAuthenticators();
+
+        try {
+            return stub.getAllLocalAuthenticators();
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -263,6 +287,8 @@ public class ApplicationManagementServiceClient {
             idps = stub.getAllIdentityProviders();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
         return idps;
     }
@@ -273,7 +299,12 @@ public class ApplicationManagementServiceClient {
      * @throws Exception
      */
     public String[] getAllClaimUris() throws Exception {
-        return stub.getAllLocalClaimUris();
+
+        try {
+            return stub.getAllLocalClaimUris();
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -284,7 +315,7 @@ public class ApplicationManagementServiceClient {
     public String[] getUserStoreDomains() throws Exception {
 
         try {
-            List<String> readWriteDomainNames = new ArrayList<String>();
+            List<String> readWriteDomainNames = new ArrayList<>();
             UserStoreInfo[] storesInfo = userAdminStub.getUserRealmInfo().getUserStoresInfo();
             for(UserStoreInfo storeInfo : storesInfo){
                 if(!storeInfo.getReadOnly()){
@@ -296,6 +327,8 @@ public class ApplicationManagementServiceClient {
             log.error(e.getMessage(), e);
             throw new Exception(
                     "Error occurred while retrieving Read-Write User Store Domain IDs for logged-in user's tenant realm");
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -319,6 +352,8 @@ public class ApplicationManagementServiceClient {
         } catch (RemoteException | IdentityApplicationManagementServiceIdentityApplicationManagementException e) {
             log.error(e.getMessage(), e);
             throw new Exception(e.getMessage());
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
 
     }
@@ -341,6 +376,8 @@ public class ApplicationManagementServiceClient {
         } catch (RemoteException | IdentityApplicationManagementServiceIdentityApplicationManagementException e) {
             log.error(e.getMessage(), e);
             throw new Exception(e.getMessage());
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
 
     }
@@ -352,7 +389,7 @@ public class ApplicationManagementServiceClient {
      * @throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException
      */
     public void createApplicationTemplate(SpTemplate spTemplate)
-            throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException {
+            throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException, AxisFault {
 
         try {
             if (debugEnabled) {
@@ -361,6 +398,8 @@ public class ApplicationManagementServiceClient {
             stub.createApplicationTemplate(spTemplate);
         } catch (RemoteException e) {
             handleException(e, "Error occurred when creating Service Provider template: " + spTemplate.getName());
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -372,7 +411,7 @@ public class ApplicationManagementServiceClient {
      * @throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException
      */
     public void createApplicationTemplateFromSP(ServiceProvider serviceProvider, SpTemplate spTemplate)
-            throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException {
+            throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException, AxisFault {
 
         try {
             if (debugEnabled) {
@@ -383,6 +422,8 @@ public class ApplicationManagementServiceClient {
         } catch (RemoteException e) {
             handleException(e, "Error occurred when creating Service Provider template: " + spTemplate.getName() +
                     " from service provider: " + serviceProvider.getApplicationName());
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -394,7 +435,7 @@ public class ApplicationManagementServiceClient {
      * @throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException
      */
     public SpTemplate getApplicationTemplate(String templateName)
-            throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException {
+            throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException, AxisFault {
 
         try {
             if (debugEnabled) {
@@ -403,6 +444,8 @@ public class ApplicationManagementServiceClient {
             return stub.getApplicationTemplate(templateName);
         } catch (RemoteException e) {
             handleException(e, "Error occurred when retrieving Service Provider template: " + templateName);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
         return null;
     }
@@ -414,7 +457,7 @@ public class ApplicationManagementServiceClient {
      * @throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException
      */
     public void deleteApplicationTemplate(String templateName)
-            throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException {
+            throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException, AxisFault {
 
         try {
             if (debugEnabled) {
@@ -423,6 +466,8 @@ public class ApplicationManagementServiceClient {
             stub.deleteApplicationTemplate(templateName);
         } catch (RemoteException e) {
             handleException(e, "Error occurred when deleting Service Provider template: " + templateName);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -433,7 +478,7 @@ public class ApplicationManagementServiceClient {
      * @throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException
      */
     public void updateApplicationTemplate(String templateName, SpTemplate spTemplate)
-            throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException {
+            throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException, AxisFault {
 
         try {
             if (debugEnabled) {
@@ -442,6 +487,8 @@ public class ApplicationManagementServiceClient {
             stub.updateApplicationTemplate(templateName, spTemplate);
         } catch (RemoteException e) {
             handleException(e, "Error occurred when updating Service Provider template: " + templateName);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -453,7 +500,7 @@ public class ApplicationManagementServiceClient {
      * @throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException
      */
     public boolean isExistingApplicationTemplate(String templateName)
-            throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException {
+            throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException, AxisFault {
 
         try {
             if (debugEnabled) {
@@ -462,6 +509,8 @@ public class ApplicationManagementServiceClient {
             return stub.isExistingApplicationTemplate(templateName);
         } catch (RemoteException e) {
             handleException(e, "Error occurred when checking existence of Service Provider template: " + templateName);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
         return false;
     }
@@ -473,7 +522,7 @@ public class ApplicationManagementServiceClient {
      * @throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException
      */
     public SpTemplate[] getAllApplicationTemplateInfo()
-            throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException {
+            throws IdentityApplicationManagementServiceIdentityApplicationManagementClientException, AxisFault {
 
         try {
             if (debugEnabled) {
@@ -482,6 +531,8 @@ public class ApplicationManagementServiceClient {
             return stub.getAllApplicationTemplateInfo();
         } catch (RemoteException e) {
             handleException(e, "Error occurred when retrieving service provider template basic info");
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
         return new SpTemplate[0];
     }

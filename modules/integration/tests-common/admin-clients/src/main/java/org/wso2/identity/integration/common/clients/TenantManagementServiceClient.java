@@ -80,11 +80,23 @@ public class TenantManagementServiceClient {
             String tenantDomain = tenantInfoBean.getTenantDomain();
             TenantInfoBean tenantInfoBeanGet = tenantMgtAdminServiceStub.getTenant(tenantDomain);
             if (!tenantInfoBeanGet.getActive() && tenantInfoBeanGet.getTenantId() != 0) {
-                tenantMgtAdminServiceStub.activateTenant(tenantDomain);
+                try {
+                    tenantMgtAdminServiceStub.activateTenant(tenantDomain);
+                } finally {
+                    tenantMgtAdminServiceStub._getServiceClient().cleanupTransport();
+                }
                 log.info("Tenant domain " + tenantDomain + " Activated successfully");
             } else if (!tenantInfoBeanGet.getActive() && tenantInfoBeanGet.getTenantId() == 0) {
-                tenantMgtAdminServiceStub.addTenant(tenantInfoBean);
-                tenantMgtAdminServiceStub.activateTenant(tenantDomain);
+                try {
+                    tenantMgtAdminServiceStub.addTenant(tenantInfoBean);
+                } finally {
+                    tenantMgtAdminServiceStub._getServiceClient().cleanupTransport();
+                }
+                try {
+                    tenantMgtAdminServiceStub.activateTenant(tenantDomain);
+                } finally {
+                    tenantMgtAdminServiceStub._getServiceClient().cleanupTransport();
+                }
                 log.info("Tenant domain " + tenantDomain + " created and activated successfully");
             } else {
                 log.info("Tenant domain " + tenantDomain + " already registered");
@@ -120,31 +132,56 @@ public class TenantManagementServiceClient {
     public void updateTenant(TenantInfoBean tenantInfoBean)
             throws RemoteException, TenantMgtAdminServiceExceptionException {
 
-        tenantMgtAdminServiceStub.updateTenant(tenantInfoBean);
+        try {
+            tenantMgtAdminServiceStub.updateTenant(tenantInfoBean);
+        } finally {
+            tenantMgtAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void deleteTenant(String tenantDomain) throws RemoteException, TenantMgtAdminServiceExceptionException {
 
-        tenantMgtAdminServiceStub.deleteTenant(tenantDomain);
+        try {
+            tenantMgtAdminServiceStub.deleteTenant(tenantDomain);
+        } finally {
+            tenantMgtAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void activateTenant(String tenantDomain) throws RemoteException, TenantMgtAdminServiceExceptionException {
 
-        tenantMgtAdminServiceStub.activateTenant(tenantDomain);
+        try {
+            tenantMgtAdminServiceStub.activateTenant(tenantDomain);
+        } finally {
+            tenantMgtAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void deactivateTenant(String tenantDomain) throws RemoteException, TenantMgtAdminServiceExceptionException {
 
-        tenantMgtAdminServiceStub.deactivateTenant(tenantDomain);
+        try {
+            tenantMgtAdminServiceStub.deactivateTenant(tenantDomain);
+        } finally {
+            tenantMgtAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public TenantInfoBean[] retrieveTenants() throws RemoteException, TenantMgtAdminServiceExceptionException {
-        return tenantMgtAdminServiceStub.retrieveTenants();
+
+        try {
+            return tenantMgtAdminServiceStub.retrieveTenants();
+        } finally {
+            tenantMgtAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public TenantInfoBean getTenant(String tenantDomain)
             throws RemoteException, TenantMgtAdminServiceExceptionException {
 
-        return tenantMgtAdminServiceStub.getTenant(tenantDomain);
+        try {
+            return tenantMgtAdminServiceStub.getTenant(tenantDomain);
+        } finally {
+            tenantMgtAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 }

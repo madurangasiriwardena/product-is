@@ -60,7 +60,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public void addRole(String roleName, String[] userList, PermissionDTO[] permissions)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        remoteUserStoreManagerServiceStub.addRole(roleName, userList, permissions);
+
+        try {
+            remoteUserStoreManagerServiceStub.addRole(roleName, userList, permissions);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -76,14 +81,17 @@ public class RemoteUserStoreManagerServiceClient {
      * @throws java.rmi.RemoteException
      * @throws org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceUserStoreExceptionException
      */
-    public void addUser(String userName, String credential, String[] roleList,
-                        ClaimValue[] claimValues,
+    public void addUser(String userName, String credential, String[] roleList, ClaimValue[] claimValues,
                         String profileName, boolean requirePasswordChange)
             throws UserStoreException, RemoteException,
                    RemoteUserStoreManagerServiceUserStoreExceptionException {
 
-        remoteUserStoreManagerServiceStub.addUser(userName, credential, roleList, claimValues,
-                                                  profileName, requirePasswordChange);
+        try {
+            remoteUserStoreManagerServiceStub.addUser(userName, credential, roleList, claimValues,
+                    profileName, requirePasswordChange);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -96,10 +104,14 @@ public class RemoteUserStoreManagerServiceClient {
      * @throws org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceUserStoreExceptionException
      * @throws java.rmi.RemoteException
      */
-    public void setUserClaimValue(String userName, String claimURI, String claimValue,
-                                  String profileName)
+    public void setUserClaimValue(String userName, String claimURI, String claimValue, String profileName)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        remoteUserStoreManagerServiceStub.setUserClaimValue(userName, claimURI, claimValue, profileName);
+
+        try {
+            remoteUserStoreManagerServiceStub.setUserClaimValue(userName, claimURI, claimValue, profileName);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -113,7 +125,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public void setUserClaimValues(String userName, ClaimValue[] claims, String profileName)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        remoteUserStoreManagerServiceStub.setUserClaimValues(userName, claims, profileName);
+
+        try {
+            remoteUserStoreManagerServiceStub.setUserClaimValues(userName, claims, profileName);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -129,7 +146,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public boolean authenticate(String userName, String credential)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        return remoteUserStoreManagerServiceStub.authenticate(userName, credential);
+
+        try {
+            return remoteUserStoreManagerServiceStub.authenticate(userName, credential);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -143,7 +165,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public void updateCredential(String userName, String newCredential, String oldCredential)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        remoteUserStoreManagerServiceStub.updateCredential(userName, newCredential, oldCredential);
+
+        try {
+            remoteUserStoreManagerServiceStub.updateCredential(userName, newCredential, oldCredential);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -156,7 +183,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public void updateCredentialByAdmin(String userName, String newCredential)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        remoteUserStoreManagerServiceStub.updateCredentialByAdmin(userName, newCredential);
+
+        try {
+            remoteUserStoreManagerServiceStub.updateCredentialByAdmin(userName, newCredential);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -170,7 +202,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public void updateRoleListOfUser(String userName, String[] deleteRoles, String[] newRoles)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        remoteUserStoreManagerServiceStub.updateRoleListOfUser(userName, deleteRoles, newRoles);
+
+        try {
+            remoteUserStoreManagerServiceStub.updateRoleListOfUser(userName, deleteRoles, newRoles);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -184,7 +221,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public void updateUserListOfRole(String roleName, String[] deleteUsers, String[] newUsers)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        remoteUserStoreManagerServiceStub.updateUserListOfRole(roleName, deleteUsers, newUsers);
+
+        try {
+            remoteUserStoreManagerServiceStub.updateUserListOfRole(roleName, deleteUsers, newUsers);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -197,7 +239,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public void updateRoleName(String oldRoleName, String newRoleName)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        remoteUserStoreManagerServiceStub.updateRoleName(oldRoleName, newRoleName);
+
+        try {
+            remoteUserStoreManagerServiceStub.updateRoleName(oldRoleName, newRoleName);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -210,7 +257,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public boolean isExistingRole(String roleName)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        return remoteUserStoreManagerServiceStub.isExistingRole(roleName);
+
+        try {
+            return remoteUserStoreManagerServiceStub.isExistingRole(roleName);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -223,7 +275,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public boolean isExistingUser(String userName)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        return remoteUserStoreManagerServiceStub.isExistingUser(userName);
+
+        try {
+            return remoteUserStoreManagerServiceStub.isExistingUser(userName);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -231,9 +288,13 @@ public class RemoteUserStoreManagerServiceClient {
      * @throws org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceUserStoreExceptionException
      * @throws java.rmi.RemoteException
      */
-    public boolean isReadOnly()
-            throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        return remoteUserStoreManagerServiceStub.isReadOnly();
+    public boolean isReadOnly() throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
+
+        try {
+            return remoteUserStoreManagerServiceStub.isReadOnly();
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -249,13 +310,23 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public String[] listUsers(String filter, int maxLimit)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        return remoteUserStoreManagerServiceStub.listUsers(filter, maxLimit);
+
+        try {
+            return remoteUserStoreManagerServiceStub.listUsers(filter, maxLimit);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
 
-    public String[] getProfileNames(String userName) throws RemoteException,
-                                                            RemoteUserStoreManagerServiceUserStoreExceptionException {
-        return remoteUserStoreManagerServiceStub.getProfileNames(userName);
+    public String[] getProfileNames(String userName)
+            throws RemoteException, RemoteUserStoreManagerServiceUserStoreExceptionException {
+
+        try {
+            return remoteUserStoreManagerServiceStub.getProfileNames(userName);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -267,7 +338,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public String[] getAllProfileNames()
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        return remoteUserStoreManagerServiceStub.getAllProfileNames();
+
+        try {
+            return remoteUserStoreManagerServiceStub.getAllProfileNames();
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -280,7 +356,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public String[] getRoleListOfUser(String userName)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        return remoteUserStoreManagerServiceStub.getRoleListOfUser(userName);
+
+        try {
+            return remoteUserStoreManagerServiceStub.getRoleListOfUser(userName);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -290,9 +371,13 @@ public class RemoteUserStoreManagerServiceClient {
      * @throws org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceUserStoreExceptionException
      * @throws java.rmi.RemoteException
      */
-    public String[] getRoleNames()
-            throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        return remoteUserStoreManagerServiceStub.getRoleNames();
+    public String[] getRoleNames() throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
+
+        try {
+            return remoteUserStoreManagerServiceStub.getRoleNames();
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -302,9 +387,13 @@ public class RemoteUserStoreManagerServiceClient {
      * @throws org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceUserStoreExceptionException
      * @throws java.rmi.RemoteException
      */
-    public String[] getHybridRoles()
-            throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        return remoteUserStoreManagerServiceStub.getHybridRoles();
+    public String[] getHybridRoles() throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
+
+        try {
+            return remoteUserStoreManagerServiceStub.getHybridRoles();
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -319,7 +408,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public String getUserClaimValue(String userName, String claim, String profileName)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        return remoteUserStoreManagerServiceStub.getUserClaimValue(userName, claim, profileName);
+
+        try {
+            return remoteUserStoreManagerServiceStub.getUserClaimValue(userName, claim, profileName);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -333,7 +427,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public ClaimDTO[] getUserClaimValues(String userName, String profileName)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        return remoteUserStoreManagerServiceStub.getUserClaimValues(userName, profileName);
+
+        try {
+            return remoteUserStoreManagerServiceStub.getUserClaimValues(userName, profileName);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
 
@@ -350,7 +449,12 @@ public class RemoteUserStoreManagerServiceClient {
     public ClaimValue[] getUserClaimValuesForClaims(String userName, String[] claims,
                                                     String profileName)
             throws RemoteException, RemoteUserStoreManagerServiceUserStoreExceptionException {
-        return remoteUserStoreManagerServiceStub.getUserClaimValuesForClaims(userName, claims, profileName);
+
+        try {
+            return remoteUserStoreManagerServiceStub.getUserClaimValuesForClaims(userName, claims, profileName);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
 
@@ -364,7 +468,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public int getUserId(String userName)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        return remoteUserStoreManagerServiceStub.getUserId(userName);
+
+        try {
+            return remoteUserStoreManagerServiceStub.getUserId(userName);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -379,7 +488,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public String[] getUserList(String claimUri, String claimValue, String profileName)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        return remoteUserStoreManagerServiceStub.getUserList(claimUri, claimValue, profileName);
+
+        try {
+            return remoteUserStoreManagerServiceStub.getUserList(claimUri, claimValue, profileName);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -392,7 +506,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public String[] getUserListOfRole(String roleName)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        return remoteUserStoreManagerServiceStub.getUserListOfRole(roleName);
+
+        try {
+            return remoteUserStoreManagerServiceStub.getUserListOfRole(roleName);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
 
@@ -406,7 +525,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public long getPasswordExpirationTime(String userName)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        return remoteUserStoreManagerServiceStub.getPasswordExpirationTime(userName);
+
+        try {
+            return remoteUserStoreManagerServiceStub.getPasswordExpirationTime(userName);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -419,7 +543,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public ArrayOfString[] getProperties(OMElement tenant)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        return remoteUserStoreManagerServiceStub.getProperties(tenant);
+
+        try {
+            return remoteUserStoreManagerServiceStub.getProperties(tenant);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -429,9 +558,13 @@ public class RemoteUserStoreManagerServiceClient {
      * @throws org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceUserStoreExceptionException
      * @throws java.rmi.RemoteException
      */
-    public int getTenantId()
-            throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        return remoteUserStoreManagerServiceStub.getTenantId();
+    public int getTenantId() throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
+
+        try {
+            return remoteUserStoreManagerServiceStub.getTenantId();
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -445,7 +578,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public int getTenantIdofUser(String userName)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        return remoteUserStoreManagerServiceStub.getTenantIdofUser(userName);
+
+        try {
+            return remoteUserStoreManagerServiceStub.getTenantIdofUser(userName);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
 
@@ -458,7 +596,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public void deleteUser(String username)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        remoteUserStoreManagerServiceStub.deleteUser(username);
+
+        try {
+            remoteUserStoreManagerServiceStub.deleteUser(username);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -470,7 +613,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public void deleteRole(String roleName)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        remoteUserStoreManagerServiceStub.deleteRole(roleName);
+
+        try {
+            remoteUserStoreManagerServiceStub.deleteRole(roleName);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -484,7 +632,12 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public void deleteUserClaimValue(String userName, String claimUri, String profileName)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        remoteUserStoreManagerServiceStub.deleteUserClaimValue(userName, claimUri, profileName);
+
+        try {
+            remoteUserStoreManagerServiceStub.deleteUserClaimValue(userName, claimUri, profileName);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -498,6 +651,11 @@ public class RemoteUserStoreManagerServiceClient {
      */
     public void deleteUserClaimValues(String userName, String[] claims, String profileName)
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
-        remoteUserStoreManagerServiceStub.deleteUserClaimValues(userName, claims, profileName);
+
+        try {
+            remoteUserStoreManagerServiceStub.deleteUserClaimValues(userName, claims, profileName);
+        } finally {
+            remoteUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 }

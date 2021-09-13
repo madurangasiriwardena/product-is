@@ -38,7 +38,7 @@ import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvide
 import org.wso2.carbon.identity.application.common.model.xsd.AuthenticationStep;
 import org.wso2.carbon.identity.application.common.model.xsd.LocalAndOutboundAuthenticationConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.LocalAuthenticatorConfig;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.common.clients.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;

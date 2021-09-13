@@ -59,54 +59,52 @@ public class UserManagementClient {
     public void addRole(String roleName, String[] userList, String[] permissions) throws
             RemoteException,
             UserAdminUserAdminException {
-        userAdminStub.addRole(roleName, userList, permissions, false);
+
+        try {
+            userAdminStub.addRole(roleName, userList, permissions, false);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void addRole(String roleName, String[] userList, String[] permissions,
                         boolean isSharedRole) throws RemoteException, UserAdminUserAdminException {
-        userAdminStub.addRole(roleName, userList, permissions, isSharedRole);
+
+        try {
+            userAdminStub.addRole(roleName, userList, permissions, isSharedRole);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void addUser(String userName, String password, String[] roles,
                         String profileName) throws RemoteException, UserAdminUserAdminException {
-        userAdminStub.addUser(userName, password, roles, null, profileName);
+
+        try {
+            userAdminStub.addUser(userName, password, roles, null, profileName);
+        }  finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void deleteRole(String roleName) throws RemoteException, UserAdminUserAdminException {
-        userAdminStub.deleteRole(roleName);
+
+        try {
+            userAdminStub.deleteRole(roleName);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void deleteUser(String userName) throws RemoteException, UserAdminUserAdminException {
-        userAdminStub.deleteUser(userName);
-    }
 
-    private void addRoleWithUser(String roleName, String userName, String[] permission)
-            throws RemoteException, UserAdminUserAdminException {
-        userAdminStub.addRole(roleName, new String[]{userName}, null, false);
-        FlaggedName[] roles = userAdminStub.getAllRolesNames(roleName, 100);
-        for (FlaggedName role : roles) {
-            if (!role.getItemName().equals(roleName)) {
-                continue;
-            } else {
-                assert (role.getItemName().equals(roleName));
-            }
-            assert false : "Role: " + roleName + " was not added properly.";
+        try {
+            userAdminStub.deleteUser(userName);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
         }
     }
 
-    private void addRoleWithUser(String roleName, String userName, boolean isSharedRole)
-            throws RemoteException, UserAdminUserAdminException {
-        userAdminStub.addRole(roleName, new String[]{userName}, null, isSharedRole);
-        FlaggedName[] roles = userAdminStub.getAllRolesNames(roleName, 100);
-        for (FlaggedName role : roles) {
-            if (!role.getItemName().equals(roleName)) {
-                continue;
-            } else {
-                assert (role.getItemName().equals(roleName));
-            }
-            assert false : "Role: " + roleName + " was not added properly.";
-        }
-    }
     public void updateUserListOfRole(String roleName, String[] addingUsers,
                                      String[] deletingUsers)
             throws UserAdminUserAdminException, RemoteException {
@@ -130,21 +128,33 @@ public class UserManagementClient {
         }
         //call userAdminStub to update user list of role
 
-        userAdminStub.updateUsersOfRole(roleName, updatedUserList.toArray(
-                new FlaggedName[updatedUserList.size()]));
+        try {
+            userAdminStub.updateUsersOfRole(roleName, updatedUserList.toArray(
+                    new FlaggedName[updatedUserList.size()]));
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
         //if delete users in retrieved list, fail
         if (deletingUsers != null) {
             for (String deletedUser : deletingUsers) {
                 FlaggedName[] verifyingList;
-                verifyingList = userAdminStub.getUsersOfRole(roleName, deletedUser, LIMIT);
-                assert (!verifyingList[0].getSelected());
+                try {
+                    verifyingList = userAdminStub.getUsersOfRole(roleName, deletedUser, LIMIT);
+                    assert (!verifyingList[0].getSelected());
+                } finally {
+                    userAdminStub._getServiceClient().cleanupTransport();
+                }
             }
         }
         if (addingUsers != null) {
             //if all added users are not in list fail
             for (String addingUser : addingUsers) {
-                FlaggedName[] verifyingList = userAdminStub.getUsersOfRole(roleName, addingUser, LIMIT);
-                assert (verifyingList[0].getSelected());
+                try {
+                    FlaggedName[] verifyingList = userAdminStub.getUsersOfRole(roleName, addingUser, LIMIT);
+                    assert (verifyingList[0].getSelected());
+                } finally {
+                    userAdminStub._getServiceClient().cleanupTransport();
+                }
             }
         }
 
@@ -153,14 +163,18 @@ public class UserManagementClient {
     public boolean roleNameExists(String roleName)
             throws RemoteException, UserAdminUserAdminException {
         FlaggedName[] roles;
-        roles = userAdminStub.getAllRolesNames(roleName, LIMIT);
-        for (FlaggedName role : roles) {
-            if (role.getItemName().equals(roleName)) {
-                log.info("Role name " + roleName + " already exists");
-                return true;
+        try {
+            roles = userAdminStub.getAllRolesNames(roleName, LIMIT);
+            for (FlaggedName role : roles) {
+                if (role.getItemName().equals(roleName)) {
+                    log.info("Role name " + roleName + " already exists");
+                    return true;
+                }
             }
+            return false;
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
         }
-        return false;
     }
 
     /**
@@ -168,7 +182,12 @@ public class UserManagementClient {
      */
     public FlaggedName[] listRoles(String filter, int limit)
             throws RemoteException, UserAdminUserAdminException {
-        return userAdminStub.getAllRolesNames(filter, limit);
+
+        try {
+            return userAdminStub.getAllRolesNames(filter, limit);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -176,138 +195,267 @@ public class UserManagementClient {
      */
     public String[] listUsers(String filter, int limit)
             throws RemoteException, UserAdminUserAdminException {
-        return userAdminStub.listUsers(filter, limit);
+
+        try {
+            return userAdminStub.listUsers(filter, limit);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public FlaggedName[] listAllUsers(String filter, int limit) throws RemoteException,
             UserAdminUserAdminException {
-        return userAdminStub.listAllUsers(filter, limit);
+
+        try {
+            return userAdminStub.listAllUsers(filter, limit);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public FlaggedName[] listUsersByClaim(ClaimValue value, String filter, int limit) throws RemoteException,
             UserAdminUserAdminException {
-        return userAdminStub.listUserByClaim(value, filter, limit);
+
+        try {
+            return userAdminStub.listUserByClaim(value, filter, limit);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
     public boolean userNameExists(String roleName, String userName)
             throws RemoteException, UserAdminUserAdminException {
 
         FlaggedName[] users;
-        users = userAdminStub.getUsersOfRole(roleName, "*", LIMIT);
+        try {
+            users = userAdminStub.getUsersOfRole(roleName, "*", LIMIT);
 
-        for (FlaggedName user : users) {
-            if (user.getItemName().equals(userName)) {
-                log.info("User name " + userName + " already exists");
-                return true;
+            for (FlaggedName user : users) {
+                if (user.getItemName().equals(userName)) {
+                    log.info("User name " + userName + " already exists");
+                    return true;
+                }
             }
+            return false;
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
         }
-        return false;
     }
 
     public Boolean hasMultipleUserStores() throws RemoteException, UserAdminUserAdminException {
-        return userAdminStub.hasMultipleUserStores();
+
+        try {
+            return userAdminStub.hasMultipleUserStores();
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void addInternalRole(String roleName, String[] userList, String[] permissions)
             throws RemoteException, UserAdminUserAdminException {
-        userAdminStub.addInternalRole(roleName, userList, permissions);
+
+        try {
+            userAdminStub.addInternalRole(roleName, userList, permissions);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public FlaggedName[] getAllRolesNames(String filter, int limit)
             throws RemoteException, UserAdminUserAdminException {
-        return userAdminStub.getAllRolesNames(filter, limit);
+
+        try {
+            return userAdminStub.getAllRolesNames(filter, limit);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void addRemoveUsersOfRole(String roleName, String[] newUsers, String[] deletedUsers)
             throws RemoteException, UserAdminUserAdminException {
-        userAdminStub.addRemoveUsersOfRole(roleName, newUsers, deletedUsers);
+
+        try {
+            userAdminStub.addRemoveUsersOfRole(roleName, newUsers, deletedUsers);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void addRemoveRolesOfUser(String userName, String[] newRoles, String[] deletedRoles)
             throws RemoteException, UserAdminUserAdminException {
-        userAdminStub.addRemoveRolesOfUser(userName, newRoles, deletedRoles);
+
+        try {
+            userAdminStub.addRemoveRolesOfUser(userName, newRoles, deletedRoles);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public FlaggedName[] getUsersOfRole(String roleName, String filter, int limit)
             throws RemoteException, UserAdminUserAdminException {
-        return userAdminStub.getUsersOfRole(roleName, filter, limit);
+
+        try {
+            return userAdminStub.getUsersOfRole(roleName, filter, limit);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public FlaggedName[] getRolesOfUser(String userName, String filter, int limit)
             throws RemoteException, UserAdminUserAdminException {
-        return userAdminStub.getRolesOfUser(userName, filter, limit);
+
+        try {
+            return userAdminStub.getRolesOfUser(userName, filter, limit);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void updateUsersOfRole(String roleName, FlaggedName[] userList)
             throws RemoteException, UserAdminUserAdminException {
-        userAdminStub.updateUsersOfRole(roleName, userList);
+
+        try {
+            userAdminStub.updateUsersOfRole(roleName, userList);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void updateRolesOfUser(String userName, String[] newUserList)
             throws RemoteException, UserAdminUserAdminException {
-        userAdminStub.updateRolesOfUser(userName, newUserList);
+
+        try {
+            userAdminStub.updateRolesOfUser(userName, newUserList);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void changePassword(String userName, String newPassword)
             throws RemoteException, UserAdminUserAdminException {
-        userAdminStub.changePassword(userName, newPassword);
+
+        try {
+            userAdminStub.changePassword(userName, newPassword);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void updateRoleName(String roleName, String newRoleName)
             throws RemoteException, UserAdminUserAdminException {
-        userAdminStub.updateRoleName(roleName, newRoleName);
+
+        try {
+            userAdminStub.updateRoleName(roleName, newRoleName);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void changePasswordByUser(String userName, String oldPassword, String newPassword)
             throws RemoteException, UserAdminUserAdminException {
-        userAdminStub.changePasswordByUser(userName, oldPassword, newPassword);
+
+        try {
+            userAdminStub.changePasswordByUser(userName, oldPassword, newPassword);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public FlaggedName[] getAllSharedRoleNames(String filter, int limit)
             throws RemoteException, UserAdminUserAdminException {
-        return userAdminStub.getAllSharedRoleNames(filter, limit);
+
+        try {
+            return userAdminStub.getAllSharedRoleNames(filter, limit);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public UIPermissionNode getAllUIPermissions()
             throws RemoteException, UserAdminUserAdminException {
-        return userAdminStub.getAllUIPermissions();
+
+        try {
+            return userAdminStub.getAllUIPermissions();
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void setRoleUIPermission(String roleName, String[] rawResources)
             throws RemoteException, UserAdminUserAdminException {
-        userAdminStub.setRoleUIPermission(roleName, rawResources);
+
+        try {
+            userAdminStub.setRoleUIPermission(roleName, rawResources);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public UIPermissionNode getRolePermissions(String roleName)
             throws RemoteException, UserAdminUserAdminException {
-        return userAdminStub.getRolePermissions(roleName);
+
+        try {
+            return userAdminStub.getRolePermissions(roleName);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public FlaggedName[] getRolesOfCurrentUser()
             throws RemoteException, UserAdminUserAdminException {
-        return userAdminStub.getRolesOfCurrentUser();
+
+        try {
+            return userAdminStub.getRolesOfCurrentUser();
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public FlaggedName[] listUserByClaim(ClaimValue claimValue, String filter, int maxLimit)
             throws RemoteException, UserAdminUserAdminException {
-        return userAdminStub.listUserByClaim(claimValue, filter, maxLimit);
+
+        try {
+            return userAdminStub.listUserByClaim(claimValue, filter, maxLimit);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public UserRealmInfo getUserRealmInfo()
             throws RemoteException, UserAdminUserAdminException {
-        return userAdminStub.getUserRealmInfo();
+
+        try {
+            return userAdminStub.getUserRealmInfo();
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public boolean isSharedRolesEnabled()
             throws RemoteException, UserAdminUserAdminException {
-        return userAdminStub.isSharedRolesEnabled();
+
+        try {
+            return userAdminStub.isSharedRolesEnabled();
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void bulkImportUsers(String userStoreDomain, String filename, DataHandler handler, String defaultPassword)
             throws RemoteException, UserAdminUserAdminException {
-        userAdminStub.bulkImportUsers(userStoreDomain, filename, handler, defaultPassword);
+
+        try {
+            userAdminStub.bulkImportUsers(userStoreDomain, filename, handler, defaultPassword);
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public HashSet<String> getUserList() throws RemoteException, UserAdminUserAdminException {
-        return new HashSet<String>(Arrays.asList(userAdminStub.listUsers("*", LIMIT)));
+
+        try {
+            return new HashSet<>(Arrays.asList(userAdminStub.listUsers("*", LIMIT)));
+        } finally {
+            userAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 }

@@ -28,7 +28,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticati
 import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.common.clients.AuthenticatorClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;

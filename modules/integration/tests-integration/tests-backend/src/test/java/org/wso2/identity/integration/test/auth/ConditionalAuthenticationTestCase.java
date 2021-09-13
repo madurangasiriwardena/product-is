@@ -48,7 +48,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticati
 import org.wso2.carbon.identity.application.common.model.xsd.LocalAndOutboundAuthenticationConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.common.clients.AuthenticatorClient;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
@@ -158,7 +158,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
             applicationManagementServiceClient.deleteApplication(PRIMARY_IS_APPLICATION_NAME);
             applicationManagementServiceClient2.deleteApplication(SECONDARY_IS_APPLICATION_NAME);
             identityProviderMgtServiceClient.deleteIdP(IDP_NAME);
-            client.getConnectionManager().shutdown();
+            client.close();
 
             this.logManger.logOut();
             logManger = null;

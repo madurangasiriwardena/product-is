@@ -69,7 +69,11 @@ public class WebAppAdminClient {
         webApp = new WebappUploadData();
         webApp.setFileName(fileName);
         webApp.setDataHandler(dh);
-        return webappAdminStub.uploadWebapp(new WebappUploadData[]{webApp});
+        try {
+            return webappAdminStub.uploadWebapp(new WebappUploadData[] {webApp});
+        } finally {
+            webappAdminStub._getServiceClient().cleanupTransport();
+        }
 
     }
 
@@ -85,7 +89,11 @@ public class WebAppAdminClient {
     public WebappsWrapper getPagedWebAppsSummary(String searchString, String webAppType, String webAppState, int pageNo)
             throws RemoteException {
 
-        return webappAdminStub.getPagedWebappsSummary(searchString, webAppType, webAppState, pageNo);
+        try {
+            return webappAdminStub.getPagedWebappsSummary(searchString, webAppType, webAppState, pageNo);
+        } finally {
+            webappAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -122,7 +130,11 @@ public class WebAppAdminClient {
     public WebappsWrapper getPagedFaultyWebAppsSummary(String searchString, String webAppType, int pageNo)
             throws RemoteException {
 
-        return webappAdminStub.getPagedFaultyWebappsSummary(searchString, webAppType, pageNo);
+        try {
+            return webappAdminStub.getPagedFaultyWebappsSummary(searchString, webAppType, pageNo);
+        } finally {
+            webappAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -150,9 +162,17 @@ public class WebAppAdminClient {
 
         List<String> webAppKey = new ArrayList<>();
         for (String webApp : webAppList) {
-            webAppKey.add(webappAdminStub.getStartedWebapp(webApp + ".war", host).getWebappKey());
+            try {
+                webAppKey.add(webappAdminStub.getStartedWebapp(webApp + ".war", host).getWebappKey());
+            } finally {
+                webappAdminStub._getServiceClient().cleanupTransport();
+            }
         }
-        webappAdminStub.deleteAllWebApps(webAppKey.toArray(new String[0]));
+        try {
+            webappAdminStub.deleteAllWebApps(webAppKey.toArray(new String[0]));
+        } finally {
+            webappAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
 }

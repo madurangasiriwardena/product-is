@@ -58,7 +58,12 @@ public class AccountCredentialMgtConfigServiceClient {
      */
     public EmailTemplateDTO[] getEmailConfig() throws RemoteException,
             AccountCredentialMgtConfigServiceIdentityMgtServiceExceptionException {
-        return accCredentialMgtConfigStub.getEmailConfig();
+
+        try {
+            return accCredentialMgtConfigStub.getEmailConfig();
+        } finally {
+            accCredentialMgtConfigStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -70,12 +75,22 @@ public class AccountCredentialMgtConfigServiceClient {
      */
     public void saveEmailConfigs(EmailTemplateDTO[] emailTemplates) throws RemoteException,
             AccountCredentialMgtConfigServiceIdentityMgtServiceExceptionException {
-        accCredentialMgtConfigStub.saveEmailConfig(emailTemplates);
+
+        try {
+            accCredentialMgtConfigStub.saveEmailConfig(emailTemplates);
+        } finally {
+            accCredentialMgtConfigStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void startGetEmailConfig(
             AccountCredentialMgtConfigServiceCallbackHandler callbackHandler)
             throws RemoteException {
-        accCredentialMgtConfigStub.startgetEmailConfig(callbackHandler);
+
+        try {
+            accCredentialMgtConfigStub.startgetEmailConfig(callbackHandler);
+        } finally {
+            accCredentialMgtConfigStub._getServiceClient().cleanupTransport();
+        }
     }
 }

@@ -26,7 +26,7 @@ import org.wso2.carbon.identity.test.integration.service.stub.PermissionDTO;
 import org.wso2.carbon.identity.test.integration.service.stub.UniqueIDUserClaimSearchEntryDAO;
 import org.wso2.carbon.identity.test.integration.service.stub.UserDTO;
 import org.wso2.carbon.identity.test.integration.service.stub.UserRoleListDTO;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.common.clients.AuthenticatorClient;
 import org.wso2.carbon.user.core.model.OperationalOperation;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.usermgt.uuid.UUIDUserStoreManagerServiceClient;

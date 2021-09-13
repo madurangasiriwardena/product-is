@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.common.clients.application.mgt;
 
+import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
@@ -61,7 +62,7 @@ public class DefaultAuthSeqMgtServiceClient {
      * @throws IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException
      */
     public void createDefaultAuthenticationSeq(DefaultAuthenticationSequence authenticationSequence)
-            throws IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException {
+            throws IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException, AxisFault {
 
         try {
             if (log.isDebugEnabled()) {
@@ -71,6 +72,8 @@ public class DefaultAuthSeqMgtServiceClient {
         } catch (RemoteException e) {
             log.error("Error occurred when creating default authentication sequence.", e);
             throw new IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException("Server error occurred.");
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -81,7 +84,7 @@ public class DefaultAuthSeqMgtServiceClient {
      * @throws IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException
      */
     public DefaultAuthenticationSequence getDefaultAuthenticationSeqInXML() throws
-            IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException {
+            IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException, AxisFault {
 
         try {
             if (log.isDebugEnabled()) {
@@ -91,6 +94,8 @@ public class DefaultAuthSeqMgtServiceClient {
         } catch (RemoteException e) {
             log.error("Error occurred when retrieving default authentication sequence in XML format.", e);
             throw new IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException("Server error occurred.");
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -101,7 +106,7 @@ public class DefaultAuthSeqMgtServiceClient {
      * @throws IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException
      */
     public DefaultAuthenticationSequence getDefaultAuthenticationSeq() throws
-            IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException {
+            IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException, AxisFault {
 
         try {
             if (log.isDebugEnabled()) {
@@ -111,6 +116,8 @@ public class DefaultAuthSeqMgtServiceClient {
         } catch (RemoteException e) {
             log.error("Error occurred when retrieving default authentication sequence.", e);
             throw new IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException("Server error occurred.");
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -121,7 +128,7 @@ public class DefaultAuthSeqMgtServiceClient {
      * @throws IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException
      */
     public DefaultAuthenticationSequence getDefaultAuthenticationSeqInfo()
-            throws IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException {
+            throws IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException, AxisFault {
 
         try {
             if (log.isDebugEnabled()) {
@@ -131,6 +138,8 @@ public class DefaultAuthSeqMgtServiceClient {
         } catch (RemoteException e) {
             log.error("Error occurred when retrieving default authentication sequence info.", e);
             throw new IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException("Server error occurred.");
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -141,7 +150,7 @@ public class DefaultAuthSeqMgtServiceClient {
      * @throws IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException
      */
     public boolean isExistingDefaultAuthenticationSequence()
-            throws IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException {
+            throws IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException, AxisFault {
 
         try {
             if (log.isDebugEnabled()) {
@@ -151,6 +160,8 @@ public class DefaultAuthSeqMgtServiceClient {
         } catch (RemoteException e) {
             log.error("Error while checking existence of default authentication sequence.", e);
             throw new IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException("Server error occurred.");
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -160,7 +171,7 @@ public class DefaultAuthSeqMgtServiceClient {
      * @throws IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException
      */
     public void deleteDefaultAuthenticationSeq() throws
-            IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException {
+            IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException, AxisFault {
 
         try {
             if (log.isDebugEnabled()) {
@@ -170,6 +181,8 @@ public class DefaultAuthSeqMgtServiceClient {
         } catch (RemoteException e) {
             log.error("Error occurred when deleting default authentication sequence.", e);
             throw new IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException("Server error occurred.");
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -179,7 +192,7 @@ public class DefaultAuthSeqMgtServiceClient {
      * @throws IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException
      */
     public void updateDefaultAuthenticationSeq(DefaultAuthenticationSequence sequence) throws
-            IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException {
+            IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException, AxisFault {
 
         try {
             if (log.isDebugEnabled()) {
@@ -189,6 +202,8 @@ public class DefaultAuthSeqMgtServiceClient {
         } catch (RemoteException e) {
             log.error("Error occurred when updating default authentication sequence.", e);
             throw new IdentityDefaultSeqManagementServiceDefaultAuthSeqMgtException("Server error occurred.");
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 }

@@ -32,7 +32,7 @@ import org.wso2.carbon.identity.workflow.mgt.stub.metadata.Association;
 import org.wso2.carbon.identity.workflow.mgt.stub.metadata.Template;
 import org.wso2.carbon.identity.workflow.mgt.stub.metadata.WorkflowImpl;
 import org.wso2.carbon.identity.workflow.mgt.stub.metadata.WorkflowWizard;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.common.clients.AuthenticatorClient;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.carbon.um.ws.api.stub.PermissionDTO;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;

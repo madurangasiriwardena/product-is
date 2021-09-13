@@ -69,6 +69,8 @@ public class FunctionLibraryManagementServiceClient {
             stub.createFunctionLibrary(functionLibrary);
         } catch (RemoteException | FunctionLibraryManagementAdminServiceFunctionLibraryManagementException e) {
             handleException(e);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -84,6 +86,8 @@ public class FunctionLibraryManagementServiceClient {
             return stub.listFunctionLibraries();
         } catch (RemoteException | FunctionLibraryManagementAdminServiceFunctionLibraryManagementException e) {
             handleException(e);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
         return new FunctionLibrary[0];
     }
@@ -101,6 +105,8 @@ public class FunctionLibraryManagementServiceClient {
             return stub.getFunctionLibrary(functionLibraryName);
         } catch (RemoteException | FunctionLibraryManagementAdminServiceFunctionLibraryManagementException e) {
             handleException(e);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
         return null;
     }
@@ -117,6 +123,8 @@ public class FunctionLibraryManagementServiceClient {
             stub.deleteFunctionLibrary(functionLibraryName);
         } catch (RemoteException | FunctionLibraryManagementAdminServiceFunctionLibraryManagementException e) {
             handleException(e);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -134,6 +142,8 @@ public class FunctionLibraryManagementServiceClient {
             stub.updateFunctionLibrary(oldFunctionLibraryName, functionLibrary);
         } catch (RemoteException | FunctionLibraryManagementAdminServiceFunctionLibraryManagementException e) {
             handleException(e);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 

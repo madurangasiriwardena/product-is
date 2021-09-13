@@ -79,6 +79,8 @@ public class KeyStoreAdminClient {
         } catch (Exception e) {
             log.error("Error in getting keystore data", e);
             throw new Exception("Error in getting keystore data");
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -97,6 +99,8 @@ public class KeyStoreAdminClient {
         } catch (Exception e) {
             log.error("Error in adding keystore", e);
             throw new Exception("Error in adding keystore");
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -108,6 +112,8 @@ public class KeyStoreAdminClient {
         } catch (Exception e) {
             log.error("Error in deleting keystore", e);
             throw new Exception("Error in deleting keystore");
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -123,6 +129,8 @@ public class KeyStoreAdminClient {
         } catch (Exception e) {
             log.error("Error in importing cert to store.", e);
             throw new Exception("Error in importing cert to store.");
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -135,6 +143,8 @@ public class KeyStoreAdminClient {
         } catch (Exception e) {
             log.error("Error in getting store entries.", e);
             throw new Exception("Error in getting store entries.");
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -157,6 +167,8 @@ public class KeyStoreAdminClient {
         } catch (Exception e) {
             log.error("Error in checking private key store.", e);
             throw new Exception("Error in checking private key store.");
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -169,6 +181,8 @@ public class KeyStoreAdminClient {
         } catch (Exception e) {
             log.error("Error in getting keystore info.", e);
             throw new Exception("Error in getting keystore info.");
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -181,6 +195,8 @@ public class KeyStoreAdminClient {
         } catch (Exception e) {
             log.error("Error in removing certificate from keystore.", e);
             throw new Exception("Error in removing certificate from keystore.");
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -195,6 +211,8 @@ public class KeyStoreAdminClient {
         } catch (Exception e) {
             log.error("Error in getting paginated keystore info.", e);
             throw new Exception("Error in getting paginated keystore info.");
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 

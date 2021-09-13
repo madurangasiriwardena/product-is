@@ -45,58 +45,124 @@ public class OauthAdminClient {
         AuthenticateStub.authenticateStub(userName, password, oauthAdminStub);        
     }
     
-    public void registerOAuthApplicationData(OAuthConsumerAppDTO application) throws RemoteException, OAuthAdminServiceIdentityOAuthAdminException {
-    	oauthAdminStub.registerOAuthApplicationData(application);
+    public void registerOAuthApplicationData(OAuthConsumerAppDTO application)
+            throws RemoteException, OAuthAdminServiceIdentityOAuthAdminException {
+
+        try {
+            oauthAdminStub.registerOAuthApplicationData(application);
+        } finally {
+            oauthAdminStub._getServiceClient().cleanupTransport();
+        }
     }
     
-    public OAuthConsumerAppDTO[] getAllOAuthApplicationData() throws RemoteException, OAuthAdminServiceIdentityOAuthAdminException {
-    	
-    	OAuthConsumerAppDTO[] appDtos = null;
-    	appDtos = oauthAdminStub.getAllOAuthApplicationData();
-    	return appDtos;
+    public OAuthConsumerAppDTO[] getAllOAuthApplicationData()
+            throws RemoteException, OAuthAdminServiceIdentityOAuthAdminException {
+
+        try {
+            return oauthAdminStub.getAllOAuthApplicationData();
+        } finally {
+            oauthAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public OAuthConsumerAppDTO getOAuthAppByConsumerKey(String consumerKey) throws Exception {
-	    return oauthAdminStub.getOAuthApplicationData(consumerKey);
+
+        try {
+            return oauthAdminStub.getOAuthApplicationData(consumerKey);
+        } finally {
+            oauthAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void updateConsumerApp(OAuthConsumerAppDTO updatedConsumerApp) throws Exception {
-        oauthAdminStub.updateConsumerApplication(updatedConsumerApp);
+
+        try {
+            oauthAdminStub.updateConsumerApplication(updatedConsumerApp);
+        } finally {
+            oauthAdminStub._getServiceClient().cleanupTransport();
+        }
     }
     
-    public void removeOAuthApplicationData(String consumerKey) throws RemoteException, OAuthAdminServiceIdentityOAuthAdminException{
-    	oauthAdminStub.removeOAuthApplicationData(consumerKey);
+    public void removeOAuthApplicationData(String consumerKey)
+            throws RemoteException, OAuthAdminServiceIdentityOAuthAdminException{
+
+        try {
+            oauthAdminStub.removeOAuthApplicationData(consumerKey);
+        } finally {
+            oauthAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public String getOauthApplicationState(String appName)
             throws Exception {
-        OAuthConsumerAppDTO authConsumerAppDTO = oauthAdminStub.getOAuthApplicationDataByAppName(appName);
-        return oauthAdminStub.getOauthApplicationState(authConsumerAppDTO.getOauthConsumerKey());
+        OAuthConsumerAppDTO authConsumerAppDTO;
+        try {
+            authConsumerAppDTO = oauthAdminStub.getOAuthApplicationDataByAppName(appName);
+        } finally {
+            oauthAdminStub._getServiceClient().cleanupTransport();
+        }
+        try {
+            return oauthAdminStub.getOauthApplicationState(authConsumerAppDTO.getOauthConsumerKey());
+        } finally {
+            oauthAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void updateConsumerAppState(String appName, String newState)
             throws Exception {
-        OAuthConsumerAppDTO authConsumerAppDTO = oauthAdminStub.getOAuthApplicationDataByAppName(appName);
-        oauthAdminStub.updateConsumerAppState(authConsumerAppDTO.getOauthConsumerKey(), newState);
+
+        OAuthConsumerAppDTO authConsumerAppDTO;
+        try {
+            authConsumerAppDTO = oauthAdminStub.getOAuthApplicationDataByAppName(appName);
+        } finally {
+            oauthAdminStub._getServiceClient().cleanupTransport();
+        }
+        try {
+            oauthAdminStub.updateConsumerAppState(authConsumerAppDTO.getOauthConsumerKey(), newState);
+        } finally {
+            oauthAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void updateOauthSecretKey(String appName)
             throws Exception {
-        OAuthConsumerAppDTO authConsumerAppDTO = oauthAdminStub.getOAuthApplicationDataByAppName(appName);
-        oauthAdminStub.updateOauthSecretKey(authConsumerAppDTO.getOauthConsumerKey());
+        OAuthConsumerAppDTO authConsumerAppDTO;
+        try {
+            authConsumerAppDTO = oauthAdminStub.getOAuthApplicationDataByAppName(appName);
+        } finally {
+            oauthAdminStub._getServiceClient().cleanupTransport();
+        }
+        try {
+            oauthAdminStub.updateOauthSecretKey(authConsumerAppDTO.getOauthConsumerKey());
+        } finally {
+            oauthAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public OAuthConsumerAppDTO getOAuthAppByName(String applicationName) throws Exception {
-	    return oauthAdminStub.getOAuthApplicationDataByAppName(applicationName);
+
+        try {
+            return oauthAdminStub.getOAuthApplicationDataByAppName(applicationName);
+        } finally {
+            oauthAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
-    public void updateConsumerApplication(OAuthConsumerAppDTO application)
-            throws Exception {
-        oauthAdminStub.updateConsumerApplication(application);
+    public void updateConsumerApplication(OAuthConsumerAppDTO application) throws Exception {
+
+        try {
+            oauthAdminStub.updateConsumerApplication(application);
+        } finally {
+            oauthAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void updateScope(String scope, String[] newClaims, String[] deleteClaims) throws Exception {
 
-        oauthAdminStub.updateScope(scope, newClaims, deleteClaims);
+        try {
+            oauthAdminStub.updateScope(scope, newClaims, deleteClaims);
+        } finally {
+            oauthAdminStub._getServiceClient().cleanupTransport();
+        }
     }
 }

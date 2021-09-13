@@ -56,7 +56,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.Claim;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.common.clients.AuthenticatorClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.test.util.Utils;

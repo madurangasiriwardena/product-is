@@ -43,57 +43,120 @@ public class OpenIDProviderServiceClient {
 
     public OpenIDClaimDTO[] getClaimValues(String openId, String profileId, OpenIDParameterDTO[] requredClaims)
             throws Exception {
-        return openidProviderServiceStub.getClaimValues(openId, profileId, requredClaims);
+
+        try {
+            return openidProviderServiceStub.getClaimValues(openId, profileId, requredClaims);
+        } finally {
+            openidProviderServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
-    public OpenIDUserProfileDTO[] getUserProfiles(String openId, OpenIDParameterDTO[] requredClaims)
-            throws Exception {
-        return openidProviderServiceStub.getUserProfiles(openId, requredClaims);
+    public OpenIDUserProfileDTO[] getUserProfiles(String openId, OpenIDParameterDTO[] requredClaims) throws Exception {
+
+        try {
+            return openidProviderServiceStub.getUserProfiles(openId, requredClaims);
+        } finally {
+            openidProviderServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public OpenIDProviderInfoDTO getOpenIDProviderInfo(String userName, String openid) throws Exception {
-        return openidProviderServiceStub.getOpenIDProviderInfo(userName, openid);
+
+        try {
+            return openidProviderServiceStub.getOpenIDProviderInfo(userName, openid);
+        } finally {
+            openidProviderServiceStub._getServiceClient().cleanupTransport();
+        }
     }
     
     public boolean isOpenIDUserApprovalBypassEnabled() throws RemoteException {
-        return openidProviderServiceStub.isOpenIDUserApprovalBypassEnabled();
+
+        try {
+            return openidProviderServiceStub.isOpenIDUserApprovalBypassEnabled();
+        } finally {
+            openidProviderServiceStub._getServiceClient().cleanupTransport();
+        }
     }
     
     public int getOpenIDSessionTimeout() throws RemoteException {
-        return openidProviderServiceStub.getOpenIDSessionTimeout();
+
+        try {
+            return openidProviderServiceStub.getOpenIDSessionTimeout();
+        } finally {
+            openidProviderServiceStub._getServiceClient().cleanupTransport();
+        }
     }
     
     public boolean authenticateWithOpenID(String openID, String password) throws Exception {
-        return openidProviderServiceStub.authenticateWithOpenID(openID, password);
+
+        try {
+            return openidProviderServiceStub.authenticateWithOpenID(openID, password);
+        } finally {
+            openidProviderServiceStub._getServiceClient().cleanupTransport();
+        }
     }
     
     public OpenIDUserRPDTO getOpenIDUserRPInfo(String openID, String rpUrl) throws Exception {
-        return openidProviderServiceStub.getOpenIDUserRPInfo(openID, rpUrl);
+
+        try {
+            return openidProviderServiceStub.getOpenIDUserRPInfo(openID, rpUrl);
+        } finally {
+            openidProviderServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public OpenIDRememberMeDTO authenticateWithOpenIDRememberMe(String openID, String password,
             String ipaddress, String cookie) throws Exception {
-        return openidProviderServiceStub.authenticateWithOpenIDRememberMe(openID, password, ipaddress, cookie);
+
+        try {
+            return openidProviderServiceStub.authenticateWithOpenIDRememberMe(openID, password, ipaddress, cookie);
+        } finally {
+            openidProviderServiceStub._getServiceClient().cleanupTransport();
+        }
     }
     
     public void updateOpenIDUserRPInfo(OpenIDUserRPDTO rpdto) throws Exception {
-        openidProviderServiceStub.updateOpenIDUserRPInfo(rpdto);
+
+        try {
+            openidProviderServiceStub.updateOpenIDUserRPInfo(rpdto);
+        } finally {
+            openidProviderServiceStub._getServiceClient().cleanupTransport();
+        }
     }
     
     public OpenIDUserRPDTO[] getOpenIDUserRPs(String openID) throws Exception {
-        return openidProviderServiceStub.getOpenIDUserRPs(openID);
+
+        try {
+            return openidProviderServiceStub.getOpenIDUserRPs(openID);
+        } finally {
+            openidProviderServiceStub._getServiceClient().cleanupTransport();
+        }
     }
     
     public String getOpenIDAssociationResponse(OpenIDParameterDTO[] params) throws Exception {
-        return openidProviderServiceStub.getOpenIDAssociationResponse(params);
+
+        try {
+            return openidProviderServiceStub.getOpenIDAssociationResponse(params);
+        } finally {
+            openidProviderServiceStub._getServiceClient().cleanupTransport();
+        }
     }
     
-    public OpenIDAuthResponseDTO getOpenIDAuthResponse(OpenIDAuthRequestDTO request)
-            throws Exception {
-        return openidProviderServiceStub.getOpenIDAuthResponse(request);
+    public OpenIDAuthResponseDTO getOpenIDAuthResponse(OpenIDAuthRequestDTO request) throws Exception {
+
+        try {
+            return openidProviderServiceStub.getOpenIDAuthResponse(request);
+        } finally {
+            openidProviderServiceStub._getServiceClient().cleanupTransport();
+        }
     }
     
     public String verify(OpenIDParameterDTO[] params) throws Exception {
-        return openidProviderServiceStub.verify(params);
+
+        try {
+            return openidProviderServiceStub.verify(params);
+        } finally {
+            openidProviderServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 }

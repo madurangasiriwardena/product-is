@@ -44,7 +44,6 @@ public class ISIntegrationTest {
     protected Tenant tenantInfo;
     protected User userInfo;
     protected ContextUrls identityContextUrls;
-    private static String jdbcClassName = "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager";
     protected LoginLogoutClient loginLogoutClient;
 
     protected void init() throws Exception {

@@ -71,6 +71,8 @@ public class SAMLSSOConfigServiceClient {
             throw new RemoteException("Error while getting claim URIs ", e);
         } catch (IdentitySAMLSSOConfigServiceIdentityException e) {
             throw new IdentitySAMLSSOConfigServiceIdentityException("Error while getting claim URIs ", e);
+        } finally {
+            identitySAMLSSOConfigServiceStub._getServiceClient().cleanupTransport();
         }
 
     }
@@ -84,6 +86,8 @@ public class SAMLSSOConfigServiceClient {
             throw new RemoteException("Error while adding service provider "+ssoServiceProviderDTO.getIssuer(), e);
         } catch (IdentitySAMLSSOConfigServiceIdentityException e) {
             throw new IdentitySAMLSSOConfigServiceIdentityException("Error while adding service provider ", e);
+        } finally {
+            identitySAMLSSOConfigServiceStub._getServiceClient().cleanupTransport();
         }
 
     }
@@ -96,6 +100,8 @@ public class SAMLSSOConfigServiceClient {
             throw new RemoteException("Error while adding service provider ", e);
         } catch (IdentitySAMLSSOConfigServiceIdentitySAML2SSOException e) {
             throw new IdentitySAMLSSOConfigServiceIdentitySAML2SSOException("Error while adding service provider ", e);
+        } finally {
+            identitySAMLSSOConfigServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -108,8 +114,9 @@ public class SAMLSSOConfigServiceClient {
             throw new RemoteException("Error while removing service provider", e);
         } catch (IdentitySAMLSSOConfigServiceIdentityException e) {
             throw new IdentitySAMLSSOConfigServiceIdentityException("Error while removing service provider ", e);
+        } finally {
+            identitySAMLSSOConfigServiceStub._getServiceClient().cleanupTransport();
         }
-
     }
 
     public SAMLSSOServiceProviderInfoDTO getServiceProviders()
@@ -120,8 +127,9 @@ public class SAMLSSOConfigServiceClient {
             throw new RemoteException("Error while getting service providers", e);
         } catch (IdentitySAMLSSOConfigServiceIdentityException e) {
             throw new IdentitySAMLSSOConfigServiceIdentityException("Error while getting service providers ", e);
+        } finally {
+            identitySAMLSSOConfigServiceStub._getServiceClient().cleanupTransport();
         }
-
     }
 
     public String[] getCertAlias()
@@ -132,8 +140,8 @@ public class SAMLSSOConfigServiceClient {
             throw new RemoteException("Error while getting cert aliases", e);
         } catch (IdentitySAMLSSOConfigServiceIdentityException e) {
             throw new IdentitySAMLSSOConfigServiceIdentityException("Error while getting cert aliases", e);
+        } finally {
+            identitySAMLSSOConfigServiceStub._getServiceClient().cleanupTransport();
         }
-
     }
-
 }

@@ -73,16 +73,33 @@ public class ServiceAdminClient {
     public ServiceMetaDataWrapper listServices(String serviceName)
             throws RemoteException {
         ServiceMetaDataWrapper serviceMetaDataWrapper;
-        serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", serviceName, 0);
-        serviceAdminStub.getFaultyServiceArchives(0);
+        try {
+            serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", serviceName, 0);
+        } finally {
+            serviceAdminStub._getServiceClient().cleanupTransport();
+        }
+
+        try {
+            serviceAdminStub.getFaultyServiceArchives(0);
+        } finally {
+            serviceAdminStub._getServiceClient().cleanupTransport();
+        }
         return serviceMetaDataWrapper;
     }
 
     public ServiceMetaDataWrapper listServices(String serviceName, String filterType)
             throws RemoteException {
         ServiceMetaDataWrapper serviceMetaDataWrapper;
-        serviceMetaDataWrapper = serviceAdminStub.listServices(filterType, serviceName, 0);
-        serviceAdminStub.getFaultyServiceArchives(0);
+        try {
+            serviceMetaDataWrapper = serviceAdminStub.listServices(filterType, serviceName, 0);
+        } finally {
+            serviceAdminStub._getServiceClient().cleanupTransport();
+        }
+        try {
+            serviceAdminStub.getFaultyServiceArchives(0);
+        } finally {
+            serviceAdminStub._getServiceClient().cleanupTransport();
+        }
         return serviceMetaDataWrapper;
     }
 

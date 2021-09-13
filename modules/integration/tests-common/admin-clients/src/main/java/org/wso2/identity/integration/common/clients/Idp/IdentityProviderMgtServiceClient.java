@@ -121,6 +121,8 @@ public class IdentityProviderMgtServiceClient {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception("Error occurred while retrieving list of Identity Providers");
+        } finally {
+            idPMgtStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -136,6 +138,8 @@ public class IdentityProviderMgtServiceClient {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception("Error occurred while updating resident identity provider");
+        } finally {
+            idPMgtStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -157,6 +161,8 @@ public class IdentityProviderMgtServiceClient {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception("Error occurred while retrieving list of Identity Providers");
+        } finally {
+            idPMgtStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -171,11 +177,15 @@ public class IdentityProviderMgtServiceClient {
      */
     public List<IdentityProvider> getPaginatedIdPsInfo(String filter, int pageNumber) throws Exception {
 
-        IdentityProvider[] identityProviders = idPMgtStub.getPaginatedIdpInfo(filter, pageNumber);
-        if (identityProviders != null && identityProviders.length > 0) {
-            return Arrays.asList(identityProviders);
-        } else {
-            return new ArrayList<>();
+        try {
+            IdentityProvider[] identityProviders = idPMgtStub.getPaginatedIdpInfo(filter, pageNumber);
+            if (identityProviders != null && identityProviders.length > 0) {
+                return Arrays.asList(identityProviders);
+            } else {
+                return new ArrayList<>();
+            }
+        } finally {
+            idPMgtStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -189,11 +199,15 @@ public class IdentityProviderMgtServiceClient {
      */
     public List<IdentityProvider> getAllPaginatedIdPsInfo(int pageNumber) throws Exception {
 
-        IdentityProvider[] identityProviders = idPMgtStub.getAllPaginatedIdpInfo(pageNumber);
-        if (identityProviders != null && identityProviders.length > 0) {
-            return Arrays.asList(identityProviders);
-        } else {
-            return new ArrayList<>();
+        try {
+            IdentityProvider[] identityProviders = idPMgtStub.getAllPaginatedIdpInfo(pageNumber);
+            if (identityProviders != null && identityProviders.length > 0) {
+                return Arrays.asList(identityProviders);
+            } else {
+                return new ArrayList<>();
+            }
+        } finally {
+            idPMgtStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -206,7 +220,11 @@ public class IdentityProviderMgtServiceClient {
      */
     public int getFilteredIdpCount(String filter) throws Exception {
 
-        return idPMgtStub.getFilteredIdpCount(filter);
+        try {
+            return idPMgtStub.getFilteredIdpCount(filter);
+        } finally {
+            idPMgtStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -217,7 +235,11 @@ public class IdentityProviderMgtServiceClient {
      */
     public int getAllIdpCount() throws Exception {
 
-        return idPMgtStub.getAllIdpCount();
+        try {
+            return idPMgtStub.getAllIdpCount();
+        } finally {
+            idPMgtStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -233,12 +255,14 @@ public class IdentityProviderMgtServiceClient {
             if (identityProviders != null && identityProviders.length > 0) {
                 return Arrays.asList(identityProviders);
             } else {
-                return new ArrayList<IdentityProvider>();
+                return new ArrayList<>();
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception(
                     "Error occurred while retrieving list of Enabled Identity Providers");
+        } finally {
+            idPMgtStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -255,6 +279,8 @@ public class IdentityProviderMgtServiceClient {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception("Error occurred while retrieving information about " + idPName);
+        } finally {
+            idPMgtStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -273,6 +299,8 @@ public class IdentityProviderMgtServiceClient {
             log.error(e.getMessage(), e);
             throw new Exception("Error occurred while adding Identity Provider "
                     + identityProvider.getIdentityProviderName());
+        } finally {
+            idPMgtStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -287,6 +315,8 @@ public class IdentityProviderMgtServiceClient {
             idPMgtStub.deleteIdP(idPName);
         } catch (Exception e) {
             throw e;
+        } finally {
+            idPMgtStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -303,6 +333,8 @@ public class IdentityProviderMgtServiceClient {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception("Error occurred while deleting Identity Provider " + oldIdPName);
+        } finally {
+            idPMgtStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -333,6 +365,8 @@ public class IdentityProviderMgtServiceClient {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception("Error occurred while retrieving all local claim URIs");
+        } finally {
+            idPMgtStub._getServiceClient().cleanupTransport();
         }
 
         return configMap;
@@ -360,6 +394,8 @@ public class IdentityProviderMgtServiceClient {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception("Error occurred while retrieving all local claim URIs");
+        } finally {
+            idPMgtStub._getServiceClient().cleanupTransport();
         }
 
         return configMap;
@@ -387,6 +423,8 @@ public class IdentityProviderMgtServiceClient {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception("Error occurred while retrieving all Provisioning Connectors");
+        } finally {
+            idPMgtStub._getServiceClient().cleanupTransport();
         }
         return provisioningConnectors;
     }
@@ -410,6 +448,8 @@ public class IdentityProviderMgtServiceClient {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception("Error occurred while retrieving all Provisioning Connectors");
+        } finally {
+            idPMgtStub._getServiceClient().cleanupTransport();
         }
         return provisioningConnectors;
     }
@@ -426,6 +466,8 @@ public class IdentityProviderMgtServiceClient {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception("Error occurred while retrieving all local claim URIs");
+        } finally {
+            idPMgtStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -449,6 +491,8 @@ public class IdentityProviderMgtServiceClient {
             log.error(e.getMessage(), e);
             throw new Exception(
                     "Error occurred while retrieving Read-Write User Store Domain IDs for logged-in user's tenant realm");
+        } finally {
+            idPMgtStub._getServiceClient().cleanupTransport();
         }
     }
 

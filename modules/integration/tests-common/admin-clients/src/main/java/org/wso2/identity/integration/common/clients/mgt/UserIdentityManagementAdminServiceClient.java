@@ -39,21 +39,41 @@ public class UserIdentityManagementAdminServiceClient {
 
     public UserChallengesDTO[] getChallengeQuestionsOfUser(String userName)
             throws UserIdentityManagementAdminServiceIdentityMgtServiceExceptionException, RemoteException {
-        return userIdentityManagementAdminServicestub.getChallengeQuestionsOfUser(userName);
+
+        try {
+            return userIdentityManagementAdminServicestub.getChallengeQuestionsOfUser(userName);
+        } finally {
+            userIdentityManagementAdminServicestub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void setChallengeQuestionsOfUser(String userName, UserChallengesDTO[] challengesDTOs)
             throws UserIdentityManagementAdminServiceIdentityMgtServiceExceptionException, RemoteException {
-        userIdentityManagementAdminServicestub.setChallengeQuestionsOfUser(userName, challengesDTOs);
+
+        try {
+            userIdentityManagementAdminServicestub.setChallengeQuestionsOfUser(userName, challengesDTOs);
+        } finally {
+            userIdentityManagementAdminServicestub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void disableUserAccount(String userName, String notificationType)
             throws UserIdentityManagementAdminServiceIdentityMgtServiceExceptionException, RemoteException {
-        userIdentityManagementAdminServicestub.disableUserAccount(userName, notificationType);
+
+        try {
+            userIdentityManagementAdminServicestub.disableUserAccount(userName, notificationType);
+        } finally {
+            userIdentityManagementAdminServicestub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void enableUserAccount(String userName, String notificationType)
             throws UserIdentityManagementAdminServiceIdentityMgtServiceExceptionException, RemoteException {
-        userIdentityManagementAdminServicestub.enableUserAccount(userName, notificationType);
+
+        try {
+            userIdentityManagementAdminServicestub.enableUserAccount(userName, notificationType);
+        } finally {
+            userIdentityManagementAdminServicestub._getServiceClient().cleanupTransport();
+        }
     }
 }

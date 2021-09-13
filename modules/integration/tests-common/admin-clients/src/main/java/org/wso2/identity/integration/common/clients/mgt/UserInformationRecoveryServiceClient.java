@@ -21,6 +21,8 @@ package org.wso2.identity.integration.common.clients.mgt;
 import java.rmi.RemoteException;
 
 import org.apache.axis2.AxisFault;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.captcha.mgt.beans.xsd.CaptchaInfoBean;
 import org.wso2.carbon.identity.mgt.stub.dto.UserIdentityClaimDTO;
 import org.wso2.carbon.identity.mgt.stub.dto.ChallengeQuestionDTO;
@@ -31,12 +33,14 @@ import org.wso2.carbon.identity.mgt.stub.UserInformationRecoveryServiceIdentityE
 import org.wso2.carbon.identity.mgt.stub.UserInformationRecoveryServiceIdentityMgtServiceExceptionException;
 import org.wso2.carbon.identity.mgt.stub.UserInformationRecoveryServiceStub;
 import org.wso2.identity.integration.common.clients.AuthenticateStub;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 
 
 public class UserInformationRecoveryServiceClient {
 
 	private UserInformationRecoveryServiceStub infoRecoveryStub;
     private final String serviceName = "UserInformationRecoveryService";
+	private static Log log = LogFactory.getLog(UserInformationRecoveryServiceClient.class);
 	
     public UserInformationRecoveryServiceClient(String backendURL, String sessionCookie)
             throws AxisFault {
@@ -57,7 +61,9 @@ public class UserInformationRecoveryServiceClient {
 		try {
 			bean = infoRecoveryStub.getCaptcha();
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error(e);
+		} finally {
+			infoRecoveryStub._getServiceClient().cleanupTransport();
 		}
 		return bean;
 	}
@@ -67,7 +73,9 @@ public class UserInformationRecoveryServiceClient {
     	try {
     		bean = infoRecoveryStub.verifyUser(username, captcha);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error(e);
+		} finally {
+			infoRecoveryStub._getServiceClient().cleanupTransport();
 		}
     	return bean;
     }
@@ -77,7 +85,9 @@ public class UserInformationRecoveryServiceClient {
     	try {
     		bean = infoRecoveryStub.sendRecoveryNotification(username, key, notificationType);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error(e);
+		} finally {
+			infoRecoveryStub._getServiceClient().cleanupTransport();
 		}
     	return bean;
     }
@@ -88,7 +98,9 @@ public class UserInformationRecoveryServiceClient {
     	try {
     		bean = infoRecoveryStub.verifyConfirmationCode(username, code, captcha);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error(e);
+		} finally {
+			infoRecoveryStub._getServiceClient().cleanupTransport();
 		}
     	return bean;
     }
@@ -99,7 +111,9 @@ public class UserInformationRecoveryServiceClient {
     	try {
     		bean = infoRecoveryStub.updatePassword(username, confirmationCode, newPassword);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error(e);
+		} finally {
+			infoRecoveryStub._getServiceClient().cleanupTransport();
 		}
     	return bean;
     }
@@ -109,7 +123,9 @@ public class UserInformationRecoveryServiceClient {
     	try {
     		bean = infoRecoveryStub.getUserChallengeQuestionIds(username, confirmation);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error(e);
+		} finally {
+			infoRecoveryStub._getServiceClient().cleanupTransport();
 		}
     	return bean;
     }
@@ -120,7 +136,9 @@ public class UserInformationRecoveryServiceClient {
     	try {
     		bean = infoRecoveryStub.getUserChallengeQuestion(userName, confirmation, questionId);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error(e);
+		} finally {
+			infoRecoveryStub._getServiceClient().cleanupTransport();
 		}
     	return bean;
     }
@@ -131,7 +149,9 @@ public class UserInformationRecoveryServiceClient {
     	try {
 			bean = infoRecoveryStub.verifyUserChallengeAnswer(userName, confirmation, questionId, answer);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error(e);
+		} finally {
+			infoRecoveryStub._getServiceClient().cleanupTransport();
 		}
     	return bean;
     }
@@ -141,7 +161,9 @@ public class UserInformationRecoveryServiceClient {
     	try {
 			questions = infoRecoveryStub.getAllChallengeQuestions();
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error(e);
+		} finally {
+			infoRecoveryStub._getServiceClient().cleanupTransport();
 		}
     	return questions;
     }
@@ -151,7 +173,9 @@ public class UserInformationRecoveryServiceClient {
     	try {
 			claims = infoRecoveryStub.getUserIdentitySupportedClaims(dialect);
 		} catch (UserInformationRecoveryServiceIdentityExceptionException e) {
-			e.printStackTrace();
+			log.error(e);
+		} finally {
+			infoRecoveryStub._getServiceClient().cleanupTransport();
 		}
     	return claims;
     }
@@ -162,7 +186,9 @@ public class UserInformationRecoveryServiceClient {
     	try {
 			bean = infoRecoveryStub.verifyAccount(claims, captcha, tenantDomain);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error(e);
+		} finally {
+			infoRecoveryStub._getServiceClient().cleanupTransport();
 		}
     	return bean;
     }
@@ -173,7 +199,9 @@ public class UserInformationRecoveryServiceClient {
     	try {
 			bean = infoRecoveryStub.registerUser(userName, password, claims, profileName, tenantDomain);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error(e);
+		} finally {
+			infoRecoveryStub._getServiceClient().cleanupTransport();
 		}
     	return bean;
     }
@@ -184,7 +212,9 @@ public class UserInformationRecoveryServiceClient {
     	try {
 			bean = infoRecoveryStub.confirmUserSelfRegistration(username, code, captcha, tenantDomain);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error(e);
+		} finally {
+			infoRecoveryStub._getServiceClient().cleanupTransport();
 		}
     	return bean;
     }

@@ -57,6 +57,8 @@ public class ChallengeQuestionMgtAdminClient {
             return stub.getChallengeQuestionsOfTenant(tenantDomain);
         } catch (Exception e) {
             handleException(e.getMessage(), e);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
         return new ChallengeQuestion[0];
     }
@@ -68,6 +70,8 @@ public class ChallengeQuestionMgtAdminClient {
             return stub.getChallengeQuestionsForUser(user);
         } catch (Exception e) {
             handleException(e.getMessage(), e);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
 
         return new ChallengeQuestion[0];
@@ -79,6 +83,8 @@ public class ChallengeQuestionMgtAdminClient {
             return stub.getChallengeQuestionsForLocale(tenantDomain, locale);
         } catch (Exception e) {
             handleException(e.getMessage(), e);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
 
         return new ChallengeQuestion[0];
@@ -91,6 +97,8 @@ public class ChallengeQuestionMgtAdminClient {
             stub.setChallengeQuestionsOfTenant(challengeQuestions, tenantDomain);
         } catch (Exception e) {
             handleException(e.getMessage(), e);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -100,6 +108,8 @@ public class ChallengeQuestionMgtAdminClient {
             stub.deleteChallengeQuestionsOfTenant(challengeQuestions, tenantDomain);
         } catch (Exception e) {
             handleException(e.getMessage(), e);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -109,6 +119,8 @@ public class ChallengeQuestionMgtAdminClient {
             stub.setUserChallengeAnswers(user, userChallengeAnswers);
         } catch (Exception e) {
             handleException(e.getMessage(), e);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -117,6 +129,8 @@ public class ChallengeQuestionMgtAdminClient {
             return stub.getUserChallengeAnswers(user);
         } catch (Exception e) {
             handleException(e.getMessage(), e);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
         }
 
         return new UserChallengeAnswer[0];

@@ -40,7 +40,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.InboundProvisioning
 import org.wso2.carbon.identity.application.common.model.xsd.JustInTimeProvisioningConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.common.clients.AuthenticatorClient;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.charon.core.client.SCIMClient;
 import org.wso2.charon.core.exceptions.CharonException;

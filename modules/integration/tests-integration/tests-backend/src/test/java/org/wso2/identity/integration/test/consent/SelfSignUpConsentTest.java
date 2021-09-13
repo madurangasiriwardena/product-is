@@ -41,7 +41,7 @@ import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProviderProperty;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.common.clients.AuthenticatorClient;
 import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
@@ -119,7 +119,6 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         selfRegistrationMeEndpoint = isServerBackendUrl + "/t/" + secondaryTenantDomain + USER_RECOVERY_ME_ENDPOINT;
         superTenantResidentIDP = superTenantIDPMgtClient.getResidentIdP();
         tenantResidentIDP = tenantIDPMgtClient.getResidentIdP();
-
     }
 
     @AfterClass(alwaysRun = true)

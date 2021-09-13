@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.application.mgt;
 
+import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.lang.ArrayUtils;
@@ -103,6 +104,8 @@ public class DefaultAuthSeqManagementTestCase extends ISIntegrationTest {
             if (ArrayUtils.isEmpty(e.getFaultMessage().getDefaultAuthSeqMgtException().getMessages())) {
                 fail("Error while trying to create default authentication sequence with invalid content.", e);
             }
+        } catch (AxisFault axisFault) {
+            log.error("Error while cleaning the transport.", axisFault);
         }
     }
 
@@ -123,6 +126,8 @@ public class DefaultAuthSeqManagementTestCase extends ISIntegrationTest {
                 fail("Error while trying to create default authentication sequence with " +
                         "invalid XML element.", e);
             }
+        } catch (AxisFault axisFault) {
+            log.error("Error while cleaning the transport.", axisFault);
         }
     }
 
@@ -141,6 +146,8 @@ public class DefaultAuthSeqManagementTestCase extends ISIntegrationTest {
             if (ArrayUtils.isEmpty(e.getFaultMessage().getDefaultAuthSeqMgtException().getMessages())) {
                 fail("Error while trying to create default authentication sequence with incorrect content.", e);
             }
+        } catch (AxisFault axisFault) {
+            log.error("Error while cleaning the transport.", axisFault);
         }
     }
 

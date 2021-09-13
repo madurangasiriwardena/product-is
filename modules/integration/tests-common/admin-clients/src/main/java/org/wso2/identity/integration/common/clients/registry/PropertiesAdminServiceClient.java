@@ -42,12 +42,22 @@ public class PropertiesAdminServiceClient {
 
     public void setProperty(String path, String key, String value) throws
             PropertiesAdminServiceRegistryExceptionException, RemoteException {
-        stub.setProperty(path, key, value);
+
+        try {
+            stub.setProperty(path, key, value);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void updateProperty(String path, String key, String value, String oldKey) throws
             PropertiesAdminServiceRegistryExceptionException, RemoteException {
-        stub.updateProperty(path, key, value, oldKey);
+
+        try {
+            stub.updateProperty(path, key, value, oldKey);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -61,7 +71,12 @@ public class PropertiesAdminServiceClient {
      */
     public PropertiesBean getProperties(String path, String viewProps)
             throws RemoteException, PropertiesAdminServiceRegistryExceptionException {
-        return stub.getProperties(path, viewProps);
+
+        try {
+            return stub.getProperties(path, viewProps);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -74,7 +89,12 @@ public class PropertiesAdminServiceClient {
      */
     public void removeProperty(String path, String propName)
             throws RemoteException, PropertiesAdminServiceRegistryExceptionException {
-        stub.removeProperty(path, propName);
+
+        try {
+            stub.removeProperty(path, propName);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
 }

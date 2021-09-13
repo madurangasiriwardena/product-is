@@ -62,6 +62,8 @@ public class ClaimMetadataManagementServiceClient {
             throw e;
         } catch (ClaimMetadataManagementServiceClaimMetadataException e) {
             throw e;
+        } finally {
+            claimMetadataManagementServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -73,6 +75,8 @@ public class ClaimMetadataManagementServiceClient {
             throw e;
         } catch (ClaimMetadataManagementServiceClaimMetadataException e) {
             throw e;
+        } finally {
+            claimMetadataManagementServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -86,6 +90,8 @@ public class ClaimMetadataManagementServiceClient {
             throw e;
         } catch (ClaimMetadataManagementServiceClaimMetadataException e) {
             throw e;
+        } finally {
+            claimMetadataManagementServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -98,6 +104,8 @@ public class ClaimMetadataManagementServiceClient {
             throw e;
         } catch (ClaimMetadataManagementServiceClaimMetadataException e) {
             throw e;
+        } finally {
+            claimMetadataManagementServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -110,6 +118,8 @@ public class ClaimMetadataManagementServiceClient {
             throw e;
         } catch (ClaimMetadataManagementServiceClaimMetadataException e) {
             throw e;
+        } finally {
+            claimMetadataManagementServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -122,6 +132,8 @@ public class ClaimMetadataManagementServiceClient {
             throw e;
         } catch (ClaimMetadataManagementServiceClaimMetadataException e) {
             throw e;
+        } finally {
+            claimMetadataManagementServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -134,6 +146,8 @@ public class ClaimMetadataManagementServiceClient {
             throw e;
         } catch (ClaimMetadataManagementServiceClaimMetadataException e) {
             throw e;
+        } finally {
+            claimMetadataManagementServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -147,6 +161,8 @@ public class ClaimMetadataManagementServiceClient {
             throw e;
         } catch (ClaimMetadataManagementServiceClaimMetadataException e) {
             throw e;
+        } finally {
+            claimMetadataManagementServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -159,6 +175,8 @@ public class ClaimMetadataManagementServiceClient {
             throw e;
         } catch (ClaimMetadataManagementServiceClaimMetadataException e) {
             throw e;
+        } finally {
+            claimMetadataManagementServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -171,6 +189,8 @@ public class ClaimMetadataManagementServiceClient {
             throw e;
         } catch (ClaimMetadataManagementServiceClaimMetadataException e) {
             throw e;
+        } finally {
+            claimMetadataManagementServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -183,6 +203,8 @@ public class ClaimMetadataManagementServiceClient {
             throw e;
         } catch (ClaimMetadataManagementServiceClaimMetadataException e) {
             throw e;
+        } finally {
+            claimMetadataManagementServiceStub._getServiceClient().cleanupTransport();
         }
     }
 }

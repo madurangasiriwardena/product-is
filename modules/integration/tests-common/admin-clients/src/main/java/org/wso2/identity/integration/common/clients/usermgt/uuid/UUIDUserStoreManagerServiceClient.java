@@ -61,20 +61,33 @@ public class UUIDUserStoreManagerServiceClient {
                                  String profileName) throws UserStoreException, RemoteException,
             UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.addUserWithID(userName, credential, roleList, claims, profileName);
+        try {
+            return uuidUserStoreManagerServiceStub.addUserWithID(userName, credential, roleList, claims, profileName);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public AuthenticationResultDTO authenticateWithIDLoginIdentifier(LoginIdentifierDTO[] loginIdentifiers,
                                                                      String domain, String credential)
             throws UserStoreException, RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.authenticateWithIDLoginIdentifier(loginIdentifiers, domain, credential);
+        try {
+            return uuidUserStoreManagerServiceStub.authenticateWithIDLoginIdentifier(loginIdentifiers, domain,
+                    credential);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public AuthenticationResultDTO authenticateWithIDUserId(String userID, String domain, String credential)
             throws UserStoreException, RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.authenticateWithIDUserId(userID, credential);
+        try {
+            return uuidUserStoreManagerServiceStub.authenticateWithIDUserId(userID, credential);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public AuthenticationResultDTO authenticateWithIDUsernameClaim(String preferredUserNameClaim,
@@ -82,61 +95,97 @@ public class UUIDUserStoreManagerServiceClient {
                                                                    String profileName) throws UserStoreException,
             RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.authenticateWithIDUsernameClaim(preferredUserNameClaim,
-                preferredUserNameValue, credential, profileName);
+        try {
+            return uuidUserStoreManagerServiceStub.authenticateWithIDUsernameClaim(preferredUserNameClaim,
+                    preferredUserNameValue, credential, profileName);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void deleteUserClaimValuesWithID(String userID, String[] claims, String profileName)
             throws UserStoreException, RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        uuidUserStoreManagerServiceStub.deleteUserClaimValuesWithID(userID, claims, profileName);
+        try {
+            uuidUserStoreManagerServiceStub.deleteUserClaimValuesWithID(userID, claims, profileName);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public Date getPasswordExpirationTimeWithID(String userId) throws UserStoreException, RemoteException,
             UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.getPasswordExpirationTimeWithID(userId);
+        try {
+            return uuidUserStoreManagerServiceStub.getPasswordExpirationTimeWithID(userId);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public boolean isUserInRoleWithID(String userID, String roleName) throws UserStoreException, RemoteException,
             UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.isUserInRoleWithID(userID, roleName);
+        try {
+            return uuidUserStoreManagerServiceStub.isUserInRoleWithID(userID, roleName);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public UserDTO[] listUsersWithID(String filter, int limit, int offset) throws UserStoreException, RemoteException,
             UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.listUsersWithOffsetWithID(filter, limit, offset);
+        try {
+            return uuidUserStoreManagerServiceStub.listUsersWithOffsetWithID(filter, limit, offset);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public UserDTO[] getUserListWithID(String claim, String claimValue, String profileName, int limit, int offset)
             throws UserStoreException, RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.getUserListWithOffsetWithID(claim, claimValue, profileName, limit,
-                offset);
+        try {
+            return uuidUserStoreManagerServiceStub.getUserListWithOffsetWithID(claim, claimValue, profileName, limit,
+                    offset);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public UserDTO[] getUserListWithID(ConditionDTO conditionDTO, String domain, String profileName, int limit,
                                        int offset, String sortBy, String sortOrder) throws UserStoreException,
             RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.getUserListWithIDCondition(conditionDTO, domain, profileName, limit,
-                offset, sortBy, sortOrder);
+        try {
+            return uuidUserStoreManagerServiceStub.getUserListWithIDCondition(conditionDTO, domain, profileName, limit,
+                    offset, sortBy, sortOrder);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public UniqueIDUserClaimSearchEntryDAO[] getUsersClaimValuesWithID(List<String> userIDs, List<String> claims,
                                                                        String profileName) throws UserStoreException,
             RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.getUsersClaimValuesWithID(userIDs.toArray(new String[0]),
-                claims.toArray(new String[0]), profileName);
+        try {
+            return uuidUserStoreManagerServiceStub.getUsersClaimValuesWithID(userIDs.toArray(new String[0]),
+                    claims.toArray(new String[0]), profileName);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public UserRoleListDTO[] getRoleListOfUsersWithID(String[] userIDs) throws UserStoreException, RemoteException,
             UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.getRoleListOfUsersWithID(userIDs);
+        try {
+            return uuidUserStoreManagerServiceStub.getRoleListOfUsersWithID(userIDs);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void deleteUserClaimValueWithID(String userID, String claimURI, String profileName)
@@ -147,67 +196,111 @@ public class UUIDUserStoreManagerServiceClient {
     public UserDTO[] listUsersWithID(String filter, int maxItemLimit) throws UserStoreException, RemoteException,
             UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.listUsersWithID(filter, maxItemLimit);
+        try {
+            return uuidUserStoreManagerServiceStub.listUsersWithID(filter, maxItemLimit);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public UserDTO getUserWithID(String userID, String[] requestedClaims, String profileName)
             throws UserStoreException, RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.getUserWithID(userID, requestedClaims, profileName);
+        try {
+            return uuidUserStoreManagerServiceStub.getUserWithID(userID, requestedClaims, profileName);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public boolean isExistingUserWithID(String userID) throws UserStoreException, RemoteException,
             UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.isExistingUserWithID(userID);
+        try {
+            return uuidUserStoreManagerServiceStub.isExistingUserWithID(userID);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public String[] getProfileNamesWithID(String userID) throws UserStoreException, RemoteException,
             UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.getProfileNamesWithID(userID);
+        try {
+            return uuidUserStoreManagerServiceStub.getProfileNamesWithID(userID);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public String[] getRoleListOfUserWithID(String userID) throws UserStoreException, RemoteException,
             UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.getRoleListOfUserWithID(userID);
+        try {
+            return uuidUserStoreManagerServiceStub.getRoleListOfUserWithID(userID);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public UserDTO[] getUserListOfRoleWithID(String roleName) throws UserStoreException, RemoteException,
             UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.getUserListOfRoleWithID(roleName);
+        try {
+            return uuidUserStoreManagerServiceStub.getUserListOfRoleWithID(roleName);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public UserDTO[] getUserListOfRoleWithID(String roleName, String filter, int maxItemLimit)
             throws UserStoreException, RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.getUserListOfRoleFilteredWithID(roleName, filter, maxItemLimit);
+        try {
+            return uuidUserStoreManagerServiceStub.getUserListOfRoleFilteredWithID(roleName, filter, maxItemLimit);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public String getUserClaimValueWithID(String userID, String claim, String profileName) throws UserStoreException,
             RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.getUserClaimValueWithID(userID, claim, profileName);
+        try {
+            return uuidUserStoreManagerServiceStub.getUserClaimValueWithID(userID, claim, profileName);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public ClaimValue[] getUserClaimValuesWithID(String userID, String[] claims, String profileName)
             throws UserStoreException, RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.getUserClaimValuesForGivenClaimsWithID(userID, claims, profileName);
+        try {
+            return uuidUserStoreManagerServiceStub.getUserClaimValuesForGivenClaimsWithID(userID, claims, profileName);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public ClaimDTO[] getUserClaimValuesWithID(String userID, String profileName) throws UserStoreException,
             RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.getUserClaimValuesWithID(userID, profileName);
+        try {
+            return uuidUserStoreManagerServiceStub.getUserClaimValuesWithID(userID, profileName);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void deleteUserWithID(String userID) throws UserStoreException, RemoteException,
             UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        uuidUserStoreManagerServiceStub.deleteUserWithID(userID);
+        try {
+            uuidUserStoreManagerServiceStub.deleteUserWithID(userID);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void setUserClaimValueWithID(String userID, String claimURI, String claimValue, String profileName)
@@ -218,43 +311,71 @@ public class UUIDUserStoreManagerServiceClient {
     public void setUserClaimValuesWithID(String userID, ClaimValue[] claims, String profileName)
             throws UserStoreException, RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        uuidUserStoreManagerServiceStub.setUserClaimValuesWithID(userID, claims, profileName);
+        try {
+            uuidUserStoreManagerServiceStub.setUserClaimValuesWithID(userID, claims, profileName);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public UserDTO[] getUserListWithID(String claim, String claimValue, String profileName) throws UserStoreException,
             RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.getUserListWithID(claim, claimValue, profileName);
+        try {
+            return uuidUserStoreManagerServiceStub.getUserListWithID(claim, claimValue, profileName);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void updateCredentialWithID(String userID, String newCredential, String oldCredential)
             throws UserStoreException, RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        uuidUserStoreManagerServiceStub.updateCredentialWithID(userID, newCredential, oldCredential);
+        try {
+            uuidUserStoreManagerServiceStub.updateCredentialWithID(userID, newCredential, oldCredential);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void updateCredentialByAdminWithID(String userID, String newCredential) throws UserStoreException,
             RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        uuidUserStoreManagerServiceStub.updateCredentialByAdminWithID(userID, newCredential);
+        try {
+            uuidUserStoreManagerServiceStub.updateCredentialByAdminWithID(userID, newCredential);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void addRoleWithID(String roleName, String[] userIDList, PermissionDTO[] permissionsDTOs,
                               boolean isSharedRole) throws UserStoreException, RemoteException,
             UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        uuidUserStoreManagerServiceStub.addRoleWithID(roleName, userIDList, permissionsDTOs, isSharedRole);
+        try {
+            uuidUserStoreManagerServiceStub.addRoleWithID(roleName, userIDList, permissionsDTOs, isSharedRole);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void updateUserListOfRoleWithID(String roleName, String[] deletedUserIDs, String[] newUserIDs)
             throws UserStoreException, RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        uuidUserStoreManagerServiceStub.updateUserListOfRoleWithID(roleName, deletedUserIDs, newUserIDs);
+        try {
+            uuidUserStoreManagerServiceStub.updateUserListOfRoleWithID(roleName, deletedUserIDs, newUserIDs);
+        }  finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void updateRoleListOfUserWithID(String userID, String[] deletedRoles, String[] newRoles)
             throws UserStoreException, RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        uuidUserStoreManagerServiceStub.updateRoleListOfUserWithID(userID, deletedRoles, newRoles);
+        try {
+            uuidUserStoreManagerServiceStub.updateRoleListOfUserWithID(userID, deletedRoles, newRoles);
+        } finally {
+            uuidUserStoreManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 }

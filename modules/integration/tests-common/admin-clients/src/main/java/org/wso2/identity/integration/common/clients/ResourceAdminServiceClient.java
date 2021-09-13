@@ -70,14 +70,21 @@ public class ResourceAdminServiceClient {
              log.debug("Destination Path :" + destinationPath);
              log.debug("Media Type :" + mediaType);
          }
-         return resourceAdminServiceStub.addResource(destinationPath, mediaType, description, dh, null, null);
+         try {
+             return resourceAdminServiceStub.addResource(destinationPath, mediaType, description, dh, null, null);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
+         }
      }
 
      public ResourceData[] getResource(String destinationPath)
              throws ResourceAdminServiceExceptionException, RemoteException {
-         ResourceData[] rs;
-         rs = resourceAdminServiceStub.getResourceData(new String[]{destinationPath});
-         return rs;
+
+         try {
+             return resourceAdminServiceStub.getResourceData(new String[] {destinationPath});
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
+         }
      }
 
      public CollectionContentBean getCollectionContent(String destinationPath)
@@ -88,14 +95,13 @@ public class ResourceAdminServiceClient {
              collectionContentBean = resourceAdminServiceStub.getCollectionContent(destinationPath);
          } catch (RemoteException e) {
              log.error("Resource getting failed due to RemoteException : " + e);
-             throw new RemoteException("Resource getting failed due to RemoteException :",
-                     e);
+             throw new RemoteException("Resource getting failed due to RemoteException :", e);
          } catch (ResourceAdminServiceExceptionException e) {
-             log.error("Resource getting failed due to ResourceAdminServiceExceptionException : ",
-                     e);
+             log.error("Resource getting failed due to ResourceAdminServiceExceptionException : ", e);
              throw new ResourceAdminServiceExceptionException(
-                     "Resource getting failed due to ResourceAdminServiceExceptionException:",
-                     e);
+                     "Resource getting failed due to ResourceAdminServiceExceptionException:", e);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
          }
 
          return collectionContentBean;
@@ -104,7 +110,11 @@ public class ResourceAdminServiceClient {
      public boolean deleteResource(String destinationPath)
              throws ResourceAdminServiceExceptionException, RemoteException {
 
-         return resourceAdminServiceStub.delete(destinationPath);
+         try {
+             return resourceAdminServiceStub.delete(destinationPath);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
+         }
      }
 
      public void addWSDL(String description, DataHandler dh)
@@ -113,7 +123,11 @@ public class ResourceAdminServiceClient {
          String fileName;
          fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
          log.debug(fileName);
-         resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_WSDL, description, dh, null, null);
+         try {
+             resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_WSDL, description, dh, null, null);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
+         }
      }
 
      public void addWADL(String description, DataHandler dh)
@@ -122,44 +136,69 @@ public class ResourceAdminServiceClient {
          String fileName;
          fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
          log.debug(fileName);
-         resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_WADL, description, dh, null, null);
+         try {
+             resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_WADL, description, dh, null, null);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
+         }
      }
 
      public void addSchema(String description, DataHandler dh)
              throws ResourceAdminServiceExceptionException, RemoteException {
          String fileName;
          fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
-         resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_SCHEMA,
-                 description, dh, null, null);
+         try {
+             resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_SCHEMA,
+                     description, dh, null, null);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
+         }
      }
 
      public void addPolicy(String description, DataHandler dh)
              throws ResourceAdminServiceExceptionException, RemoteException {
          String fileName;
          fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
-         resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_POLICY,
-                 description, dh, null, null);
+         try {
+             resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_POLICY,
+                     description, dh, null, null);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
+         }
      }
 
      public void addSwagger(String description, DataHandler dh)
              throws ResourceAdminServiceExceptionException, RemoteException {
          String fileName;
          fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
-         resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_SWAGGER, description, dh, null, null);
+         try {
+             resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_SWAGGER, description, dh, null, null);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
+         }
      }
 
      public void uploadArtifact(String description, DataHandler dh)
              throws ResourceAdminServiceExceptionException, RemoteException {
          String fileName;
          fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
-         resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_GOVERNANCE_ARCHIVE,
-                 description, dh, null, null);
+         try {
+             resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_GOVERNANCE_ARCHIVE,
+                     description, dh, null, null);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
+         }
      }
 
      public String addCollection(String parentPath, String collectionName,
                                  String mediaType, String description)
              throws ResourceAdminServiceExceptionException, RemoteException {
-         return resourceAdminServiceStub.addCollection(parentPath, collectionName, mediaType, description);
+
+         try {
+             return resourceAdminServiceStub.addCollection(parentPath, collectionName, mediaType, description);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
+         }
      }
 
 
@@ -167,15 +206,23 @@ public class ResourceAdminServiceClient {
                                  String targetPath)
              throws ResourceAdminServiceExceptionException, RemoteException {
 
-         resourceAdminServiceStub.addSymbolicLink(parentPath, name, targetPath);
+         try {
+             resourceAdminServiceStub.addSymbolicLink(parentPath, name, targetPath);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
+         }
      }
 
      public void addTextResource(String parentPath, String fileName,
                                  String mediaType, String description, String content)
              throws RemoteException, ResourceAdminServiceExceptionException {
 
-         resourceAdminServiceStub.addTextResource(parentPath, fileName, mediaType,
-                 description, content);
+         try {
+             resourceAdminServiceStub.addTextResource(parentPath, fileName, mediaType,
+                     description, content);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
+         }
      }
 
      public boolean addResourcePermission(String pathToAuthorize,
@@ -183,38 +230,52 @@ public class ResourceAdminServiceClient {
                                           String actionToAuthorize, String permissionType)
              throws RemoteException, ResourceAdminServiceResourceServiceExceptionException {
 
-         return resourceAdminServiceStub.addRolePermission(pathToAuthorize, roleToAuthorize,
-                 actionToAuthorize, permissionType);
-
+         try {
+             return resourceAdminServiceStub.addRolePermission(pathToAuthorize, roleToAuthorize,
+                     actionToAuthorize, permissionType);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
+         }
      }
 
      public String getProperty(String resourcePath, String key)
              throws RemoteException, ResourceAdminServiceExceptionException {
 
-         return resourceAdminServiceStub.getProperty(resourcePath, key);
-
+         try {
+             return resourceAdminServiceStub.getProperty(resourcePath, key);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
+         }
      }
 
-     public MetadataBean getMetadata(String resourcePath)
-             throws RemoteException, ResourceAdminServiceExceptionException {
-
-         return resourceAdminServiceStub.getMetadata(resourcePath);
-     }
+    public MetadataBean getMetadata(String resourcePath)
+            throws RemoteException, ResourceAdminServiceExceptionException {
+        try {
+            return resourceAdminServiceStub.getMetadata(resourcePath);
+        } finally {
+            resourceAdminServiceStub._getServiceClient().cleanupTransport();
+        }
+    }
 
      public ContentBean getResourceContent(String resourcePath)
              throws RemoteException, ResourceAdminServiceExceptionException {
 
-         return resourceAdminServiceStub.getContentBean(resourcePath);
-
+         try {
+             return resourceAdminServiceStub.getContentBean(resourcePath);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
+         }
      }
 
      public ResourceData[] getResourceData(String resourcePath)
              throws RemoteException, ResourceAdminServiceExceptionException {
          String[] resourceArray = {resourcePath};
 
-         return resourceAdminServiceStub.getResourceData(resourceArray);
-
-
+         try {
+             return resourceAdminServiceStub.getResourceData(resourceArray);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
+         }
      }
 
      public String getHumanReadableMediaTypes() throws Exception {
@@ -223,6 +284,8 @@ public class ResourceAdminServiceClient {
          } catch (Exception e) {
              String msg = "get human readable media type error ";
              throw new Exception(msg, e);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
          }
      }
 
@@ -233,7 +296,8 @@ public class ResourceAdminServiceClient {
          } catch (Exception e) {
              String msg = "get human readable media type error ";
              throw new Exception(msg, e);
-
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
          }
      }
 
@@ -244,11 +308,11 @@ public class ResourceAdminServiceClient {
          } catch (RemoteException e) {
              log.error("Cannot edit the content of the resource : " + e.getMessage());
              throw new RemoteException("Edit content error : ", e);
-
          } catch (ResourceAdminServiceExceptionException e) {
              log.error("Cannot edit the content of the resource : " + e.getMessage());
              throw new ResourceAdminServiceExceptionException("Get version error : ", e);
-
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
          }
      }
 
@@ -263,6 +327,8 @@ public class ResourceAdminServiceClient {
          } catch (ResourceAdminServiceExceptionException e) {
              log.error("Copy resource error");
              throw new ResourceAdminServiceExceptionException("Copy resource error", e);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
          }
      }
 
@@ -277,6 +343,8 @@ public class ResourceAdminServiceClient {
          } catch (ResourceAdminServiceExceptionException e) {
              log.error("Move resource error");
              throw new ResourceAdminServiceExceptionException("Copy resource error", e);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
          }
      }
 
@@ -293,6 +361,8 @@ public class ResourceAdminServiceClient {
          } catch (ResourceAdminServiceExceptionException e) {
              log.error("Get version error : " + e.getMessage());
              throw new ResourceAdminServiceExceptionException("Get version error : ", e);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
          }
          return versionPaths;
      }
@@ -308,6 +378,8 @@ public class ResourceAdminServiceClient {
          } catch (ResourceAdminServiceExceptionException e) {
              log.error("Get version bean fails:  " + e.getMessage());
              throw new ResourceAdminServiceExceptionException("Get version bean fails:  : ", e);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
          }
      }
 
@@ -321,6 +393,8 @@ public class ResourceAdminServiceClient {
          } catch (ResourceAdminServiceExceptionException e) {
              log.error("Create version error : " + e.getMessage());
              throw new ResourceAdminServiceExceptionException("Create version error : ", e);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
          }
      }
 
@@ -336,7 +410,8 @@ public class ResourceAdminServiceClient {
          } catch (ResourceAdminServiceExceptionException e) {
              log.error("Delete version error : " + e.getMessage());
              throw new ResourceAdminServiceExceptionException("Delete version error : ", e);
-
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
          }
      }
 
@@ -353,6 +428,8 @@ public class ResourceAdminServiceClient {
          } catch (ResourceAdminServiceExceptionException e) {
              log.error("Restore version error : " + e.getMessage());
              throw new ResourceAdminServiceExceptionException("Restore version error : ", e);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
          }
          return status;
      }
@@ -368,6 +445,8 @@ public class ResourceAdminServiceClient {
          } catch (ResourceAdminServiceExceptionException e) {
              log.error("GetTextContent Error : " + e.getMessage());
              throw new ResourceAdminServiceExceptionException("GetTextContent Error :  ", e);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
          }
          return content;
      }
@@ -378,6 +457,8 @@ public class ResourceAdminServiceClient {
          } catch (Exception e) {
              log.error("Unable to get permission : " + e.getMessage());
              throw new Exception("Unable to get permission : ", e);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
          }
      }
 
@@ -392,6 +473,8 @@ public class ResourceAdminServiceClient {
          } catch (ResourceAdminServiceExceptionException e) {
              log.error("Rename resource error");
              throw new ResourceAdminServiceExceptionException("Rename resource error", e);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
          }
      }
 
@@ -405,6 +488,8 @@ public class ResourceAdminServiceClient {
          } catch (ResourceAdminServiceExceptionException e) {
              log.error("Add Extension error");
              throw new ResourceAdminServiceExceptionException("Rename resource error", e);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
          }
      }
 
@@ -418,6 +503,8 @@ public class ResourceAdminServiceClient {
          } catch (ResourceAdminServiceExceptionException e) {
              log.error("Remove Extension error");
              throw new ResourceAdminServiceExceptionException("Remove resource error", e);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
          }
      }
 
@@ -431,6 +518,8 @@ public class ResourceAdminServiceClient {
          } catch (ResourceAdminServiceExceptionException e) {
              log.error("List extensions error ");
              throw new ResourceAdminServiceExceptionException("List extensions error ", e);
+         } finally {
+             resourceAdminServiceStub._getServiceClient().cleanupTransport();
          }
      }
 

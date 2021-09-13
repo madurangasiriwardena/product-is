@@ -68,7 +68,11 @@ public class SCIMConfigAdminClient {
         scimProviderDTO.setGroupEPURL(groupEPUrl);
         scimProviderDTO.setProviderId(providerId);
         scimProviderDTO.setUserEPURL(userEPUrl);
-        scimConfigAdminServiceStub.addUserProvider(consumerId, scimProviderDTO);
+        try {
+            scimConfigAdminServiceStub.addUserProvider(consumerId, scimProviderDTO);
+        } finally {
+            scimConfigAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -93,7 +97,11 @@ public class SCIMConfigAdminClient {
         scimProviderDTO.setGroupEPURL(groupEPUrl);
         scimProviderDTO.setProviderId(providerId);
         scimProviderDTO.setUserEPURL(userEPUrl);
-        scimConfigAdminServiceStub.addGlobalProvider(consumerId, scimProviderDTO);
+        try {
+            scimConfigAdminServiceStub.addGlobalProvider(consumerId, scimProviderDTO);
+        } finally {
+            scimConfigAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -107,7 +115,12 @@ public class SCIMConfigAdminClient {
      */
     public void deleteUserProvider(String consumerId, String providerId)
             throws SCIMConfigAdminServiceIdentitySCIMExceptionException, RemoteException {
-        scimConfigAdminServiceStub.deleteUserProvider(consumerId, providerId);
+
+        try {
+            scimConfigAdminServiceStub.deleteUserProvider(consumerId, providerId);
+        } finally {
+            scimConfigAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -121,7 +134,12 @@ public class SCIMConfigAdminClient {
      */
     public void deleteGlobalProvider(String consumerId, String providerId)
             throws SCIMConfigAdminServiceIdentitySCIMExceptionException, RemoteException {
-        scimConfigAdminServiceStub.deleteGlobalProvider(consumerId, providerId);
+
+        try {
+            scimConfigAdminServiceStub.deleteGlobalProvider(consumerId, providerId);
+        } finally {
+            scimConfigAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -136,7 +154,12 @@ public class SCIMConfigAdminClient {
      */
     public SCIMProviderDTO[] listUserProviders(String consumerId, String providerId)
             throws SCIMConfigAdminServiceIdentitySCIMExceptionException, RemoteException {
-        return scimConfigAdminServiceStub.getAllUserProviders(consumerId);
+
+        try {
+            return scimConfigAdminServiceStub.getAllUserProviders(consumerId);
+        } finally {
+            scimConfigAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -151,6 +174,11 @@ public class SCIMConfigAdminClient {
      */
     public SCIMProviderDTO[] listGlobalProviders(String consumerId, String providerId)
             throws SCIMConfigAdminServiceIdentitySCIMExceptionException, RemoteException {
-        return scimConfigAdminServiceStub.getAllGlobalProviders(consumerId);
+
+        try {
+            return scimConfigAdminServiceStub.getAllGlobalProviders(consumerId);
+        } finally {
+            scimConfigAdminServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 }

@@ -80,7 +80,12 @@ public class UserAccountConnectorServiceClient {
      * @throws Exception
      */
     public void associateTwoAccounts(String user1, String user2) throws Exception {
-        serviceStub.associateTwoAccounts(user1, user2);
+
+        try {
+            serviceStub.associateTwoAccounts(user1, user2);
+        } finally {
+            serviceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -90,7 +95,12 @@ public class UserAccountConnectorServiceClient {
      * @throws Exception
      */
     public void deleteUserAccountAssociation(String userName) throws Exception {
-        serviceStub.deleteUserAccountAssociation(userName);
+
+        try {
+            serviceStub.deleteUserAccountAssociation(userName);
+        } finally {
+            serviceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -100,7 +110,12 @@ public class UserAccountConnectorServiceClient {
      * @throws Exception
      */
     public UserAccountAssociationDTO[] getAccountAssociationsOfUser() throws Exception {
-        return serviceStub.getAccountAssociationsOfUser();
+
+        try {
+            return serviceStub.getAccountAssociationsOfUser();
+        } finally {
+            serviceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -111,7 +126,12 @@ public class UserAccountConnectorServiceClient {
      * @throws Exception
      */
     public UserAccountAssociationDTO[] getAccountAssociations(String userName) throws Exception {
-        return serviceStub.getAccountAssociations(userName);
+
+        try {
+            return serviceStub.getAccountAssociations(userName);
+        } finally {
+            serviceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -122,7 +142,12 @@ public class UserAccountConnectorServiceClient {
      * @throws Exception
      */
     public boolean switchLoggedInUser(String userName) throws Exception {
-        return serviceStub.switchLoggedInUser(userName);
+
+        try {
+            return serviceStub.switchLoggedInUser(userName);
+        } finally {
+            serviceStub._getServiceClient().cleanupTransport();
+        }
     }
 
 

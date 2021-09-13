@@ -64,7 +64,12 @@ public class UserStoreConfigAdminServiceClient {
      * @return: active domains
      */
     public UserStoreDTO[] getActiveDomains() throws Exception {
-        return stub.getSecondaryRealmConfigurations();
+
+        try {
+            return stub.getSecondaryRealmConfigurations();
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -74,8 +79,12 @@ public class UserStoreConfigAdminServiceClient {
      * @throws Exception
      */
     public String[] getAvailableUserStoreClasses() throws Exception {
-        return stub.getAvailableUserStoreClasses();
 
+        try {
+            return stub.getAvailableUserStoreClasses();
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -86,8 +95,12 @@ public class UserStoreConfigAdminServiceClient {
      * @throws Exception
      */
     public Properties getUserStoreProperties(String className) throws Exception {
-        return stub.getUserStoreManagerProperties(className);
 
+        try {
+            return stub.getUserStoreManagerProperties(className);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
 
@@ -98,7 +111,12 @@ public class UserStoreConfigAdminServiceClient {
      * @throws Exception
      */
     public void addUserStore(UserStoreDTO userStoreDTO) throws Exception {
-        stub.addUserStore(userStoreDTO);
+
+        try {
+            stub.addUserStore(userStoreDTO);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -108,7 +126,12 @@ public class UserStoreConfigAdminServiceClient {
      * @throws Exception
      */
     public void deleteUserStoresSet(String[] userStores) throws Exception {
-        stub.deleteUserStoresSet(userStores);
+
+        try {
+            stub.deleteUserStoresSet(userStores);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -118,7 +141,12 @@ public class UserStoreConfigAdminServiceClient {
      * @throws Exception
      */
     public void deleteUserStore(String userStore) throws Exception {
-        stub.deleteUserStore(userStore);
+
+        try {
+            stub.deleteUserStore(userStore);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -129,7 +157,12 @@ public class UserStoreConfigAdminServiceClient {
      * @throws Exception
      */
     public void changeUserStoreState(String domain, boolean isDisabled) throws Exception {
-        stub.changeUserStoreState(domain, isDisabled);
+
+        try {
+            stub.changeUserStoreState(domain, isDisabled);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**
@@ -141,7 +174,11 @@ public class UserStoreConfigAdminServiceClient {
      */
     public void updateUserStoreWithDomainName(String previousDomain, UserStoreDTO userStoreDTO) throws Exception {
         if (previousDomain != null && !"".equals(previousDomain) && !previousDomain.equalsIgnoreCase(userStoreDTO.getDomainId())) {
-            stub.editUserStoreWithDomainName(previousDomain, userStoreDTO);
+            try {
+                stub.editUserStoreWithDomainName(previousDomain, userStoreDTO);
+            } finally {
+                stub._getServiceClient().cleanupTransport();
+            }
         } else {
             this.updateUserStore(userStoreDTO);
         }
@@ -154,7 +191,12 @@ public class UserStoreConfigAdminServiceClient {
      * @throws Exception
      */
     public void updateUserStore(UserStoreDTO userStoreDTO) throws Exception {
-        stub.editUserStore(userStoreDTO);
+
+        try {
+            stub.editUserStore(userStoreDTO);
+        } finally {
+            stub._getServiceClient().cleanupTransport();
+        }
     }
 
     /**

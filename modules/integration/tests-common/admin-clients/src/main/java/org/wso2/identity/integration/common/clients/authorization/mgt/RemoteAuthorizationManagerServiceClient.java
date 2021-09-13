@@ -32,98 +32,185 @@ public class RemoteAuthorizationManagerServiceClient {
     private final String serviceName = "RemoteAuthorizationManagerService";
     private RemoteAuthorizationManagerServiceStub remoteAuthorizationManagerServiceStub;
 
-    private String endPoint;
-
     public RemoteAuthorizationManagerServiceClient(String backEndUrl, String sessionCookie) throws AxisFault {
-        this.endPoint = backEndUrl + serviceName;
+        String endPoint = backEndUrl + serviceName;
         remoteAuthorizationManagerServiceStub = new RemoteAuthorizationManagerServiceStub(endPoint);
         AuthenticateStub.authenticateStub(sessionCookie, remoteAuthorizationManagerServiceStub);
     }
 
     public boolean isRoleAuthorized(String roleName, String resourceId, String action) throws RemoteException,
             UserStoreExceptionException {
-        return remoteAuthorizationManagerServiceStub.isRoleAuthorized(roleName, resourceId, action);
+        try {
+            return remoteAuthorizationManagerServiceStub.isRoleAuthorized(roleName, resourceId, action);
+        } finally {
+            remoteAuthorizationManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void clearResourceAuthorizations(String resourceId) throws RemoteException, UserStoreExceptionException {
-        remoteAuthorizationManagerServiceStub.clearResourceAuthorizations(resourceId);
+
+        try {
+            remoteAuthorizationManagerServiceStub.clearResourceAuthorizations(resourceId);
+        } finally {
+            remoteAuthorizationManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void clearAllUserAuthorization(String username) throws RemoteException, UserStoreExceptionException {
-        remoteAuthorizationManagerServiceStub.clearAllUserAuthorization(username);
+
+        try {
+            remoteAuthorizationManagerServiceStub.clearAllUserAuthorization(username);
+        } finally {
+            remoteAuthorizationManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public boolean isUserAuthorized(String username, String resourceId, String action) throws RemoteException,
             UserStoreExceptionException {
-        return remoteAuthorizationManagerServiceStub.isUserAuthorized(username, resourceId, action);
+
+        try {
+            return remoteAuthorizationManagerServiceStub.isUserAuthorized(username, resourceId, action);
+        } finally {
+            remoteAuthorizationManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void clearRoleActionOnAllResources(String roleName, String action) throws RemoteException,
             UserStoreExceptionException {
-        remoteAuthorizationManagerServiceStub.clearRoleActionOnAllResources(roleName, action);
+
+        try {
+            remoteAuthorizationManagerServiceStub.clearRoleActionOnAllResources(roleName, action);
+        } finally {
+            remoteAuthorizationManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void clearRoleAuthorization(String roleName, String resourceId, String action) throws RemoteException,
             UserStoreExceptionException {
-        remoteAuthorizationManagerServiceStub.clearRoleAuthorization(roleName, resourceId, action);
+
+        try {
+            remoteAuthorizationManagerServiceStub.clearRoleAuthorization(roleName, resourceId, action);
+        } finally {
+            remoteAuthorizationManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void clearAllRoleAuthorization(String roleName) throws RemoteException, UserStoreExceptionException {
-        remoteAuthorizationManagerServiceStub.clearAllRoleAuthorization(roleName);
+
+        try {
+            remoteAuthorizationManagerServiceStub.clearAllRoleAuthorization(roleName);
+        } finally {
+            remoteAuthorizationManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public String[] getExplicitlyDeniedUsersForResource(String resourceId, String action) throws RemoteException,
             UserStoreExceptionException {
-        return remoteAuthorizationManagerServiceStub.getExplicitlyDeniedUsersForResource(resourceId, action);
+
+        try {
+            return remoteAuthorizationManagerServiceStub.getExplicitlyDeniedUsersForResource(resourceId, action);
+        } finally {
+            remoteAuthorizationManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void authorizeUser(String username, String resourceId, String action) throws RemoteException,
             UserStoreExceptionException {
-        remoteAuthorizationManagerServiceStub.authorizeUser(username, resourceId, action);
+
+        try {
+            remoteAuthorizationManagerServiceStub.authorizeUser(username, resourceId, action);
+        } finally {
+            remoteAuthorizationManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public String[] getAllowedRolesForResource(String resourceId, String action) throws RemoteException,
             UserStoreExceptionException {
-        return remoteAuthorizationManagerServiceStub.getAllowedRolesForResource(resourceId, action);
+
+        try {
+            return remoteAuthorizationManagerServiceStub.getAllowedRolesForResource(resourceId, action);
+        } finally {
+            remoteAuthorizationManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void clearUserAuthorization(String username, String resourceId, String action) throws RemoteException,
             UserStoreExceptionException {
-        remoteAuthorizationManagerServiceStub.clearUserAuthorization(username, resourceId, action);
+
+        try {
+            remoteAuthorizationManagerServiceStub.clearUserAuthorization(username, resourceId, action);
+        } finally {
+            remoteAuthorizationManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public String[] getDeniedRolesForResource(String resourceId, String action) throws RemoteException,
             UserStoreExceptionException {
-        return remoteAuthorizationManagerServiceStub.getDeniedRolesForResource(resourceId, action);
+
+        try {
+            return remoteAuthorizationManagerServiceStub.getDeniedRolesForResource(resourceId, action);
+        } finally {
+            remoteAuthorizationManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public String[] getAllowedUIResourcesForUser(String username, String permissionRootPath) throws RemoteException,
             UserStoreExceptionException {
-        return remoteAuthorizationManagerServiceStub.getAllowedUIResourcesForUser(username, permissionRootPath);
+
+        try {
+            return remoteAuthorizationManagerServiceStub.getAllowedUIResourcesForUser(username, permissionRootPath);
+        } finally {
+            remoteAuthorizationManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void resetPermissionOnUpdateRole(String roleName, String newRoleName) throws RemoteException,
             UserStoreExceptionException {
-        remoteAuthorizationManagerServiceStub.resetPermissionOnUpdateRole(roleName, newRoleName);
+
+        try {
+            remoteAuthorizationManagerServiceStub.resetPermissionOnUpdateRole(roleName, newRoleName);
+        } finally {
+            remoteAuthorizationManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void denyRole(String roleName, String resourceId, String action) throws RemoteException,
             UserStoreExceptionException {
-        remoteAuthorizationManagerServiceStub.denyRole(roleName, resourceId, action);
+
+        try {
+            remoteAuthorizationManagerServiceStub.denyRole(roleName, resourceId, action);
+        } finally {
+            remoteAuthorizationManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public String[] getExplicitlyAllowedUsersForResource(String resourceId, String action) throws RemoteException,
             UserStoreExceptionException {
-        return remoteAuthorizationManagerServiceStub.getExplicitlyAllowedUsersForResource(resourceId, action);
+
+        try {
+            return remoteAuthorizationManagerServiceStub.getExplicitlyAllowedUsersForResource(resourceId, action);
+        } finally {
+            remoteAuthorizationManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void denyUser(String username, String resourceId, String action) throws RemoteException,
             UserStoreExceptionException {
-        remoteAuthorizationManagerServiceStub.denyUser(username, resourceId, action);
+
+        try {
+            remoteAuthorizationManagerServiceStub.denyUser(username, resourceId, action);
+        } finally {
+            remoteAuthorizationManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void authorizeRole(String roleName, String resourceId, String action) throws RemoteException,
             UserStoreExceptionException {
-        remoteAuthorizationManagerServiceStub.authorizeRole(roleName, resourceId, action);
+
+        try {
+            remoteAuthorizationManagerServiceStub.authorizeRole(roleName, resourceId, action);
+        } finally {
+            remoteAuthorizationManagerServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 }

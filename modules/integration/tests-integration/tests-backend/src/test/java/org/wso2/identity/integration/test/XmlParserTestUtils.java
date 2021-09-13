@@ -59,11 +59,15 @@ public class XmlParserTestUtils {
 
 	public String login(String userName, String password, String host)
 			throws LoginAuthenticationExceptionException, RemoteException {
-		Boolean loginStatus;
+		boolean loginStatus;
 		ServiceContext serviceContext;
 		String sessionCookie;
 
-		loginStatus = authenticationAdminStub.login(userName, password, host);
+		try {
+			loginStatus = authenticationAdminStub.login(userName, password, host);
+		} finally {
+			authenticationAdminStub._getServiceClient().cleanupTransport();
+		}
 
 		if (!loginStatus) {
 			throw new LoginAuthenticationExceptionException(
@@ -81,11 +85,21 @@ public class XmlParserTestUtils {
 	}
 
 	public void restartGracefully() throws Exception, RemoteException {
-		serverAdminStub.restartGracefully();
+
+		try {
+			serverAdminStub.restartGracefully();
+		} finally {
+			serverAdminStub._getServiceClient().cleanupTransport();
+		}
 	}
 
 	public void shutdownGracefully() throws Exception, RemoteException {
-		serverAdminStub.shutdownGracefully();
+
+		try {
+			serverAdminStub.shutdownGracefully();
+		} finally {
+			serverAdminStub._getServiceClient().cleanupTransport();
+		}
 	}
 
 }

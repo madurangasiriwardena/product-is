@@ -57,7 +57,9 @@ public class EntitlementAdminServiceClient {
     	try {
     		algo = entitlementAdminServiceStub.getGlobalPolicyAlgorithm();
 		} catch (EntitlementAdminServiceIdentityException e) {
-			e.printStackTrace();
+			log.error("Error while retrieving the global policy algorithm.", e);
+		} finally {
+			entitlementAdminServiceStub._getServiceClient().cleanupTransport();
 		}
     	return algo;    	
     }
@@ -67,32 +69,50 @@ public class EntitlementAdminServiceClient {
     	try {
 			requestStatus = entitlementAdminServiceStub.doTestRequest(xacmlRequest);
 		} catch (EntitlementAdminServiceIdentityException e) {
-			e.printStackTrace();
+			log.error("Error while testing the request.", e);
+		} finally {
+			entitlementAdminServiceStub._getServiceClient().cleanupTransport();
 		}
     	return requestStatus;
     }
     
     public PDPDataHolder getPDPData() throws RemoteException{
-    	PDPDataHolder holder = null;
-    	holder = entitlementAdminServiceStub.getPDPData();
+    	PDPDataHolder holder;
+		try {
+			holder = entitlementAdminServiceStub.getPDPData();
+		} finally {
+			entitlementAdminServiceStub._getServiceClient().cleanupTransport();
+		}
     	return holder;
     }
     
     public PIPFinderDataHolder getPIPAttributeFinderData(String finder) throws RemoteException{
-    	PIPFinderDataHolder holder = null;
-    	holder = entitlementAdminServiceStub.getPIPAttributeFinderData(finder);
+    	PIPFinderDataHolder holder;
+		try {
+			holder = entitlementAdminServiceStub.getPIPAttributeFinderData(finder);
+		} finally {
+			entitlementAdminServiceStub._getServiceClient().cleanupTransport();
+		}
     	return holder;
     }
     
     public PIPFinderDataHolder getPIPResourceFinderData(String finder) throws RemoteException{
-    	PIPFinderDataHolder holder = null;
-    	holder = entitlementAdminServiceStub.getPIPResourceFinderData(finder);
+    	PIPFinderDataHolder holder;
+		try {
+			holder = entitlementAdminServiceStub.getPIPResourceFinderData(finder);
+		} finally {
+			entitlementAdminServiceStub._getServiceClient().cleanupTransport();
+		}
     	return holder;
     }
     
     public PolicyFinderDataHolder getPolicyFinderData(String finder) throws RemoteException{
-    	PolicyFinderDataHolder holder = null;
-    	holder = entitlementAdminServiceStub.getPolicyFinderData(finder);
+    	PolicyFinderDataHolder holder;
+		try {
+			holder = entitlementAdminServiceStub.getPolicyFinderData(finder);
+		} finally {
+			entitlementAdminServiceStub._getServiceClient().cleanupTransport();
+		}
     	return holder;    	
     }
     
@@ -100,7 +120,9 @@ public class EntitlementAdminServiceClient {
     	try {
 			entitlementAdminServiceStub.refreshAttributeFinder(attributeFinder);
 		} catch (EntitlementAdminServiceIdentityException e) {
-			e.printStackTrace();
+			log.error("Error while refreshing the attribute finder.", e);
+		} finally {
+			entitlementAdminServiceStub._getServiceClient().cleanupTransport();
 		}
     }
     
@@ -108,7 +130,9 @@ public class EntitlementAdminServiceClient {
     	try {
 			entitlementAdminServiceStub.refreshPolicyFinders(policyFinder);
 		} catch (EntitlementAdminServiceIdentityException e) {
-			e.printStackTrace();
+			log.error("Error while refreshing the policy finders.", e);
+		} finally {
+			entitlementAdminServiceStub._getServiceClient().cleanupTransport();
 		}
     }
     
@@ -116,7 +140,9 @@ public class EntitlementAdminServiceClient {
     	try {
 			entitlementAdminServiceStub.refreshResourceFinder(resourceFinder);
 		} catch (EntitlementAdminServiceIdentityException e) {
-			e.printStackTrace();
+			log.error("Error while refreshing the resource finder.", e);
+		} finally {
+			entitlementAdminServiceStub._getServiceClient().cleanupTransport();
 		}
     }
     
@@ -124,7 +150,9 @@ public class EntitlementAdminServiceClient {
     	try {
 			entitlementAdminServiceStub.setGlobalPolicyAlgorithm(policyCombiningAlgorithm);
 		} catch (EntitlementAdminServiceIdentityException e) {
-			e.printStackTrace();
+			log.error("Error while retrieving the global policy algorithm.", e);
+		} finally {
+			entitlementAdminServiceStub._getServiceClient().cleanupTransport();
 		}
     }
 }

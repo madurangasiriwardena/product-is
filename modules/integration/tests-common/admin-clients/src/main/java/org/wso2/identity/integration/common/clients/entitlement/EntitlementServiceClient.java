@@ -51,59 +51,122 @@ public class EntitlementServiceClient {
     public EntitledResultSetDTO getEntitledAttributes(String subjectName, String resourceName, String subjectId,
                                                       String action, boolean enableChildSearch)
             throws RemoteException, EntitlementServiceIdentityException {
-        return entitlementServiceStub.getEntitledAttributes(subjectName, resourceName, subjectId, action, enableChildSearch);
+
+        try {
+            return entitlementServiceStub.getEntitledAttributes(subjectName, resourceName, subjectId, action,
+                    enableChildSearch);
+        } finally {
+            entitlementServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void startgetEntitledAttributes(String subjectName, String resourceName, String subjectId,
-                                           String action, boolean enableChildSearch, EntitlementServiceCallbackHandler callback)
+                                           String action, boolean enableChildSearch,
+                                           EntitlementServiceCallbackHandler callback)
             throws RemoteException {
-        entitlementServiceStub.startgetEntitledAttributes(subjectName, resourceName, subjectId, action, enableChildSearch, callback);
+
+        try {
+            entitlementServiceStub.startgetEntitledAttributes(subjectName, resourceName, subjectId, action,
+                    enableChildSearch, callback);
+        } finally {
+            entitlementServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public String xACMLAuthzDecisionQuery(String request) throws EntitlementServiceException, RemoteException {
-        return entitlementServiceStub.xACMLAuthzDecisionQuery(request);
+
+        try {
+            return entitlementServiceStub.xACMLAuthzDecisionQuery(request);
+        } finally {
+            entitlementServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void startxACMLAuthzDecisionQuery(String request, EntitlementServiceCallbackHandler callback)
             throws RemoteException {
-        entitlementServiceStub.startxACMLAuthzDecisionQuery(request, callback);
+
+        try {
+            entitlementServiceStub.startxACMLAuthzDecisionQuery(request, callback);
+        } finally {
+            entitlementServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public EntitledResultSetDTO getAllEntitlements(String identifier, AttributeDTO[] givenAttributes)
             throws RemoteException, EntitlementServiceIdentityException {
-        return entitlementServiceStub.getAllEntitlements(identifier, givenAttributes);
+
+        try {
+            return entitlementServiceStub.getAllEntitlements(identifier, givenAttributes);
+        } finally {
+            entitlementServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void startgetAllEntitlements(String identifier, AttributeDTO[] givenAttributes,
                                         EntitlementServiceCallbackHandler callback) throws RemoteException {
-        entitlementServiceStub.startgetAllEntitlements(identifier, givenAttributes, callback);
+
+        try {
+            entitlementServiceStub.startgetAllEntitlements(identifier, givenAttributes, callback);
+        } finally {
+            entitlementServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public String getDecision(String request) throws EntitlementServiceException, RemoteException {
-        return entitlementServiceStub.getDecision(request);
+
+        try {
+            return entitlementServiceStub.getDecision(request);
+        } finally {
+            entitlementServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void startgetDecision(String request, EntitlementServiceCallbackHandler callback) throws RemoteException {
-        entitlementServiceStub.startgetDecision(request, callback);
+
+        try {
+            entitlementServiceStub.startgetDecision(request, callback);
+        } finally {
+            entitlementServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public String getDecisionByAttributes(String subject, String resource, String action, String[] environment)
             throws EntitlementServiceException, RemoteException {
-        return entitlementServiceStub.getDecisionByAttributes(subject, resource, action, environment);
+
+        try {
+            return entitlementServiceStub.getDecisionByAttributes(subject, resource, action, environment);
+        } finally {
+            entitlementServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void startgetDecisionByAttributes(String subject, String resource, String action, String[] environment,
                                              EntitlementServiceCallbackHandler callback) throws RemoteException {
-        entitlementServiceStub.startgetDecisionByAttributes(subject, resource, action, environment, callback);
+
+        try {
+            entitlementServiceStub.startgetDecisionByAttributes(subject, resource, action, environment, callback);
+        } finally {
+            entitlementServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public boolean getBooleanDecision(String subject, String resource, String action)
             throws EntitlementServiceException, RemoteException {
-        return entitlementServiceStub.getBooleanDecision(subject, resource, action);
+
+        try {
+            return entitlementServiceStub.getBooleanDecision(subject, resource, action);
+        } finally {
+            entitlementServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void startgetBooleanDecision(String subject, String resource, String action,
                                         EntitlementServiceCallbackHandler callback) throws RemoteException {
-        entitlementServiceStub.startgetBooleanDecision(subject, resource, action, callback);
+
+        try {
+            entitlementServiceStub.startgetBooleanDecision(subject, resource, action, callback);
+        } finally {
+            entitlementServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 }

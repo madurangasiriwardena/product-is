@@ -31,7 +31,7 @@ import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthen
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.ProvisioningConnectorConfig;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.common.clients.AuthenticatorClient;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 

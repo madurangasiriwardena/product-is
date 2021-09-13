@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.identity.integration.common.clients;
 
@@ -71,6 +71,8 @@ public class UserProfileMgtServiceClient {
             String msg = "Delete user profile fails";
             log.info(msg);
             throw new UserProfileMgtServiceUserProfileExceptionException(msg, e);
+        } finally {
+            userProfileMgtServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -82,11 +84,12 @@ public class UserProfileMgtServiceClient {
             String msg = "Set user profile fails";
             log.info(msg);
             throw new RemoteException(msg, e);
-
         } catch (UserProfileMgtServiceUserProfileExceptionException e) {
             String msg = "Set user profile fails";
             log.info(msg);
             throw new UserProfileMgtServiceUserProfileExceptionException(msg, e);
+        } finally {
+            userProfileMgtServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -101,6 +104,8 @@ public class UserProfileMgtServiceClient {
             String msg = "Unable to get user profiles of " + userName;
             log.info(msg);
             throw new RemoteException(msg, e);
+        } finally {
+            userProfileMgtServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
@@ -112,46 +117,79 @@ public class UserProfileMgtServiceClient {
             String msg = "Unable to get user profile of " + userName;
             log.info(msg);
             throw new RemoteException(msg, e);
-
         } catch (UserProfileMgtServiceUserProfileExceptionException e) {
             String msg = "Unable to get user profile of " + userName;
             log.info(msg);
             throw new UserProfileMgtServiceUserProfileExceptionException(msg, e);
+        } finally {
+            userProfileMgtServiceStub._getServiceClient().cleanupTransport();
         }
     }
 
     public UserProfileDTO getProfileFieldsForInternalStore() throws RemoteException,
-            UserProfileMgtServiceUserProfileExceptionException{
-    	return userProfileMgtServiceStub.getProfileFieldsForInternalStore();
+            UserProfileMgtServiceUserProfileExceptionException {
+
+        try {
+            return userProfileMgtServiceStub.getProfileFieldsForInternalStore();
+        } finally {
+            userProfileMgtServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public boolean isAddProfileEnabled() throws RemoteException, UserProfileMgtServiceUserProfileExceptionException {
-        return userProfileMgtServiceStub.isAddProfileEnabled();
+
+        try {
+            return userProfileMgtServiceStub.isAddProfileEnabled();
+        } finally {
+            userProfileMgtServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public boolean isAddProfileEnabledForDomain(String domain) throws RemoteException,
             UserProfileMgtServiceUserProfileExceptionException {
-        return userProfileMgtServiceStub.isAddProfileEnabledForDomain(domain);
+
+        try {
+            return userProfileMgtServiceStub.isAddProfileEnabledForDomain(domain);
+        } finally {
+            userProfileMgtServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public boolean isReadOnlyUserStore() throws RemoteException, UserProfileMgtServiceUserProfileExceptionException {
-        return userProfileMgtServiceStub.isReadOnlyUserStore();
+
+        try {
+            return userProfileMgtServiceStub.isReadOnlyUserStore();
+        } finally {
+            userProfileMgtServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void addFedIdpAccountAssociation(String idpName,
-                                            String idpAssociatedId) throws Exception{
+                                            String idpAssociatedId) throws Exception {
 
-        userProfileMgtServiceStub.associateID(idpName, idpAssociatedId);
+        try {
+            userProfileMgtServiceStub.associateID(idpName, idpAssociatedId);
+        } finally {
+            userProfileMgtServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public void deleteFedIdpAccountAssociation(String idpName,
-                                            String idpAssociatedId) throws Exception{
+                                               String idpAssociatedId) throws Exception {
 
-        userProfileMgtServiceStub.removeAssociateID(idpName, idpAssociatedId);
+        try {
+            userProfileMgtServiceStub.removeAssociateID(idpName, idpAssociatedId);
+        } finally {
+            userProfileMgtServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 
     public AssociatedAccountDTO[] getAssociatedFedUserAccountIds() throws Exception {
 
-        return userProfileMgtServiceStub.getAssociatedIDs();
+        try {
+            return userProfileMgtServiceStub.getAssociatedIDs();
+        } finally {
+            userProfileMgtServiceStub._getServiceClient().cleanupTransport();
+        }
     }
 }
