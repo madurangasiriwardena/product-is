@@ -1,0 +1,15 @@
+{
+  "name": "greater",
+  "description": "Greater Hospital",
+  "type": "TENANT",
+  "attributes": [
+    {
+      "key": "Country",
+      "value": "Sri Lanka"
+    },
+    {
+      "key": "Language",
+      "value": "Sinhala"
+    }
+  ]
+}
