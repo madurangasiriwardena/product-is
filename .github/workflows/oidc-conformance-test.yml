@@ -103,12 +103,18 @@ jobs:
     
     - name: Adding extra hosts to docker-compose-dev.yml
       run: sed -i '/^    volumes.*/i \ \ \ \ extra_hosts:\n \ \ \ \ - "localhost:\$IP\"' ./conformance-suite/docker-compose-dev.yml
-         
+
+    - name: Download Jacoco Agent
+      run: |
+        curl -vLJO -H 'Accept: application/octet-stream' https://repo1.maven.org/maven2/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12.jar
+
     - name: Run IS
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
+        JACOCO_AGENT=$(find ./ -name org.jacoco.agent* -type f -printf "%f\n")
+        echo ">>> Selected conformance suite branch: JACOCO_AGENT"
         cd ./product-is/oidc-conformance-tests
-        python3 ./configure_is.py ../../$PRODUCT_IS_ZIP
+        python3 ./configure_is.py ../../$PRODUCT_IS_ZIP ../../$JACOCO_AGENT
 
     - name: Set up JDK 17
       uses: actions/setup-java@v2

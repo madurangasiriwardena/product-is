@@ -34,6 +34,7 @@ headers = {
 }
 # path to product is zip file
 path_to_is_zip = str(sys.argv[1])
+path_to_jacoco_agent = str(sys.argv[2])
 
 
 # use dcr to register a client
@@ -339,6 +340,10 @@ def unpack_and_run(zip_file_name):
                 dir_name = line
                 break
 
+        print("Dir Name: {dir_name}")
+        print("Dir List: {dir_list}")
+        agent_line = "-javaagent:" + "=destfile=" + dir_name + "/../" + ",append=true,includes=org.wso2.carbon.idp.mgt*:org.wso2.carbon.sts*:org.wso2.carbon.user.core*:org.wso2.carbon.user.mgt*:org.wso2.carbon.claim.mgt*:org.wso2.carbon.identity.*:org.wso2.carbon.xkms.mgt* \"
+        add_jacoco_agent("./" + dir_name + "/bin/wso2server.sh", "-Dwso2.server.standalone=true", agent_line)
         os.chmod("./" + dir_name + "/bin/wso2server.sh", 0o777)
         append_toml_config("./config/oidc_deployment_config.toml", "./" + dir_name + "/repository/conf/deployment.toml")
         process = subprocess.Popen("./" + dir_name + "/bin/wso2server.sh", stdout=subprocess.PIPE)
@@ -378,6 +383,20 @@ def append_toml_config(source_file, destination_file):
     except IOError as e:
         print(f"An error occurred: {e}")
 
+def add_jacoco_agent(file, line_to_check, line_to_replace):
+    try:
+        with open(file, 'rb') as src, open(file + ".back", 'wb') as dst: dst.write(src.read())
+        # Read the content from the source TOML file
+        with open(file + ".back") as fin, open(file, 'w') as fout:
+                for line in fin:
+                    lineout = line
+                    if line.strip() == line_to_check:
+                        lineout = f"{line_to_replace}\n{line_to_replace}\n"
+                    fout.write(lineout)
+    except FileNotFoundError as e:
+        print(f"The file does not exist: {e}")
+    except IOError as e:
+        print(f"An error occurred: {e}")
 
 # creates the IS_config.json file needed to run OIDC test plans and save in the given path
 def json_config_builder(service_provider_1, service_provider_2, output_file_path, plan_name):

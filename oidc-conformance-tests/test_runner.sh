@@ -15,14 +15,14 @@
 #  limitations under the License.
 
 
-CONFORMANCE_SUITE_PATH=./conformance-suite
+CONFORMANCE_SUITE_PATH=/Users/maduranga/Documents/jacoco-oidc-conformance/conformance-suite
 PATH_TO_SCRIPTS=./product-is/oidc-conformance-tests
 IS_SUCCESSFUL=false
-IS_LOCAL=false
+IS_LOCAL=true
 
 if $IS_LOCAL; then
   PATH_TO_SCRIPTS=.
-  PRODUCT_IS_ZIP_PATH=./wso2is-5.12.0-m7.zip
+  PRODUCT_IS_ZIP_PATH=/Users/maduranga/Documents/jacoco-oidc-conformance/wso2is-7.0.1-SNAPSHOT.zip
   echo "====================="
   echo "Identity Server Setup"
   echo "====================="
