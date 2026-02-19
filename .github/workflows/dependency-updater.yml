@@ -51,45 +51,76 @@ jobs:
         id: builder_step
         run: |
           echo "REPO_NAME=${{ env.REPOSITORY }}" >> "$GITHUB_OUTPUT"
+          
+          # Function to log time with section name
+          log_time() {
+            echo ""
+            echo "=========================================================="
+            echo "[$1] - $(date '+%Y-%m-%d %H:%M:%S')"
+            echo "=========================================================="
+          }
+          
+          # Function to calculate and log elapsed time
+          log_elapsed() {
+            local start_time=$1
+            local section_name=$2
+            local end_time=$(date +%s)
+            local elapsed=$((end_time - start_time))
+            echo ""
+            echo "=========================================================="
+            echo "[$section_name] COMPLETED - Elapsed time: ${elapsed} seconds ($(date -d@$elapsed -u +%H:%M:%S 2>/dev/null || echo "${elapsed}s"))"
+            echo "=========================================================="
+          }
+          
+          WORKFLOW_START_TIME=$(date +%s)
+          log_time "WORKFLOW START"
+          
           echo ""
-          echo "Starting dependency upgrade"
-          echo "=========================================================="
-          echo ""
-          echo "Clean up any existing files"
-          echo "=========================================================="
+          log_time "Clean up any existing files"
+          SECTION_START=$(date +%s)
           rm -rf ${{ env.REPOSITORY }}
+          log_elapsed $SECTION_START "Clean up"
+          
           echo ""
-          echo "Cloning: https://github.com/'${{ env.PRODUCT_REPOSITORY_FORKED }}"
-          echo "=========================================================="
+          log_time "Cloning: https://github.com/'${{ env.PRODUCT_REPOSITORY_FORKED }}"
+          SECTION_START=$(date +%s)
           git clone 'https://github.com/'${{ env.PRODUCT_REPOSITORY_FORKED }}'.git'
+          log_elapsed $SECTION_START "Git clone"
+          
           cd ${{ env.REPOSITORY }}
+          
           echo ""
-          echo 'Add remote: '${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }} 'as https://github.com/'${{ env.PRODUCT_REPOSITORY_PUBLIC }}
-          echo "=========================================================="
+          log_time "Add remote: ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }} as https://github.com/${{ env.PRODUCT_REPOSITORY_PUBLIC }}"
           git remote add ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }} 'https://@github.com/'${{ env.PRODUCT_REPOSITORY_PUBLIC }}
+          
           echo ""
-          echo 'Fetching:' ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }}
-          echo "=========================================================="
+          log_time "Fetching: ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }}"
+          SECTION_START=$(date +%s)
           git fetch ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }}
+          log_elapsed $SECTION_START "Git fetch"
+          
           echo ""
-          echo 'Checking out:' ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }} 'master branch'
-          echo "=========================================================="
+          log_time "Checking out: ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }} master branch"
+          SECTION_START=$(date +%s)
           git checkout -b ${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }} ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }}'/master'
+          log_elapsed $SECTION_START "Git checkout"
 
           echo ""
-          echo 'Updating dependencies'
-          echo "=========================================================="
+          log_time "Updating dependencies (mvn versions:update-properties)"
+          SECTION_START=$(date +%s)
           mvn versions:update-properties -U -DgenerateBackupPoms=false -DallowMajorUpdates=false -DallowMinorUpdates=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.identity.*,org.wso2.carbon.consent.*,org.wso2.carbon.healthcheck.*,org.wso2.carbon.utils,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.identity.framework:*,org.wso2.carbon.multitenancy:*,org.wso2.carbon.registry:* -Dexcludes=org.wso2.carbon.extension.identity.authenticator.utils
+          log_elapsed $SECTION_START "Maven versions:update-properties"
+          
           echo ""
-          echo 'Available updates'
-          echo "=========================================================="
+          log_time "Available updates"
           git diff --color > dependency_updates.diff
           cat dependency_updates.diff
 
           echo ""
-          echo 'Build'
-          echo "=========================================================="
+          log_time "Build (mvn clean install)"
+          SECTION_START=$(date +%s)
           mvn clean install -Dmaven.test.failure.ignore=false | tee mvn-build.log
+          log_elapsed $SECTION_START "Maven clean install"
           PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
           PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
           PR_BUILD_FINAL_RESULT=$(
@@ -112,22 +143,24 @@ jobs:
           if [ -s dependency_updates.diff ]
           then
             echo ""
-            echo 'Commit Changes'
-            echo "=========================================================="
+            log_time "Commit Changes"
+            SECTION_START=$(date +%s)
             git config --global user.email ${{ env.GIT_EMAIL }}
             git config --global user.name ${{ env.GIT_USERNAME }}
             git commit -a -m 'Bump dependencies from '${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}
             git remote rm origin
             git remote add origin 'https://'${{ secrets.PAT }}'@github.com/'${{ env.PRODUCT_REPOSITORY_FORKED }}
+            log_elapsed $SECTION_START "Commit Changes"
 
             echo ""
-            echo 'Push Changes'
-            echo "=========================================================="
+            log_time "Push Changes"
+            SECTION_START=$(date +%s)
             git push -u origin ${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}
+            log_elapsed $SECTION_START "Push Changes"
 
             echo ""
-            echo 'Send Pull Request'
-            echo "=========================================================="
+            log_time "Send Pull Request"
+            SECTION_START=$(date +%s)
 
             TITLE="Bump Dependencies #"${{ env.BUILD_NUMBER }}
             RESPONSE=$(curl -s -w "%{http_code}" -k -X \
@@ -140,12 +173,15 @@ jobs:
             if [[ $STATUS == "201" ]]; then
               echo "PR=$(echo $RESPONSE_BODY | jq -r '.html_url')" >> $GITHUB_ENV
             fi
+            log_elapsed $SECTION_START "Send Pull Request"
           else
             echo ""
-            echo "There are no dependency updates available"
-            echo "=========================================================="
+            log_time "There are no dependency updates available"
             exit 0
           fi
+          
+          # Log total workflow time
+          log_elapsed $WORKFLOW_START_TIME "TOTAL WORKFLOW"
       - name: Archive dependency diff file
         if: always()
         uses: actions/upload-artifact@v4

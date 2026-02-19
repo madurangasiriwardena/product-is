@@ -42,6 +42,11 @@ public class NashornAdaptiveScriptInitializerTestCase extends AbstractAdaptiveAu
     @BeforeTest(alwaysRun = true)
     public void testInit() throws Exception {
 
+        long testInitStartTime = System.currentTimeMillis();
+        log.info("==========================================================");
+        log.info("[NashornAdaptiveScriptInitializerTestCase.testInit] START - " + new java.util.Date());
+        log.info("==========================================================");
+
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         String carbonHome = CarbonUtils.getCarbonHome();
@@ -52,7 +57,10 @@ public class NashornAdaptiveScriptInitializerTestCase extends AbstractAdaptiveAu
 
         if (javaVersion >= 15) {
             // Download OpenJDK Nashorn only if the JDK version is Higher or Equal to 15.
+            log.info("[testInit] JDK version " + javaVersion + " >= 15, downloading OpenJDK Nashorn dependencies...");
+            long downloadStartTime = System.currentTimeMillis();
             runAdaptiveAuthenticationDependencyScript(false, serverConfigurationManager, log);
+            log.info("[testInit] Dependency download completed in: " + (System.currentTimeMillis() - downloadStartTime) + " ms");
             identityNewResourceFileName = "openjdknashorn_script_engine_config.toml";
         }
 
@@ -60,7 +68,14 @@ public class NashornAdaptiveScriptInitializerTestCase extends AbstractAdaptiveAu
                 getISResourceLocation() + File.separator + "scriptEngine" + File.separator +
                         identityNewResourceFileName);
         serverConfigurationManager.applyConfigurationWithoutRestart(scriptEngineConfigFile, defaultConfigFile, true);
+        long restartStartTime = System.currentTimeMillis();
         serverConfigurationManager.restartGracefully();
+        log.info("[testInit] Final server restart completed in: " + (System.currentTimeMillis() - restartStartTime) + " ms");
+
+        long totalTime = System.currentTimeMillis() - testInitStartTime;
+        log.info("==========================================================");
+        log.info("[NashornAdaptiveScriptInitializerTestCase.testInit] COMPLETED - Total elapsed time: " + totalTime + " ms (" + (totalTime / 1000) + " seconds)");
+        log.info("==========================================================");
     }
 
     protected static void runAdaptiveAuthenticationDependencyScript(boolean disable, ServerConfigurationManager scm, Log logger) {
@@ -73,6 +88,12 @@ public class NashornAdaptiveScriptInitializerTestCase extends AbstractAdaptiveAu
         File scriptFile = new File(scriptFolder);
         Runtime runtime = Runtime.getRuntime();
 
+        long startTime = System.currentTimeMillis();
+        String operation = disable ? "DISABLE" : "ENABLE";
+        logger.info("==========================================================");
+        logger.info("[Adaptive Auth Dependency Script - " + operation + "] START - " + new java.util.Date());
+        logger.info("==========================================================");
+
         try {
             if (System.getProperty("os.name").toLowerCase().contains("windows")) {
                 logger.info("Operating System is Windows. Executing batch script");
@@ -81,7 +102,9 @@ public class NashornAdaptiveScriptInitializerTestCase extends AbstractAdaptiveAu
                     Restarting before the excution to release the locks on nashorn
                     and asm-util jars in the dropins directory.
                      */
+                    long restartStart = System.currentTimeMillis();
                     scm.restartGracefully();
+                    logger.info("[Server restart before disable] Elapsed time: " + (System.currentTimeMillis() - restartStart) + " ms");
                     tempProcess = runtime.exec(
                             new String[]{"cmd", "/c", "adaptive.bat", targetFolder, "DISABLE"}, null, scriptFile);
                 } else {
@@ -92,9 +115,13 @@ public class NashornAdaptiveScriptInitializerTestCase extends AbstractAdaptiveAu
                 inputStreamHandler = new ServerLogReader("inputStream", tempProcess.getInputStream());
                 inputStreamHandler.start();
                 errorStreamHandler.start();
+                long scriptStart = System.currentTimeMillis();
                 boolean runStatus = waitForMessage(inputStreamHandler, disable);
+                logger.info("[Script execution wait] Elapsed time: " + (System.currentTimeMillis() - scriptStart) + " ms");
                 logger.info("Status Message : " + runStatus);
+                long restartStart = System.currentTimeMillis();
                 scm.restartGracefully();
+                logger.info("[Server restart after script] Elapsed time: " + (System.currentTimeMillis() - restartStart) + " ms");
             } else {
                 logger.info("Operating system is not windows. Executing shell script");
                 if (disable) {
@@ -108,9 +135,13 @@ public class NashornAdaptiveScriptInitializerTestCase extends AbstractAdaptiveAu
                 inputStreamHandler = new ServerLogReader("inputStream", tempProcess.getInputStream());
                 inputStreamHandler.start();
                 errorStreamHandler.start();
+                long scriptStart = System.currentTimeMillis();
                 boolean runStatus = waitForMessage(inputStreamHandler, disable);
+                logger.info("[Script execution wait] Elapsed time: " + (System.currentTimeMillis() - scriptStart) + " ms");
                 logger.info("Status Message : " + runStatus);
+                long restartStart = System.currentTimeMillis();
                 scm.restartGracefully();
+                logger.info("[Server restart after script] Elapsed time: " + (System.currentTimeMillis() - restartStart) + " ms");
             }
         } catch (Exception e) {
             logger.error("Failed to execute adaptive authentication dependency script", e);
@@ -118,6 +149,10 @@ public class NashornAdaptiveScriptInitializerTestCase extends AbstractAdaptiveAu
             if (tempProcess != null) {
                 tempProcess.destroy();
             }
+            long elapsedTime = System.currentTimeMillis() - startTime;
+            logger.info("==========================================================");
+            logger.info("[Adaptive Auth Dependency Script - " + operation + "] COMPLETED - Total elapsed time: " + elapsedTime + " ms (" + (elapsedTime / 1000) + " seconds)");
+            logger.info("==========================================================");
         }
     }
 
