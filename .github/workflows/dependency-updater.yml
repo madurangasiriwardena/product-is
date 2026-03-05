@@ -8,6 +8,7 @@ on:
 
 env:
   MAVEN_OPTS: -Xmx4g -Xms1g -XX:+HeapDumpOnOutOfMemoryError
+  JAVA_OPTS: "-Djava.security.debug=certpath"
   REPOSITORY: product-is
   GIT_USERNAME: jenkins-is-staging
   GIT_EMAIL: jenkins-is-staging@wso2.com
