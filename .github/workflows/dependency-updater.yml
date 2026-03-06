@@ -101,6 +101,8 @@ jobs:
           fi
 
       - name: Run Integration Tests
+        env:
+          JAVA_OPTS: "-XX:+UseG1GC -XX:ActiveProcessorCount=4 -XX:ParallelGCThreads=4"
         working-directory: ${{ env.REPOSITORY }}
         run: |
           echo "Running integration tests"
