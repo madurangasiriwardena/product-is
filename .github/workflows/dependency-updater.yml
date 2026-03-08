@@ -100,13 +100,93 @@ jobs:
             exit 1
           fi
 
+      - name: Prepare jstack diagnostic directory
+        run: |
+          mkdir -p ${{ github.workspace }}/jstack-dumps
+          # ──────────────────────────────────────────────────────────────
+          # jstack sampler script
+          #
+          # Runs in the background during integration tests. Every 5
+          # seconds it looks for WSO2 Carbon server processes (identified
+          # by the wso2carbon.log.file system property in their cmdline)
+          # and captures a thread dump from each.
+          #
+          # Dumps are written to per-PID files with timestamps so you
+          # can correlate them with the "Starting WSO2 Carbon" /
+          # "WSO2 Carbon started in X sec" log lines.
+          #
+          # The script automatically detects NEW server PIDs across
+          # restarts and tracks which ones it has already seen.
+          # ──────────────────────────────────────────────────────────────
+          cat > ${{ github.workspace }}/jstack-sampler.sh << 'SAMPLER_EOF'
+          #!/bin/bash
+          DUMP_DIR="$1"
+          INTERVAL=10                # seconds between samples
+          CAPTURE_WINDOW=240         # only capture first 4 min after discovering a PID
+          MAX_DUMPS_PER_PID=25       # hard cap: ~25 dumps × 75KB ≈ 1.9MB per PID
+
+          declare -A PID_FIRST_SEEN  # timestamp when PID was first discovered
+          declare -A PID_DUMP_COUNT  # number of dumps taken for this PID
+
+          while true; do
+            CARBON_PIDS=$(ps aux | grep -E 'wso2carbon\.log\.file|org\.wso2\.carbon\.launcher|carbon\.home' | grep -v grep | awk '{print $2}')
+            NOW=$(date +%s)
+
+            for PID in $CARBON_PIDS; do
+              if [ "$PID" = "$$" ]; then
+                continue
+              fi
+
+              TIMESTAMP=$(date -u +%Y%m%dT%H%M%S)
+              DUMP_FILE="${DUMP_DIR}/jstack-pid${PID}.log"
+
+              # First time seeing this PID
+              if [ -z "${PID_FIRST_SEEN[$PID]}" ]; then
+                PID_FIRST_SEEN[$PID]=$NOW
+                PID_DUMP_COUNT[$PID]=0
+                echo "[${TIMESTAMP}] Discovered new Carbon server PID: ${PID}" >> "${DUMP_DIR}/sampler.log"
+              fi
+
+              # Skip if we've exceeded the capture window or dump cap
+              ELAPSED=$(( NOW - PID_FIRST_SEEN[$PID] ))
+              if [ "$ELAPSED" -gt "$CAPTURE_WINDOW" ]; then
+                continue
+              fi
+              if [ "${PID_DUMP_COUNT[$PID]}" -ge "$MAX_DUMPS_PER_PID" ]; then
+                continue
+              fi
+
+              # Capture thread dump
+              echo "" >> "$DUMP_FILE"
+              echo "========== jstack ${PID} at ${TIMESTAMP} (elapsed=${ELAPSED}s, dump=#${PID_DUMP_COUNT[$PID]}) ==========" >> "$DUMP_FILE"
+              jstack "$PID" >> "$DUMP_FILE" 2>&1
+              PID_DUMP_COUNT[$PID]=$(( PID_DUMP_COUNT[$PID] + 1 ))
+            done
+
+            sleep $INTERVAL
+          done
+          SAMPLER_EOF
+          chmod +x ${{ github.workspace }}/jstack-sampler.sh
+
       - name: Run Integration Tests
         working-directory: ${{ env.REPOSITORY }}
         run: |
-          echo "Running integration tests"
+          echo "Running integration tests with jstack sampler"
           echo "=========================================================="
+
+          # Start the jstack sampler in the background
+          bash ${{ github.workspace }}/jstack-sampler.sh "${{ github.workspace }}/jstack-dumps" &
+          SAMPLER_PID=$!
+          echo "jstack sampler started as PID: ${SAMPLER_PID}"
+
           cd modules/integration/tests-integration/tests-backend
           mvn clean install -Dmaven.test.failure.ignore=false | tee mvn-test.log
+
+          # Stop the sampler
+          kill $SAMPLER_PID 2>/dev/null || true
+          wait $SAMPLER_PID 2>/dev/null || true
+          echo "jstack sampler stopped"
+
           PR_TEST_STATUS=$(cat mvn-test.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
           PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-test.log)
           PR_BUILD_FINAL_RESULT=$(
@@ -125,6 +205,54 @@ jobs:
             echo "::error::Integration tests not successfull. Check artifacts for logs."
             exit 1
           fi
+
+      - name: Summarize jstack diagnostics
+        if: always()
+        run: |
+          echo "=========================================================="
+          echo "jstack Sampler Summary"
+          echo "=========================================================="
+          DUMP_DIR="${{ github.workspace }}/jstack-dumps"
+
+          # Show sampler discovery log
+          if [ -f "${DUMP_DIR}/sampler.log" ]; then
+            echo "── Server PID discovery log ──"
+            cat "${DUMP_DIR}/sampler.log"
+            echo ""
+          else
+            echo "WARNING: No sampler.log found — sampler may not have detected any Carbon server processes."
+            echo "Check that the process grep pattern matches the actual WSO2 server command line."
+            echo ""
+          fi
+
+          # Summary per PID
+          for f in "${DUMP_DIR}"/jstack-pid*.log; do
+            [ -f "$f" ] || continue
+            PID=$(echo "$f" | sed 's/.*pid\([0-9]*\).*/\1/')
+            DUMP_COUNT=$(grep -c '========== jstack' "$f" 2>/dev/null || echo 0)
+            FIRST_TS=$(grep '========== jstack' "$f" | head -1 | sed 's/.*at \(.*\) =.*/\1/')
+            LAST_TS=$(grep '========== jstack' "$f" | tail -1 | sed 's/.*at \(.*\) =.*/\1/')
+            echo "── PID ${PID}: ${DUMP_COUNT} dumps from ${FIRST_TS} to ${LAST_TS} ──"
+
+            # Show the most common thread states across all dumps for this PID.
+            # This reveals what the server spends most of its time doing.
+            echo "  Top 10 most frequent thread states:"
+            grep -A1 '^"' "$f" \
+              | grep 'java.lang.Thread.State' \
+              | sort | uniq -c | sort -rn | head -10 \
+              | sed 's/^/    /'
+            echo ""
+
+            # Show the most common stack frames — the real gold.
+            # If a thread is blocked on the same call across many dumps,
+            # it will dominate this list.
+            echo "  Top 15 most frequent stack frames (excluding common ones):"
+            grep '^\tat ' "$f" \
+              | grep -v -E 'java\.lang\.Object\.wait|java\.lang\.Thread\.sleep|sun\.misc\.Unsafe\.park|jdk\.internal\.misc\.Unsafe\.park|java\.util\.concurrent\.locks' \
+              | sort | uniq -c | sort -rn | head -15 \
+              | sed 's/^/    /'
+            echo ""
+          done
 
       - name: Commit and Push Changes
         working-directory: ${{ env.REPOSITORY }}
@@ -186,6 +314,14 @@ jobs:
           name: mvn-test.log
           path: |
             ${{steps.builder_step.outputs.REPO_NAME}}/modules/integration/tests-integration/tests-backend/mvn-test.log
+          if-no-files-found: warn
+      - name: Archive jstack diagnostic dumps
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jstack-dumps
+          path: |
+            ${{ github.workspace }}/jstack-dumps/
           if-no-files-found: warn
       - name: Archive heap dump
         if: always()
